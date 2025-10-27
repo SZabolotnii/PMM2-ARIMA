@@ -1,6 +1,9 @@
-.Rproj.user
+# RStudio project files
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
-.Rhistory
-.RData
+
+# Generated analysis outputs
+PMM2-ARIMA/results/
+Rplots.pdf
