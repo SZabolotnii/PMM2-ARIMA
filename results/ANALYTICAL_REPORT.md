@@ -3,7 +3,7 @@
 
 ---
 
-**Report Generated:** 2025-10-27 11:09:15.565067
+**Report Generated:** 2025-10-27 11:19:23.238771
 
 **Data Source:** WTI Crude Oil Prices (DCOILWTICO)
 **Observations:** 1249
@@ -94,18 +94,18 @@ Six ARIMA specifications were evaluated:
 
 | Rank | Model | Method | AIC | BIC | RMSE | MAE | Kurtosis | Time(s) |
 |------|-------|--------|-----|-----|------|-----|----------|--------|
-| 1 | ARIMA(1,1,1) | PMM2 | 5079.10 | 5089.36 | 1.8455 | 1.3211 | 5.749 | 0.003 |
-| 2 | ARIMA(2,1,2) | CSS-ML | 5101.25 | 5126.90 | 1.8592 | 1.3316 | 5.472 | 0.025 |
-| 3 | ARIMA(0,1,1) | PMM2 | 5123.67 | 5128.80 | 1.8802 | 1.3448 | 5.912 | 0.003 |
-| 4 | ARIMA(1,1,0) | PMM2 | 5123.80 | 5128.93 | 1.8803 | 1.3450 | 5.906 | 0.001 |
+| 1 | ARIMA(1,1,1) | PMM2 | 5079.10 | 5089.36 | 1.8455 | 1.3211 | 5.749 | 0.002 |
+| 2 | ARIMA(2,1,2) | CSS-ML | 5101.25 | 5126.90 | 1.8592 | 1.3316 | 5.472 | 0.023 |
+| 3 | ARIMA(0,1,1) | PMM2 | 5123.67 | 5128.80 | 1.8802 | 1.3448 | 5.912 | 0.002 |
+| 4 | ARIMA(1,1,0) | PMM2 | 5123.80 | 5128.93 | 1.8803 | 1.3450 | 5.906 | 0.002 |
 | 5 | ARIMA(0,1,1) | CSS-ML | 5122.40 | 5132.66 | 1.8801 | 1.3452 | 5.859 | 0.002 |
 | 6 | ARIMA(1,1,0) | CSS-ML | 5122.48 | 5132.74 | 1.8801 | 1.3454 | 5.847 | 0.001 |
-| 7 | ARIMA(2,1,1) | CSS-ML | 5112.97 | 5133.48 | 1.8699 | 1.3363 | 5.314 | 0.008 |
-| 8 | ARIMA(1,1,2) | CSS-ML | 5113.23 | 5133.75 | 1.8701 | 1.3362 | 5.334 | 0.011 |
+| 7 | ARIMA(2,1,1) | CSS-ML | 5112.97 | 5133.48 | 1.8699 | 1.3363 | 5.314 | 0.007 |
+| 8 | ARIMA(1,1,2) | CSS-ML | 5113.23 | 5133.75 | 1.8701 | 1.3362 | 5.334 | 0.009 |
 | 9 | ARIMA(1,1,2) | PMM2 | 5119.50 | 5134.89 | 1.8740 | 1.3387 | 5.711 | 0.011 |
-| 10 | ARIMA(2,1,1) | PMM2 | 5119.58 | 5134.97 | 1.8741 | 1.3386 | 5.704 | 0.010 |
+| 10 | ARIMA(2,1,1) | PMM2 | 5119.58 | 5134.97 | 1.8741 | 1.3386 | 5.704 | 0.008 |
 | 11 | ARIMA(1,1,1) | CSS-ML | 5123.89 | 5139.28 | 1.8797 | 1.3440 | 5.897 | 0.002 |
-| 12 | ARIMA(2,1,2) | PMM2 | 5122.95 | 5143.47 | 1.8751 | 1.3451 | 5.505 | 0.025 |
+| 12 | ARIMA(2,1,2) | PMM2 | 5122.95 | 5143.47 | 1.8751 | 1.3451 | 5.505 | 0.024 |
 
 ### 3.2 Performance by Information Criteria
 
@@ -153,7 +153,7 @@ Six ARIMA specifications were evaluated:
 | BIC | 5133.14 | 5126.74 | -6.40 |
 | RMSE | 1.8732 | 1.8715 | -0.0017 |
 | MAE | 1.3398 | 1.3389 | -0.0009 |
-| Time | 0.0082 s | 0.0088 s | +0.0007 s |
+| Time | 0.0073 s | 0.0082 s | +0.0008 s |
 
 ---
 
@@ -213,14 +213,14 @@ Values < 1 favor PMM2, > 1 favor CSS-ML; ratios derive from observed residual mo
 
 | Model | CSS-ML Time (s) | PMM2 Time (s) | Speedup Factor |
 |-------|----------------|---------------|----------------|
-| ARIMA(0,1,1) | 0.0020 | 0.0030 | 0.67x |
-| ARIMA(1,1,0) | 0.0010 | 0.0010 | 1.00x |
-| ARIMA(1,1,1) | 0.0020 | 0.0030 | 0.67x |
-| ARIMA(2,1,1) | 0.0080 | 0.0100 | 0.80x |
-| ARIMA(1,1,2) | 0.0110 | 0.0110 | 1.00x |
-| ARIMA(2,1,2) | 0.0250 | 0.0250 | 1.00x |
+| ARIMA(0,1,1) | 0.0020 | 0.0020 | 1.00x |
+| ARIMA(1,1,0) | 0.0010 | 0.0020 | 0.50x |
+| ARIMA(1,1,1) | 0.0020 | 0.0020 | 1.00x |
+| ARIMA(2,1,1) | 0.0070 | 0.0080 | 0.87x |
+| ARIMA(1,1,2) | 0.0090 | 0.0110 | 0.82x |
+| ARIMA(2,1,2) | 0.0230 | 0.0240 | 0.96x |
 
-**Average Speedup:** 0.92x (CSS-ML is faster)
+**Average Speedup:** 0.90x (CSS-ML is faster)
 
 ---
 
@@ -245,7 +245,7 @@ Values < 1 favor PMM2, > 1 favor CSS-ML; ratios derive from observed residual mo
 
 4. **Computational Cost**
    - CSS-ML is slightly faster
-   - But difference is negligible (1.08x)
+   - But difference is negligible (1.11x)
 
 ### 8.2 Practical Recommendations
 
@@ -319,7 +319,7 @@ The following visualizations are available in the `plots/` directory:
 
 ## 11. METADATA
 
-- **Report Generated:** 2025-10-27 11:09:15.592303
+- **Report Generated:** 2025-10-27 11:19:23.277608
 - **EstemPMM Version:** 0.1.1
 - **R Version:** R version 4.5.1 (2025-06-13)
 - **Platform:** aarch64-apple-darwin24.4.0

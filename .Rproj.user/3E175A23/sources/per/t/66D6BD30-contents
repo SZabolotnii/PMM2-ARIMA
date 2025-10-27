@@ -34,7 +34,7 @@ cat("Estimated time: 2-5 minutes\n\n")
 start_time <- Sys.time()
 
 tryCatch({
-  source("PMM2-ARIMA/comprehensive_study.R")
+  source("comprehensive_study.R")
   cat("\n✓ Model fitting completed successfully\n\n")
 }, error = function(e) {
   cat(sprintf("\n✗ Error in model fitting: %s\n\n", e$message))
@@ -51,7 +51,7 @@ cat("Generating 10 publication-quality plots\n\n")
 step2_start <- Sys.time()
 
 tryCatch({
-  source("PMM2-ARIMA/create_visualizations.R")
+  source("create_visualizations.R")
   cat("\n✓ Visualization creation completed successfully\n\n")
 }, error = function(e) {
   cat(sprintf("\n✗ Error in visualization: %s\n\n", e$message))
@@ -68,7 +68,7 @@ cat("Creating comprehensive markdown report\n\n")
 step3_start <- Sys.time()
 
 tryCatch({
-  source("PMM2-ARIMA/generate_report.R")
+  source("generate_report.R")
   cat("\n✓ Report generation completed successfully\n\n")
 }, error = function(e) {
   cat(sprintf("\n✗ Error in report generation: %s\n\n", e$message))
@@ -92,7 +92,7 @@ cat(sprintf("  Total Time:                 %.1f seconds (%.1f minutes)\n\n",
             total_time, total_time / 60))
 
 cat("Output Files:\n")
-cat("  ├── PMM2-ARIMA/results/\n")
+cat("  ├── results/\n")
 cat("  │   ├── full_results.csv           - Complete results table\n")
 cat("  │   ├── method_comparison.csv      - Head-to-head comparison\n")
 cat("  │   ├── descriptive_stats.csv      - Data statistics\n")
@@ -115,25 +115,25 @@ cat("  │       └── 10_summary_statistics.png\n\n")
 
 cat("Quick Actions:\n")
 cat("  # View the analytical report\n")
-cat("  cat PMM2-ARIMA/results/ANALYTICAL_REPORT.md\n\n")
+cat("  cat results/ANALYTICAL_REPORT.md\n\n")
 
 cat("  # View results in R\n")
-cat("  results <- readRDS('PMM2-ARIMA/results/all_results.rds')\n")
+cat("  results <- readRDS('results/all_results.rds')\n")
 cat("  View(results)\n\n")
 
 cat("  # Convert report to HTML\n")
-cat("  pandoc PMM2-ARIMA/results/ANALYTICAL_REPORT.md \\\n")
-cat("    -o PMM2-ARIMA/results/ANALYTICAL_REPORT.html \\\n")
+cat("  pandoc results/ANALYTICAL_REPORT.md \\\n")
+cat("    -o results/ANALYTICAL_REPORT.html \\\n")
 cat("    -s --toc --toc-depth=3 \\\n")
 cat("    --metadata title='ARIMA Comparison Study'\n\n")
 
 cat("  # Convert report to PDF (requires LaTeX)\n")
-cat("  pandoc PMM2-ARIMA/results/ANALYTICAL_REPORT.md \\\n")
-cat("    -o PMM2-ARIMA/results/ANALYTICAL_REPORT.pdf \\\n")
+cat("  pandoc results/ANALYTICAL_REPORT.md \\\n")
+cat("    -o results/ANALYTICAL_REPORT.pdf \\\n")
 cat("    -s --toc --toc-depth=3\n\n")
 
 # Load and display key findings
-summary_info <- readRDS("PMM2-ARIMA/results/study_summary.rds")
+summary_info <- readRDS("results/study_summary.rds")
 
 cat("================================================================\n")
 cat("KEY FINDINGS\n")
@@ -143,4 +143,4 @@ cat(sprintf("Best Model (BIC): %s\n\n", summary_info$best_model_bic))
 cat(sprintf("PMM2 Win Rate (AIC): %.1f%%\n", summary_info$pmm2_win_rate_aic * 100))
 cat(sprintf("PMM2 Win Rate (BIC): %.1f%%\n\n", summary_info$pmm2_win_rate_bic * 100))
 
-cat("For detailed analysis, see: PMM2-ARIMA/results/ANALYTICAL_REPORT.md\n\n")
+cat("For detailed analysis, see: results/ANALYTICAL_REPORT.md\n\n")

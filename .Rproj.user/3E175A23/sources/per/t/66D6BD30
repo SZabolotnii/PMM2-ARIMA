@@ -3,7 +3,7 @@
     "path": "~/R/PMM2-ARIMA/run_full_study.R",
     "project_path": "run_full_study.R",
     "type": "r_source",
-    "hash": "3799712851",
+    "hash": "3035593159",
     "contents": "",
     "dirty": false,
     "created": 1761555311616.0,
@@ -11,14 +11,16 @@
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "0,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1761553110,
+    "lastKnownWriteTime": 1761555675,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1761553110,
+    "last_content_update": 1761555675,
     "read_only": false,
     "read_only_alternatives": []
 }
