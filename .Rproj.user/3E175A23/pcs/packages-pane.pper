@@ -1,7 +1,0 @@
-{
-    "installOptions": {
-        "installFromRepository": false,
-        "libraryPath": "/opt/homebrew/lib/R/4.5/site-library",
-        "installDependencies": true
-    }
-}
