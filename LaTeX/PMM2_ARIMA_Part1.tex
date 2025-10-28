@@ -219,6 +219,527 @@ PMM метод успішно застосовувався до різноман
 \end{itemize}
 
 % ============================================
+% SECTION 2: METHODOLOGY
+% ============================================
+\section{Методологія}
+\label{sec:methodology}
+
+У цьому розділі ми надаємо повну методологію застосування методу максимізації поліномів другого порядку (PMM2) до оцінювання параметрів ARIMA моделей з негаусовими інноваціями. Спочатку формулюємо ARIMA модель та класичні методи оцінювання, потім розглядаємо теоретичні основи PMM2, адаптуємо метод до контексту часових рядів, та надаємо алгоритм реалізації з асимптотичною теорією.
+
+\subsection{ARIMA Моделі: Основи та Класичне Оцінювання}
+\label{subsec:arima_basics}
+
+\subsubsection{Визначення ARIMA(p,d,q) Моделі}
+
+Авторегресійна інтегрована модель ковзного середнього ARIMA(p,d,q) описує часовий ряд $\{y_t\}_{t=1}^T$ через три компоненти: авторегресійну (AR) порядку $p$, диференціювання порядку $d$, та ковзного середнього (MA) порядку $q$.
+
+\begin{definition}[ARIMA(p,d,q) модель]
+Часовий ряд $\{y_t\}$ слідує ARIMA(p,d,q) моделі, якщо $d$-та різниця ряду
+\begin{equation}
+\label{eq:differencing}
+z_t = \Delta^d y_t = (1-B)^d y_t
+\end{equation}
+задовольняє стаціонарну та оборотну ARMA(p,q) модель:
+\begin{equation}
+\label{eq:arma}
+\Phi(B) z_t = \Theta(B) \varepsilon_t
+\end{equation}
+де $B$ --- оператор зсуву ($B y_t = y_{t-1}$), та
+\begin{align}
+\Phi(B) &= 1 - \phi_1 B - \phi_2 B^2 - \cdots - \phi_p B^p \label{eq:ar_poly} \\
+\Theta(B) &= 1 + \theta_1 B + \theta_2 B^2 + \cdots + \theta_q B^q \label{eq:ma_poly}
+\end{align}
+є поліномами авторегресії та ковзного середнього відповідно, а $\{\varepsilon_t\}$ --- послідовність незалежних однаково розподілених (i.i.d.) інновацій з нульовим середнім та дисперсією $\sigma^2$.
+\end{definition}
+
+Еквівалентно, ARIMA модель може бути записана у явній формі:
+\begin{equation}
+\label{eq:arima_explicit}
+y_t = \sum_{j=1}^{d} \binom{d}{j} (-1)^{j+1} y_{t-j} + \sum_{i=1}^{p} \phi_i z_{t-i} + \varepsilon_t + \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}
+\end{equation}
+
+\paragraph{Умови стаціонарності та оборотності.}
+
+\begin{itemize}
+    \item \textbf{Стаціонарність:} Корені характеристичного рівняння $\Phi(z) = 0$ лежать поза одиничним колом: $|z_i| > 1$ для всіх $i = 1, \ldots, p$.
+
+    \item \textbf{Оборотність:} Корені характеристичного рівняння $\Theta(z) = 0$ лежать поза одиничним колом: $|z_j| > 1$ для всіх $j = 1, \ldots, q$.
+\end{itemize}
+
+\subsubsection{Класичні Методи Оцінювання}
+
+Нехай $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$ --- вектор параметрів розміру $k = p + q$.
+
+\paragraph{Метод умовної суми квадратів (CSS).}
+
+CSS метод мінімізує умовну суму квадратів залишків:
+\begin{equation}
+\label{eq:css}
+\hat{\boldsymbol{\theta}}_{\text{CSS}} = \arg\min_{\boldsymbol{\theta}} S(\boldsymbol{\theta}) = \arg\min_{\boldsymbol{\theta}} \sum_{t=p+1}^{T} \varepsilon_t^2(\boldsymbol{\theta})
+\end{equation}
+де $\varepsilon_t(\boldsymbol{\theta})$ --- залишки, обчислені рекурсивно з початковими умовами $\varepsilon_t = 0$ для $t \leq 0$ та $z_t = 0$ для $t \leq 0$.
+
+\paragraph{Звичайний метод найменших квадратів (OLS).}
+
+Для авторегресійної частини, OLS оцінює параметри через лінійну регресію:
+\begin{equation}
+\label{eq:ols}
+\hat{\boldsymbol{\phi}}_{\text{OLS}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{z}
+\end{equation}
+де $\mathbf{z} = (z_{p+1}, \ldots, z_T)^\top$ та $\mathbf{X}$ --- матриця регресорів розміру $(T-p) \times p$ з елементами $X_{ti} = z_{t-i}$.
+
+\paragraph{Метод максимальної правдоподібності (MLE).}
+
+За припущення гаусовості інновацій $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$, MLE максимізує функцію правдоподібності:
+\begin{equation}
+\label{eq:mle}
+\hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta} \mid \mathbf{y}) = \arg\max_{\boldsymbol{\theta}} \left\{ -\frac{T}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{t=1}^{T} \varepsilon_t^2(\boldsymbol{\theta}) \right\}
+\end{equation}
+
+За умови нормальності, MLE є асимптотично ефективним, консистентним та асимптотично нормальним:
+\begin{equation}
+\label{eq:mle_asymptotic}
+\sqrt{T}(\hat{\boldsymbol{\theta}}_{\text{MLE}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2 \left[\mathbb{E}\left(\frac{\partial \varepsilon_t}{\partial \boldsymbol{\theta}} \frac{\partial \varepsilon_t}{\partial \boldsymbol{\theta}^\top}\right)\right]^{-1}\right)
+\end{equation}
+
+Однак, ці властивості порушуються за умов негаусовості інновацій.
+
+\subsection{Теоретичні Основи Методу Максимізації Поліномів}
+\label{subsec:pmm_theory}
+
+\subsubsection{Стохастичні Поліноми та Кумулянтний Опис}
+
+Метод максимізації поліномів базується на концепції стохастичних поліномів, що є поліноміальними функціями випадкових величин з коефіцієнтами, що залежать від параметрів моделі.
+
+\begin{definition}[Стохастичний поліном порядку $S$]
+Для випадкової величини $\xi$ та параметра $\theta$, стохастичний поліном порядку $S$ визначається як:
+\begin{equation}
+\label{eq:stochastic_polynomial}
+P_S(\xi; \theta) = \sum_{s=0}^{S} a_s(\theta) \xi^s
+\end{equation}
+де $a_s(\theta)$ --- детерміновані коефіцієнти, що залежать від параметра $\theta$.
+\end{definition}
+
+Ключова ідея PMM полягає в побудові таких коефіцієнтів $a_s(\theta)$, що математичне сподівання стохастичного полінома досягає максимуму в околі справжнього значення параметра $\theta_0$.
+
+\paragraph{Кумулянти та їх властивості.}
+
+Нехай $\kappa_r$ позначає $r$-й кумулянт випадкової величини $\xi$. Кумулянти мають наступні властивості:
+
+\begin{itemize}
+    \item $\kappa_1 = \mathbb{E}[\xi]$ (середнє)
+    \item $\kappa_2 = \text{Var}(\xi)$ (дисперсія)
+    \item $\kappa_3 = \mathbb{E}[(\xi - \mu)^3]$ (третій центральний момент, пов'язаний з асиметрією)
+    \item $\kappa_4 = \mathbb{E}[(\xi - \mu)^4] - 3\kappa_2^2$ (четвертий кумулянт, пов'язаний з ексцесом)
+\end{itemize}
+
+Стандартизовані кумулянти (кумулянтні коефіцієнти) визначаються як:
+\begin{align}
+\gamma_3 &= \frac{\kappa_3}{\kappa_2^{3/2}} \quad \text{(коефіцієнт асиметрії)} \label{eq:skewness} \\
+\gamma_4 &= \frac{\kappa_4}{\kappa_2^{2}} \quad \text{(коефіцієнт ексцесу)} \label{eq:kurtosis}
+\end{align}
+
+Для гаусового розподілу $\gamma_3 = 0$ та $\gamma_4 = 0$. Відхилення від нуля вказують на негаусовість.
+
+\subsubsection{PMM2 для Асиметричних Розподілів}
+
+Для асиметричних розподілів ($\gamma_3 \neq 0$), оптимальним є стохастичний поліном другого порядку (PMM2).
+
+\begin{theorem}[PMM2 для простої оцінки параметра]
+\label{thm:pmm2_basic}
+Розглянемо оцінювання параметра локації $\theta$ випадкової величини $\xi = \theta + \varepsilon$, де $\varepsilon$ --- похибка з нульовим середнім, дисперсією $\sigma^2$, та кумулянтами $\kappa_3 \neq 0$, $\kappa_4$. Стохастичний поліном другого порядку
+\begin{equation}
+\label{eq:pmm2_polynomial}
+P_2(\xi; \theta) = a_0(\theta) + a_1(\theta) \xi + a_2(\theta) \xi^2
+\end{equation}
+з коефіцієнтами
+\begin{align}
+a_0(\theta) &= -\frac{\kappa_3}{2(4\kappa_2 + 2\kappa_4)} \theta^2 + \text{const} \label{eq:a0} \\
+a_1(\theta) &= \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \theta \label{eq:a1} \\
+a_2(\theta) &= -\frac{\kappa_3}{2(4\kappa_2 + 2\kappa_4)} \label{eq:a2}
+\end{align}
+має властивість, що $\mathbb{E}[P_2(\xi; \theta)]$ досягає максимуму при $\theta = \theta_0$.
+\end{theorem}
+
+\paragraph{Оцінювач PMM2.}
+
+PMM2 оцінювач отримується максимізацією вибіркового середнього стохастичного полінома:
+\begin{equation}
+\label{eq:pmm2_estimator}
+\hat{\theta}_{\text{PMM2}} = \arg\max_{\theta} \frac{1}{n} \sum_{i=1}^{n} P_2(\xi_i; \theta)
+\end{equation}
+
+Умова першого порядку для максимізації:
+\begin{equation}
+\label{eq:pmm2_foc}
+\frac{\partial}{\partial \theta} \left[ \frac{1}{n} \sum_{i=1}^{n} P_2(\xi_i; \theta) \right] = 0
+\end{equation}
+
+Підставляючи вирази для коефіцієнтів~\eqref{eq:a0}--\eqref{eq:a2} та спрощуючи, отримуємо:
+\begin{equation}
+\label{eq:pmm2_solution}
+\hat{\theta}_{\text{PMM2}} = \frac{\sum_{i=1}^{n} \xi_i - \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \sum_{i=1}^{n} \xi_i^2}{n - \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \sum_{i=1}^{n} \xi_i}
+\end{equation}
+
+Для практичного застосування, кумулянти $\kappa_2$, $\kappa_3$, $\kappa_4$ замінюються їх вибірковими оцінками.
+
+\subsubsection{Асимптотична Ефективність PMM2}
+
+\begin{theorem}[Відносна ефективність PMM2 щодо OLS]
+\label{thm:relative_efficiency}
+За умови, що інновації $\varepsilon_t$ мають скінченні моменти до четвертого порядку включно, відносна ефективність PMM2 оцінювача щодо OLS визначається як:
+\begin{equation}
+\label{eq:re_pmm2_ols}
+RE_{\text{PMM2/OLS}} = \frac{\text{Var}(\hat{\theta}_{\text{OLS}})}{\text{Var}(\hat{\theta}_{\text{PMM2}})} = \frac{4 + 2\gamma_4}{4 + 2\gamma_4 - \gamma_3^2}
+\end{equation}
+де $\gamma_3$ та $\gamma_4$ --- стандартизовані коефіцієнти асиметрії та ексцесу інновацій відповідно.
+\end{theorem}
+
+\begin{proof}[Ескіз доведення]
+Доведення базується на розкладі Тейлора умови першого порядку~\eqref{eq:pmm2_foc} в околі справжнього значення параметра та обчисленні асимптотичної дисперсії через інформаційну матрицю Фішера для часткового кумулянтного опису. Детальне доведення наведено в~\cite{kunchenko2002polynomial,zabolotnii2018polynomial}.
+\end{proof}
+
+\paragraph{Інтерпретація відносної ефективності.}
+
+\begin{itemize}
+    \item Для гаусових інновацій ($\gamma_3 = 0$, $\gamma_4 = 0$): $RE = 1$, тобто PMM2 еквівалентний OLS.
+
+    \item Для асиметричних розподілів ($\gamma_3 \neq 0$): $RE > 1$, тобто PMM2 має меншу дисперсію.
+
+    \item Відносна ефективність зростає квадратично з асиметрією: $RE \approx 1 + \frac{\gamma_3^2}{4}$ для малих $\gamma_3$ та $\gamma_4 \approx 0$.
+
+    \item Наприклад, для $\gamma_3 = 1.5$ та $\gamma_4 = 3$: $RE = 10/(10 - 2.25) \approx 1.29$, що відповідає 22\% зменшенню дисперсії.
+\end{itemize}
+
+\subsection{PMM2 для ARIMA Моделей: Адаптація Методу}
+\label{subsec:pmm2_arima}
+
+\subsubsection{Мотивація: Чому Класичний PMM2 Потребує Адаптації}
+
+Пряме застосування PMM2 до ARIMA моделей стикається з декількома викликами:
+
+\begin{enumerate}
+    \item \textbf{Нестаціонарність:} Диференціювання вносить додаткові джерела варіації.
+
+    \item \textbf{Часова залежність:} Інновації $\varepsilon_t$ не спостерігаються безпосередньо, а обчислюються рекурсивно через залишки.
+
+    \item \textbf{Багатопараметричність:} ARIMA моделі мають $k = p + q$ параметрів, що потребує багатовимірної оптимізації.
+
+    \item \textbf{Ідентифікованість:} Необхідно забезпечити умови стаціонарності та оборотності.
+\end{enumerate}
+
+\subsubsection{Формулювання PMM2 для ARIMA}
+
+Розглянемо ARIMA(p,d,q) модель з вектором параметрів $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$.
+
+\paragraph{Крок 1: Диференціювання.}
+
+Застосовуємо диференціювання порядку $d$ до вихідного ряду:
+\begin{equation}
+\label{eq:differenced_series}
+z_t = \Delta^d y_t, \quad t = d+1, \ldots, T
+\end{equation}
+
+Це дає стаціонарний ряд довжини $n = T - d$.
+
+\paragraph{Крок 2: Обчислення залишків.}
+
+Для заданого вектора параметрів $\boldsymbol{\theta}$, залишки обчислюються рекурсивно:
+\begin{equation}
+\label{eq:residuals}
+\varepsilon_t(\boldsymbol{\theta}) = z_t - \sum_{i=1}^{p} \phi_i z_{t-i} - \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta})
+\end{equation}
+з початковими умовами $\varepsilon_t = 0$ для $t \leq 0$ та $z_t = \bar{z}$ для $t \leq 0$, де $\bar{z} = \frac{1}{n}\sum_{t=1}^{n} z_t$.
+
+\paragraph{Крок 3: Оцінювання вибіркових кумулянтів.}
+
+Для заданого $\boldsymbol{\theta}$, обчислюємо вибіркові кумулянти залишків:
+\begin{align}
+\hat{\kappa}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}) \label{eq:sample_k2} \\
+\hat{\kappa}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}) \label{eq:sample_k3} \\
+\hat{\kappa}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}) - 3\hat{\kappa}_2^2(\boldsymbol{\theta}) \label{eq:sample_k4}
+\end{align}
+
+\paragraph{Крок 4: Побудова стохастичного полінома.}
+
+Стохастичний поліном PMM2 для багатопараметричної моделі:
+\begin{equation}
+\label{eq:pmm2_multivariate}
+P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}) = \sum_{t=1}^{n} \left[ a_0 + a_1(\boldsymbol{\theta}) \varepsilon_t(\boldsymbol{\theta}) + a_2(\boldsymbol{\theta}) \varepsilon_t^2(\boldsymbol{\theta}) \right]
+\end{equation}
+де коефіцієнти визначаються через вибіркові кумулянти:
+\begin{align}
+a_0 &= \text{const} \label{eq:a0_arima} \\
+a_1(\boldsymbol{\theta}) &= \frac{\hat{\kappa}_3(\boldsymbol{\theta})}{4\hat{\kappa}_2(\boldsymbol{\theta}) + 2\hat{\kappa}_4(\boldsymbol{\theta})} \label{eq:a1_arima} \\
+a_2(\boldsymbol{\theta}) &= -\frac{\hat{\kappa}_3(\boldsymbol{\theta})}{2(4\hat{\kappa}_2(\boldsymbol{\theta}) + 2\hat{\kappa}_4(\boldsymbol{\theta}))} \label{eq:a2_arima}
+\end{align}
+
+\paragraph{Крок 5: Оцінювач PMM2 для ARIMA.}
+
+PMM2 оцінювач для ARIMA визначається як:
+\begin{equation}
+\label{eq:pmm2_arima_estimator}
+\hat{\boldsymbol{\theta}}_{\text{PMM2}} = \arg\max_{\boldsymbol{\theta} \in \Theta} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})
+\end{equation}
+де $\Theta$ --- простір параметрів, що задовольняє умови стаціонарності та оборотності.
+
+Еквівалентно, максимізація стохастичного полінома зводиться до розв'язання системи нелінійних рівнянь:
+\begin{equation}
+\label{eq:pmm2_system}
+\frac{\partial P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})}{\partial \boldsymbol{\theta}} = \mathbf{0}
+\end{equation}
+
+\subsubsection{Градієнт та Гессіан для Ньютона-Рафсона}
+
+Для ефективного розв'язання системи~\eqref{eq:pmm2_system}, використовуємо метод Ньютона-Рафсона, що потребує градієнта та Гессіана цільової функції.
+
+\paragraph{Градієнт.}
+
+$j$-й компонент градієнта:
+\begin{equation}
+\label{eq:gradient_j}
+\frac{\partial P_2}{\partial \theta_j} = \sum_{t=1}^{n} \left[ a_1 \frac{\partial \varepsilon_t}{\partial \theta_j} + 2 a_2 \varepsilon_t \frac{\partial \varepsilon_t}{\partial \theta_j} + \frac{\partial a_1}{\partial \theta_j} \varepsilon_t + \frac{\partial a_2}{\partial \theta_j} \varepsilon_t^2 \right]
+\end{equation}
+
+де $\frac{\partial \varepsilon_t}{\partial \theta_j}$ обчислюється рекурсивно з~\eqref{eq:residuals}:
+\begin{equation}
+\label{eq:residual_derivative}
+\frac{\partial \varepsilon_t}{\partial \theta_j} = \begin{cases}
+-z_{t-j} - \sum_{k=1}^{q} \theta_k \frac{\partial \varepsilon_{t-k}}{\partial \phi_j} & \text{якщо } \theta_j = \phi_j \text{ (AR параметр)} \\
+-\varepsilon_{t-j+p} - \sum_{k=1}^{q} \theta_k \frac{\partial \varepsilon_{t-k}}{\partial \theta_j} & \text{якщо } \theta_j \text{ (MA параметр)}
+\end{cases}
+\end{equation}
+
+\paragraph{Гессіан.}
+
+Елемент Гессіана:
+\begin{equation}
+\label{eq:hessian_jl}
+\frac{\partial^2 P_2}{\partial \theta_j \partial \theta_l} = \sum_{t=1}^{n} \left[ a_1 \frac{\partial^2 \varepsilon_t}{\partial \theta_j \partial \theta_l} + 2 a_2 \left( \frac{\partial \varepsilon_t}{\partial \theta_j} \frac{\partial \varepsilon_t}{\partial \theta_l} + \varepsilon_t \frac{\partial^2 \varepsilon_t}{\partial \theta_j \partial \theta_l} \right) + \cdots \right]
+\end{equation}
+
+На практиці, часто використовується наближення Гессіана або метод квазі-Ньютона (BFGS) для уникнення обчислення других похідних.
+
+\subsection{Алгоритм Оцінювання PMM2 для ARIMA}
+\label{subsec:algorithm}
+
+\begin{algorithm}[H]
+\caption{PMM2 для ARIMA(p,d,q)}
+\label{alg:pmm2_arima}
+\begin{algorithmic}[1]
+\REQUIRE Часовий ряд $\{y_t\}_{t=1}^T$, порядки $(p, d, q)$
+\ENSURE PMM2 оцінки параметрів $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$
+
+\STATE \textbf{Крок 1: Попередня обробка}
+\STATE Застосувати диференціювання: $z_t \leftarrow \Delta^d y_t$ для $t = d+1, \ldots, T$
+\STATE Обчислити $n \leftarrow T - d$
+\STATE Обчислити середнє: $\bar{z} \leftarrow \frac{1}{n}\sum_{t=1}^{n} z_t$
+
+\STATE \textbf{Крок 2: Ініціалізація}
+\STATE Отримати початкову оцінку $\boldsymbol{\theta}^{(0)}$ за допомогою CSS або OLS
+\STATE Встановити лічильник ітерацій: $k \leftarrow 0$
+\STATE Встановити критерій збіжності: $\epsilon \leftarrow 10^{-6}$
+
+\STATE \textbf{Крок 3: Ітераційна процедура Ньютона-Рафсона}
+\REPEAT
+    \STATE $k \leftarrow k + 1$
+
+    \STATE \textit{3.1. Обчислити залишки} $\varepsilon_t(\boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:residuals}
+
+    \STATE \textit{3.2. Обчислити вибіркові кумулянти} $\hat{\kappa}_2, \hat{\kappa}_3, \hat{\kappa}_4$ за формулами~\eqref{eq:sample_k2}--\eqref{eq:sample_k4}
+
+    \STATE \textit{3.3. Обчислити коефіцієнти} $a_1, a_2$ за формулами~\eqref{eq:a1_arima}--\eqref{eq:a2_arima}
+
+    \STATE \textit{3.4. Обчислити градієнт} $\mathbf{g}^{(k)} = \nabla_{\boldsymbol{\theta}} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:gradient_j}
+
+    \STATE \textit{3.5. Обчислити Гессіан} $\mathbf{H}^{(k)} = \nabla^2_{\boldsymbol{\theta}} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}^{(k-1)})$ або BFGS апроксимацію
+
+    \STATE \textit{3.6. Оновити параметри:} $\boldsymbol{\theta}^{(k)} \leftarrow \boldsymbol{\theta}^{(k-1)} - (\mathbf{H}^{(k)})^{-1} \mathbf{g}^{(k)}$
+
+    \STATE \textit{3.7. Перевірити обмеження:} Якщо $\boldsymbol{\theta}^{(k)}$ порушує стаціонарність/оборотність, проектувати на допустимий простір
+
+\UNTIL $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\| < \epsilon$ або $k > k_{\max}$
+
+\STATE \textbf{Крок 4: Фінальні обчислення}
+\STATE Повернути $\hat{\boldsymbol{\theta}}_{\text{PMM2}} \leftarrow \boldsymbol{\theta}^{(k)}$
+\STATE Обчислити оцінку дисперсії: $\hat{\sigma}^2 \leftarrow \hat{\kappa}_2(\hat{\boldsymbol{\theta}}_{\text{PMM2}})$
+
+\RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}}, \hat{\sigma}^2$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Обчислювальна складність.}
+
+\begin{itemize}
+    \item \textbf{Обчислення залишків:} $O(nk)$ операцій на ітерацію, де $k = p + q$.
+
+    \item \textbf{Обчислення кумулянтів:} $O(n)$ операцій на ітерацію.
+
+    \item \textbf{Обчислення градієнта:} $O(nk)$ операцій.
+
+    \item \textbf{Обчислення Гессіана:} $O(nk^2)$ операцій (або $O(k^2)$ для BFGS апроксимації).
+
+    \item \textbf{Розв'язання системи:} $O(k^3)$ операцій для обернення Гессіана.
+
+    \item \textbf{Загальна складність:} $O(I \cdot nk^2)$, де $I$ --- кількість ітерацій (типово $I = 10$--$50$).
+\end{itemize}
+
+Порівняно з класичним MLE, PMM2 має подібну обчислювальну складність, оскільки обидва методи потребують ітеративної оптимізації з обчисленням градієнтів та Гессіанів.
+
+\subsection{Асимптотичні Властивості PMM2 для ARIMA}
+\label{subsec:asymptotic_theory}
+
+\subsubsection{Консистентність}
+
+\begin{theorem}[Консистентність PMM2]
+\label{thm:consistency}
+За умови, що:
+\begin{enumerate}
+    \item ARIMA(p,d,q) модель правильно специфікована,
+    \item Інновації $\varepsilon_t$ є i.i.d. з нульовим середнім, скінченною дисперсією $\sigma^2 < \infty$, та скінченними моментами до четвертого порядку включно,
+    \item Справжній вектор параметрів $\boldsymbol{\theta}_0$ лежить у внутрішності компактного простору параметрів $\Theta$,
+    \item Умови стаціонарності та оборотності виконуються,
+\end{enumerate}
+PMM2 оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консистентним:
+\begin{equation}
+\label{eq:consistency}
+\hat{\boldsymbol{\theta}}_{\text{PMM2}} \xrightarrow{p} \boldsymbol{\theta}_0 \quad \text{при } n \to \infty
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Ескіз доведення]
+Доведення базується на застосуванні теорем про M-оцінки для часових рядів. Ключові кроки:
+\begin{enumerate}
+    \item Показати, що цільова функція $P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})/n$ збігається рівномірно до детермінованого ліміту $Q(\boldsymbol{\theta})$ за законом великих чисел для залежних даних (ергодична теорема).
+
+    \item Показати, що $Q(\boldsymbol{\theta})$ має єдиний максимум в $\boldsymbol{\theta}_0$.
+
+    \item Застосувати теорему 2.1 з White (1994) для M-оцінок часових рядів.
+\end{enumerate}
+Детальне доведення вимагає перевірки умов рівномірної збіжності та ідентифікації, що є стандартною процедурою для часових рядів.
+\end{proof}
+
+\subsubsection{Асимптотична Нормальність}
+
+\begin{theorem}[Асимптотична нормальність PMM2]
+\label{thm:asymptotic_normality}
+За умовами Теореми~\ref{thm:consistency}, PMM2 оцінювач є асимптотично нормальним:
+\begin{equation}
+\label{eq:asymptotic_normality}
+\sqrt{n}(\hat{\boldsymbol{\theta}}_{\text{PMM2}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}(0, \boldsymbol{\Sigma}_{\text{PMM2}})
+\end{equation}
+де асимптотична коваріаційна матриця:
+\begin{equation}
+\label{eq:asymptotic_covariance}
+\boldsymbol{\Sigma}_{\text{PMM2}} = \mathbf{A}^{-1} \mathbf{B} (\mathbf{A}^{-1})^\top
+\end{equation}
+з матрицями:
+\begin{align}
+\mathbf{A} &= \mathbb{E}\left[ -\frac{\partial^2 P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta} \partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_A} \\
+\mathbf{B} &= \mathbb{E}\left[ \frac{\partial P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}} \frac{\partial P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_B}
+\end{align}
+\end{theorem}
+
+\paragraph{Оцінювання асимптотичної коваріації.}
+
+На практиці, асимптотична коваріаційна матриця оцінюється як:
+\begin{equation}
+\label{eq:estimated_covariance}
+\hat{\boldsymbol{\Sigma}}_{\text{PMM2}} = \hat{\mathbf{A}}^{-1} \hat{\mathbf{B}} (\hat{\mathbf{A}}^{-1})^\top
+\end{equation}
+де $\hat{\mathbf{A}}$ та $\hat{\mathbf{B}}$ --- вибіркові аналоги матриць~\eqref{eq:matrix_A}--\eqref{eq:matrix_B}, обчислені при $\boldsymbol{\theta} = \hat{\boldsymbol{\theta}}_{\text{PMM2}}$.
+
+Стандартні похибки параметрів:
+\begin{equation}
+\label{eq:standard_errors}
+\text{SE}(\hat{\theta}_j) = \sqrt{\frac{[\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}]_{jj}}{n}}
+\end{equation}
+
+\subsubsection{Відносна Ефективність для ARIMA}
+
+Для багатопараметричних ARIMA моделей, відносна ефективність PMM2 щодо OLS може бути визначена через детермінанти або сліди коваріаційних матриць:
+
+\begin{equation}
+\label{eq:re_arima_det}
+RE_{\text{det}} = \left( \frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|} \right)^{1/k}
+\end{equation}
+
+або
+
+\begin{equation}
+\label{eq:re_arima_trace}
+RE_{\text{trace}} = \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})}
+\end{equation}
+
+Для простих ARIMA моделей (наприклад, ARIMA(1,1,0)), відносна ефективність добре апроксимується формулою~\eqref{eq:relative_efficiency}.
+
+\subsection{Практичні Аспекти Реалізації}
+\label{subsec:implementation}
+
+\subsubsection{Вибір Початкових Значень}
+
+Якість збіжності методу Ньютона-Рафсона суттєво залежить від початкових значень. Рекомендуємо наступну стратегію:
+
+\begin{enumerate}
+    \item \textbf{Метод Юла-Вокера} для AR компоненти для отримання початкових значень $\phi_1^{(0)}, \ldots, \phi_p^{(0)}$.
+
+    \item \textbf{Conditional Sum of Squares (CSS)} для повної ARIMA моделі.
+
+    \item \textbf{Перевірка стаціонарності:} Обчислити корені характеристичного полінома $\Phi(z) = 0$ та переконатися, що $|z_i| > 1$. Якщо умова порушується, відкоригувати початкові значення шляхом проектування на область стаціонарності.
+\end{enumerate}
+
+\subsubsection{Забезпечення Обмежень}
+
+Для забезпечення стаціонарності та оборотності під час ітераційної оптимізації:
+
+\paragraph{Параметризація через часткові автокореляції.}
+
+Використовуємо параметризацію Box-Jenkins через часткові автокореляції (PACF), що автоматично гарантує стаціонарність:
+\begin{equation}
+\label{eq:pacf_parameterization}
+\phi_1, \ldots, \phi_p = \text{PACF}^{-1}(\alpha_1, \ldots, \alpha_p), \quad \alpha_i \in (-1, 1)
+\end{equation}
+
+Аналогічно для MA параметрів через перетворення Ансомба.
+
+\paragraph{Проектування на допустимий простір.}
+
+Якщо оновлений параметр $\boldsymbol{\theta}^{(k)}$ порушує обмеження, проектуємо його на найближчу допустиму точку:
+\begin{equation}
+\label{eq:projection}
+\boldsymbol{\theta}^{(k)} \leftarrow \arg\min_{\tilde{\boldsymbol{\theta}} \in \Theta} \|\tilde{\boldsymbol{\theta}} - \boldsymbol{\theta}^{(k)}\|^2
+\end{equation}
+
+\subsubsection{Діагностика Залишків}
+
+Після оцінювання параметрів, необхідно перевірити адекватність моделі через аналіз залишків:
+
+\begin{enumerate}
+    \item \textbf{Тест Люнга-Бокса} для автокореляції залишків:
+    \begin{equation}
+    \label{eq:ljung_box}
+    Q(m) = n(n+2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{n-k} \sim \chi^2(m - p - q)
+    \end{equation}
+    де $\hat{\rho}_k$ --- вибіркова автокореляція залишків на лагу $k$.
+
+    \item \textbf{Оцінка кумулянтів залишків:} Обчислити $\hat{\gamma}_3$ та $\hat{\gamma}_4$ для верифікації припущень про розподіл інновацій.
+
+    \item \textbf{Візуальна діагностика:} ACF/PACF графіки, Q-Q plot, гістограма залишків.
+\end{enumerate}
+
+\subsubsection{Обчислювальна Стабільність}
+
+Для забезпечення числової стабільності:
+
+\begin{itemize}
+    \item \textbf{Нормалізація ряду:} Віднімаємо середнє та ділимо на стандартне відхилення.
+
+    \item \textbf{Регуляризація Гессіана:} Додаємо малу діагональну матрицю $\lambda \mathbf{I}$ до Гессіана для уникнення сингулярності.
+
+    \item \textbf{Line search:} Використовуємо line search (backtracking) для забезпечення збільшення цільової функції на кожній ітерації.
+\end{itemize}
+
+% ============================================
 % BIBLIOGRAPHY (Placeholder)
 % ============================================
 \bibliographystyle{plain}
