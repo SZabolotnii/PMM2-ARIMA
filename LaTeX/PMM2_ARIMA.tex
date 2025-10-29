@@ -8,6 +8,7 @@
 \usepackage{amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage[table]{xcolor}
 \usepackage{multirow}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -833,16 +834,16 @@ y_t = \sum_{j=1}^{d} \binom{d}{j} (-1)^{j+1} y_{t-j} + \sum_{i=1}^{p} \phi_i z_{
 \paragraph{Зміщеність (Bias).}
 \begin{equation}
 \label{eq:bias}
-\text{Bias}_M(\theta_j) = \frac{1}{R} \sum_{r=1}^{R} \left( \hat{\theta}_j^{(r)}_M - \theta_{j,0} \right)
+\text{Bias}_M(\theta_j) = \frac{1}{R} \sum_{r=1}^{R} \left( \hat{\theta}_{j,M}^{(r)} - \theta_{j,0} \right)
 \end{equation}
 де $R = 2000$ --- кількість повторень, $\theta_{j,0}$ --- справжнє значення параметра.
 
 \paragraph{Дисперсія (Variance).}
 \begin{equation}
 \label{eq:variance}
-\text{Var}_M(\theta_j) = \frac{1}{R-1} \sum_{r=1}^{R} \left( \hat{\theta}_j^{(r)}_M - \bar{\hat{\theta}}_j^M \right)^2
+\text{Var}_M(\theta_j) = \frac{1}{R-1} \sum_{r=1}^{R} \left( \hat{\theta}_{j,M}^{(r)} - \bar{\hat{\theta}}_j^M \right)^2
 \end{equation}
-де $\bar{\hat{\theta}}_j^M = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}_j^{(r)}_M$ --- вибіркове середнє оцінок.
+де $\bar{\hat{\theta}}_j^M = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}_{j,M}^{(r)}$ --- вибіркове середнє оцінок.
 
 \paragraph{Середньоквадратична похибка (MSE).}
 \begin{equation}
