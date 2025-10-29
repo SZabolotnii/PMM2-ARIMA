@@ -1,0 +1,214 @@
+\begin{thebibliography}{10}
+
+\bibitem{box2015time}
+George E.~P. Box, Gwilym~M. Jenkins, Gregory~C. Reinsel, and Greta~M. Ljung.
+\newblock {\em Time Series Analysis: Forecasting and Control}.
+\newblock John Wiley \& Sons, Hoboken, NJ, 5th edition, 2015.
+
+\bibitem{chepinoga2014polynomial}
+Andrii~V. Chepinoga, Serhii~W. Zabolotnii, and Kateryna~S. Vasiuta.
+\newblock Polynomial maximization method application for poly-gaussian random variables.
+\newblock {\em Przegląd Elektrotechniczny}, 90(12):242--245, 2014.
+
+\bibitem{dedomenico2023modeling}
+Filippo De~Domenico, Giacomo Livan, Guido Montagna, and Simone Righi.
+\newblock Modeling and simulation of financial returns under non-gaussian distributions.
+\newblock {\em Physica A: Statistical Mechanics and Its Applications}, 622:128886, 2023.
+
+\bibitem{dowe2025novel}
+David~L. Dowe, Shelton Peiris, and Ellie Kim.
+\newblock A novel arfima-ann hybrid model for forecasting time series---and its role in explainable ai.
+\newblock {\em Journal of Econometrics and Statistics}, 5(1):107--127, 2025.
+
+\bibitem{fruhwirth2006finite}
+Sylvia Frühwirth-Schnatter and Sylvia Kaufmann.
+\newblock Model-based clustering of multiple time series.
+\newblock {\em Journal of Business \& Economic Statistics}, 24(1):78--89, 2006.
+
+\bibitem{graves2014efficient}
+Tristan Graves, Robert~B. Gramacy, Christian L.~E. Franzke, and Nicholas~W. Watkins.
+\newblock Efficient bayesian inference for arfima processes.
+\newblock arXiv preprint arXiv:1403.2940, 2014.
+
+\bibitem{hampel1986robust}
+Frank~R. Hampel, Elvezio~M. Ronchetti, Peter~J. Rousseeuw, and Werner~A. Stahel.
+\newblock {\em Robust Statistics: The Approach Based on Influence Functions}.
+\newblock John Wiley \& Sons, New York, 1986.
+
+\bibitem{harvey2013dynamic}
+Andrew~C. Harvey.
+\newblock {\em Dynamic Models for Volatility and Heavy Tails: With Applications to Financial and Economic Time Series}.
+\newblock Cambridge University Press, Cambridge, 2013.
+
+\bibitem{huber1964robust}
+Peter~J. Huber.
+\newblock {\em Robust Estimation of a Location Parameter}, volume~35.
+\newblock 1964.
+
+\bibitem{hyndman2021forecasting}
+Rob~J. Hyndman and George Athanasopoulos.
+\newblock {\em Forecasting: Principles and Practice}.
+\newblock OTexts, 3rd edition, 2021.
+\newblock Accessed: 2025-01-15.
+
+\bibitem{jacks2024commodity}
+David~S. Jacks.
+\newblock Commodity prices and inflation: From the industrial revolution to the present.
+\newblock Cepr discussion paper, Centre for Economic Policy Research, 2024.
+
+\bibitem{katsouris2023quantile}
+Christos Katsouris.
+\newblock Quantile time series regression models revisited.
+\newblock arXiv preprint arXiv:2308.06617, 2023.
+
+\bibitem{kim2019fat}
+Min-Jae Kim and Soyoung Kim.
+\newblock Fat tails in korean stock market returns.
+\newblock arXiv preprint arXiv:1904.02567, 2019.
+
+\bibitem{kim2012approximation}
+Young~Shin Kim and Frank~J. Fabozzi.
+\newblock Approximation of skewed and leptokurtic return distributions.
+\newblock {\em Applied Financial Economics}, 22(16):1299--1316, 2012.
+
+\bibitem{koenker2005quantile}
+Roger Koenker.
+\newblock {\em Quantile Regression}.
+\newblock Cambridge University Press, Cambridge, 2005.
+
+\bibitem{koenker1978regression}
+Roger Koenker and Jr. Bassett, Gilbert.
+\newblock Regression quantiles.
+\newblock {\em Econometrica}, 46(1):33--50, 1978.
+
+\bibitem{kunchenko2002polynomial}
+Yuriy~P. Kunchenko.
+\newblock {\em Polynomial Parameter Estimations of Close to Gaussian Random Variables}.
+\newblock Shaker Verlag, Aachen, Germany, 2002.
+
+\bibitem{ledolter1989inference}
+Johannes Ledolter.
+\newblock Inference robustness of arima models under non-normality.
+\newblock {\em Metrika}, 26:43--56, 1989.
+
+\bibitem{li2020forecasting}
+Long Li, Siyu Leng, Jun Yang, and Guang Yu.
+\newblock On the forecasting of high-frequency financial time series based on arima model improved by deep learning.
+\newblock {\em Journal of Forecasting}, 39(7):1081--1097, 2020.
+
+\bibitem{ling2005self}
+Shiqing Ling.
+\newblock Self-weighted least absolute deviation estimation for infinite variance autoregressive models.
+\newblock {\em Journal of the Royal Statistical Society: Series B}, 67(3):381--393, 2005.
+
+\bibitem{markiewicz2021time}
+Marcin Markiewicz and Agnieszka Wyłomańska.
+\newblock Time series forecasting: Problem of heavy-tailed distributed noise.
+\newblock {\em International Journal of Advances in Engineering Sciences and Applied Mathematics}, 13:248--256, 2021.
+
+\bibitem{muler2009robust}
+Nora Muler, Daniel Peña, and Victor~J. Yohai.
+\newblock Robust estimation for arma models.
+\newblock {\em The Annals of Statistics}, 37(2):816--840, 2009.
+
+\bibitem{nakajima2012generalized}
+Jouchi Nakajima and Yasuhiro Omori.
+\newblock Stochastic volatility model with leverage and asymmetrically heavy-tailed error using gh skew student's t-distribution.
+\newblock {\em Computational Statistics \& Data Analysis}, 56(11):3690--3704, 2012.
+
+\bibitem{palacios2024comparative}
+M.~Belén Palacios and M.~Reyes Nieto.
+\newblock A comparative study of error distributions in garch models.
+\newblock {\em Journal of Statistical Computation and Simulation}, 94(3):567--589, 2024.
+
+\bibitem{palahin2016joint}
+Volodymyr Palahin and Jozef Juhár.
+\newblock Joint signal parameter estimation in non-gaussian noise by the method of polynomial maximization.
+\newblock {\em Journal of Electrical Engineering}, 67(3):217--221, 2016.
+
+\bibitem{peng2003least}
+Liang Peng and Qiwei Yao.
+\newblock Least absolute deviations estimation for arch and garch models.
+\newblock {\em Biometrika}, 90(4):967--975, 2003.
+
+\bibitem{potscher1991noninvertibility}
+Benedikt~M. Pötscher.
+\newblock Noninvertibility and pseudo-maximum likelihood estimation of misspecified arma models.
+\newblock {\em Econometric Theory}, 7(4):435--449, 1991.
+
+\bibitem{qi2010non}
+Li~Qi and Jianqing Fan.
+\newblock Non-gaussian quasi maximum likelihood estimation of garch models.
+\newblock arXiv preprint arXiv:1001.3895, 2010.
+
+\bibitem{reisen2024robust}
+Valdério~Anselmo Reisen, Céline Lévy-Leduc, and Camila~Cristina Solci.
+\newblock A robust m-estimator for gaussian arma time series based on the whittle approximation.
+\newblock {\em Applied Mathematical Modelling}, 129:209--228, 2024.
+
+\bibitem{saraiva2025modeling}
+Erlandson~Ferreira Saraiva, Adriano~Kamimura Suzuki, and Luis~Aparecido Milan.
+\newblock Modeling time series with sarimax and skew-normal and zero-inflated skew-normal errors.
+\newblock {\em Mathematics}, 13(11):1892, 2025.
+
+\bibitem{verma2024optimal}
+Vaibhav Verma, Mohammed Yousuf, and Mainak~M. Panja.
+\newblock On the optimal prediction of extreme events in heavy-tailed time series with applications to solar flare forecasting.
+\newblock arXiv preprint arXiv:2407.11887, 2024.
+
+\bibitem{viswanathan2003quantifying}
+G.~M. Viswanathan, C.-K. Peng, H.~E. Stanley, and A.~L. Goldberger.
+\newblock Quantifying long-range correlations in complex systems.
+\newblock {\em Physica A: Statistical Mechanics and Its Applications}, 316(1-4):87--114, 2003.
+
+\bibitem{warsza2017polynomial}
+Zygmunt~L. Warsza and Serhii~W. Zabolotnii.
+\newblock A polynomial estimation of measurand parameters for samples of non-gaussian symmetrically distributed data.
+\newblock In Roman Szewczyk, Cezary Zieliński, and Małgorzata Kaliczyńska, editors, {\em Automation 2017: Advances in Intelligent Systems and Computing}, volume 550, pages 468--480, Cham, 2017. Springer.
+
+\bibitem{wong2009student}
+Chun~Shan Wong, Wai~Sum Chan, and Pui~Lam Kam.
+\newblock A student-t mixture autoregressive model with applications to heavy-tailed financial data.
+\newblock {\em Biometrika}, 96(3):751--760, 2009.
+
+\bibitem{zabolotnii2021estimating}
+Serhii Zabolotnii, Volodymyr Khotunov, Andrii Chepynoha, and Oleksandr Tkachenko.
+\newblock Estimating parameters of linear regression with an exponential power distribution of errors by using a polynomial maximization method.
+\newblock {\em Eastern-European Journal of Enterprise Technologies}, 1(4-109):64--73, 2021.
+
+\bibitem{zabolotnii2018polynomial}
+Serhii~W. Zabolotnii, Zygmunt~L. Warsza, and Oleksandr Tkachenko.
+\newblock Polynomial estimation of linear regression parameters for the asymmetric pdf of errors.
+\newblock In Roman Szewczyk, Cezary Zieliński, and Małgorzata Kaliczyńska, editors, {\em Automation 2018: Advances in Intelligent Systems and Computing}, volume 743, pages 758--772, Cham, 2018. Springer.
+
+\bibitem{zabolotnii2020estimation}
+Serhii~W. Zabolotnii, Zygmunt~L. Warsza, and Oleksandr Tkachenko.
+\newblock Estimation of linear regression parameters of symmetric non-gaussian errors by polynomial maximization method.
+\newblock In Roman Szewczyk, Jurek Sąsiadek, and Małgorzata Kaliczyńska, editors, {\em Automation 2019: Advances in Intelligent Systems and Computing}, volume 920, pages 636--649, Cham, 2020. Springer.
+
+\bibitem{zhang2012maximum}
+Rongmao Zhang and Chor-Yiu Sin.
+\newblock Maximum likelihood estimation for nearly non-stationary stable autoregressive processes.
+\newblock {\em Journal of Time Series Analysis}, 33(3):424--439, 2012.
+
+\bibitem{zhu2015model}
+Ke~Zhu and Shiqing Ling.
+\newblock Model-based pricing for financial derivatives with negative skewness and excess kurtosis.
+\newblock {\em Econometric Theory}, 31(6):1199--1242, 2015.
+
+\bibitem{slezak2023application}
+Jarosław Ślęzak, Anna Szczepaniec, and Agnieszka Wyłomańska.
+\newblock Application of mixed-stable models to high-frequency financial data.
+\newblock {\em Entropy}, 25(2):351, 2023.
+
+\bibitem{kunchenko2006stochastic}
+Ю.~П. Кунченко.
+\newblock {\em Стохастичні поліноми}.
+\newblock Наукова думка, Київ, 2006.
+
+\bibitem{kunchenko1991estimation}
+Ю.~П. Кунченко and Ю.~Г. Лега.
+\newblock {\em Оцінювання параметрів випадкових величин методом максимізації поліномів}.
+\newblock Наукова думка, Київ, 1991.
+
+\end{thebibliography}

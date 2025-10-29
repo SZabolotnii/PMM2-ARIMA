@@ -405,6 +405,9 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
 INPUT /Users/serhiizabolotnii/Library/texlive/2025/texmf-var/fonts/tfm/lh/lh-t2a/labx1000.tfm
+INPUT ./PMM2_ARIMA_.bbl
+INPUT ./PMM2_ARIMA_.bbl
+INPUT PMM2_ARIMA_.bbl
 INPUT PMM2_ARIMA_.aux
 INPUT ./PMM2_ARIMA_.out
 INPUT ./PMM2_ARIMA_.out

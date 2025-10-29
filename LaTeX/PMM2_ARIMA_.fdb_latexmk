@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex PMM2_ARIMA_"] 1761723482.59215 "PMM2_ARIMA_.aux" "PMM2_ARIMA_.bbl" "PMM2_ARIMA_" 1761723484.70453 0
+["bibtex PMM2_ARIMA_"] 1761723524.13131 "PMM2_ARIMA_.aux" "PMM2_ARIMA_.bbl" "PMM2_ARIMA_" 1761723531.40272 0
   "./references.bib" 1761669796.66805 16571 9cc3fddd559b7bb946967de62349a434 ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "PMM2_ARIMA_.aux" 1761723484.23593 45208 c150b4d5b34e1de2fd0b5800988ed97c "pdflatex"
+  "PMM2_ARIMA_.aux" 1761723531.00633 46612 2ae1e7b1e6771b8d6cb6c5693b2477b3 "pdflatex"
   (generated)
   "PMM2_ARIMA_.bbl"
   "PMM2_ARIMA_.blg"
   (rewritten before read)
-["pdflatex"] 1761723482.7059 "/Users/serhiizabolotnii/R/PMM2-ARIMA/LaTeX/PMM2_ARIMA_.tex" "PMM2_ARIMA_.pdf" "PMM2_ARIMA_" 1761723484.70493 2
+["pdflatex"] 1761723529.41046 "/Users/serhiizabolotnii/R/PMM2-ARIMA/LaTeX/PMM2_ARIMA_.tex" "PMM2_ARIMA_.pdf" "PMM2_ARIMA_" 1761723531.40364 2
   "/Users/serhiizabolotnii/Library/texlive/2025/texmf-var/fonts/tfm/lh/lh-t2a/labx1000.tfm" 1761722830.39252 3300 6abb8e321227ead2a8e929e5abc72bd3 ""
   "/Users/serhiizabolotnii/Library/texlive/2025/texmf-var/fonts/tfm/lh/lh-t2a/labx1095.tfm" 1753635364.65939 3336 216c27338cb0f11f0d2908d69ce3de23 ""
   "/Users/serhiizabolotnii/Library/texlive/2025/texmf-var/fonts/tfm/lh/lh-t2a/labx1200.tfm" 1753635367.39437 3308 eee81981029f67083258db36df06e523 ""
@@ -284,11 +284,11 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1753635178 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1753635129 3345736 adfd9f4852ea84de82163b795a3ab81c ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "PMM2_ARIMA_.aux" 1761723484.23593 45208 c150b4d5b34e1de2fd0b5800988ed97c "pdflatex"
-  "PMM2_ARIMA_.bbl" 0 -1 0 "bibtex PMM2_ARIMA_"
-  "PMM2_ARIMA_.out" 1761723484.28376 28349 0ae1ba6f9c386252bc76299457a75620 "pdflatex"
+  "PMM2_ARIMA_.aux" 1761723531.00633 46612 2ae1e7b1e6771b8d6cb6c5693b2477b3 "pdflatex"
+  "PMM2_ARIMA_.bbl" 1761723524.24411 9927 b9c1d26edfa84d0acfc3831cf88b3e7a "bibtex PMM2_ARIMA_"
+  "PMM2_ARIMA_.out" 1761723531.01491 28349 0ae1ba6f9c386252bc76299457a75620 "pdflatex"
   "PMM2_ARIMA_.tex" 1761723345.99754 167873 02e869abb792c12e206ed1af83f3da9c ""
-  "PMM2_ARIMA_.toc" 1761723484.28666 18661 cb7d2bd04230429e3b07ab634fafd98c "pdflatex"
+  "PMM2_ARIMA_.toc" 1761723531.0186 18661 cb7d2bd04230429e3b07ab634fafd98c "pdflatex"
   (generated)
   "PMM2_ARIMA_.aux"
   "PMM2_ARIMA_.log"
