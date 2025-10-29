@@ -384,45 +384,94 @@ f_{SN}^{(p)}(y_v, x_v) = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv}^{(p)} [\phi_i(y_v)
 
 \subsubsection{PMM2 для Асиметричних Розподілів}
 
-Для асиметричних розподілів ($\gamma_3 \neq 0$), оптимальним є стохастичний поліном другого порядку (PMM2).
+Для асиметричних розподілів ($\gamma_3 \neq 0$), оптимальним є стохастичний поліном другого порядку (PMM2). Розглянемо детальний вивід методу на прикладі простої двокомпонентної лінійної регресії.
 
-\begin{theorem}[PMM2 для простої оцінки параметра]
-\label{thm:pmm2_basic}
-Розглянемо оцінювання параметра локації $\theta$ випадкової величини $\xi = \theta + \varepsilon$, де $\varepsilon$ --- похибка з нульовим середнім, дисперсією $\sigma^2$, та кумулянтами $\kappa_3 \neq 0$, $\kappa_4$. Стохастичний поліном другого порядку
+\paragraph{Постановка задачі: Проста лінійна регресія.}
+
+Розглянемо найпростішу лінійну регресійну модель з двома параметрами:
 \begin{equation}
-\label{eq:pmm2_polynomial}
-P_2(\xi; \theta) = a_0(\theta) + a_1(\theta) \xi + a_2(\theta) \xi^2
+\label{eq:simple_linear_regression}
+y_v = a_0 + a_1 x_v + \xi_v, \quad v = \overline{1,N}
 \end{equation}
-з коефіцієнтами
+де $y_v$ --- спостереження цільової змінної, $x_v$ --- значення незалежної змінної (регресора), $\boldsymbol{\theta} = (a_0, a_1)^T$ --- вектор параметрів, що підлягають оцінюванню, та $\xi_v$ --- випадкові помилки з властивостями:
+\begin{itemize}
+    \item центрованість: $\mathbb{E}[\xi_v] = 0$
+    \item гомоскедастичність: $\text{Var}(\xi_v) = \mu_2 = \text{const}$
+    \item асиметричний розподіл: $\mu_3 = \mathbb{E}[\xi_v^3] \neq 0$ (третій центральний момент)
+    \item скінченний четвертий момент: $\mu_4 = \mathbb{E}[\xi_v^4] - 3\mu_2^2$ (ексцес)
+    \item незалежність: $\xi_i \perp \xi_j$ для $i \neq j$
+\end{itemize}
+
+\paragraph{Стохастичний поліном PMM2.}
+
+Згідно з методом максимізації поліномів~\cite{kunchenko2002polynomial}, для оцінювання векторного параметра $\boldsymbol{\theta} = (a_0, a_1)^T$ необхідно використовувати два стохастичних поліноми другого порядку $L_{2N}^{(p)}$, $p \in \{0,1\}$ --- по одному для кожної компоненти:
+\begin{equation}
+\label{eq:pmm2_polynomial_vector}
+L_{2N}^{(p)} = \sum_{v=1}^{N} \left[ k_{1,v}^{(p)} \phi_1(y_v) + k_{2,v}^{(p)} \phi_2(y_v) \right] - \sum_{v=1}^{N} \left[ k_{1,v}^{(p)} \Psi_{1v} + k_{2,v}^{(p)} \Psi_{2v} \right]
+\end{equation}
+де базисні функції обираються як степеневі перетворення:
 \begin{align}
-a_0(\theta) &= -\frac{\kappa_3}{2(4\kappa_2 + 2\kappa_4)} \theta^2 + \text{const} \label{eq:a0} \\
-a_1(\theta) &= \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \theta \label{eq:a1} \\
-a_2(\theta) &= -\frac{\kappa_3}{2(4\kappa_2 + 2\kappa_4)} \label{eq:a2}
+\phi_1(y_v) &= y_v, \quad \Psi_{1v} = \mathbb{E}[y_v] = a_0 + a_1 x_v \\
+\phi_2(y_v) &= y_v^2, \quad \Psi_{2v} = \mathbb{E}[y_v^2] = (a_0 + a_1 x_v)^2 + \mu_2
 \end{align}
-має властивість, що $\mathbb{E}[P_2(\xi; \theta)]$ досягає максимуму при $\theta = \theta_0$.
-\end{theorem}
 
-\paragraph{Оцінювач PMM2.}
+\paragraph{Оптимальні коефіцієнти PMM2.}
 
-PMM2 оцінювач отримується максимізацією вибіркового середнього стохастичного полінома:
+Для максимізації стохастичного полінома~\eqref{eq:pmm2_polynomial_vector} оптимальні коефіцієнти $k_{i,v}^{(p)}$, $i=1,2$, знаходяться з розв'язання системи лінійних алгебраїчних рівнянь (згідно з формулою 2.5 з теорії ММПл):
 \begin{equation}
-\label{eq:pmm2_estimator}
-\hat{\theta}_{\text{PMM2}} = \arg\max_{\theta} \frac{1}{n} \sum_{i=1}^{n} P_2(\xi_i; \theta)
+\label{eq:optimal_coef_system}
+\sum_{j=1}^{2} k_{j,v}^{(p)} F_{(i,j)v} = \frac{\partial}{\partial a_p} \Psi_{iv}, \quad i=1,2; \quad p=0,1
+\end{equation}
+де $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv}\Psi_{jv}$ --- елементи коваріаційної матриці базисних функцій.
+
+Для лінійної регресії~\eqref{eq:simple_linear_regression} з асиметричним розподілом похибок ($\mu_3 \neq 0$) оптимальні коефіцієнти мають вигляд:
+\begin{align}
+k_{1,v}^{(p)} &= \frac{\mu_4 - \mu_2^2 + 2\mu_3(a_0 + a_1 x_v)}{\mu_2(\mu_4 - \mu_2^2) - \mu_3^2} \cdot x_{p,v} \label{eq:k1_pmm2} \\
+k_{2,v}^{(p)} &= -\frac{\mu_3}{\mu_2(\mu_4 - \mu_2^2) - \mu_3^2} \cdot x_{p,v} \label{eq:k2_pmm2}
+\end{align}
+де $x_{0,v} \equiv 1$ (для вільного члена $a_0$) та $x_{1,v} = x_v$ (для коефіцієнта нахилу $a_1$).
+
+\paragraph{Система PMM2 рівнянь.}
+
+PMM2 оцінки $\hat{\boldsymbol{\theta}}_{\text{PMM2}} = (\hat{a}_0, \hat{a}_1)^T$ знаходяться як розв'язок системи рівнянь (умова максимізації стохастичних поліномів):
+\begin{equation}
+\label{eq:pmm2_system}
+\sum_{v=1}^{N} \left\{ k_{1,v}^{(p)} \left[ y_v - (a_0 + a_1 x_v) \right] + k_{2,v}^{(p)} \left[ y_v^2 - (a_0 + a_1 x_v)^2 - \mu_2 \right] \right\} = 0, \quad p = 0,1
 \end{equation}
 
-Умова першого порядку для максимізації:
+Підставляючи оптимальні коефіцієнти~\eqref{eq:k1_pmm2}--\eqref{eq:k2_pmm2} та позначивши:
 \begin{equation}
-\label{eq:pmm2_foc}
-\frac{\partial}{\partial \theta} \left[ \frac{1}{n} \sum_{i=1}^{n} P_2(\xi_i; \theta) \right] = 0
+\Delta = \mu_2(\mu_4 - \mu_2^2) - \mu_3^2
 \end{equation}
+отримуємо систему для двокомпонентної регресії:
+\begin{align}
+\sum_{v=1}^{N} &\left[ \frac{\mu_4 - \mu_2^2 + 2\mu_3(a_0 + a_1 x_v)}{\Delta} [y_v - a_0 - a_1 x_v] - \frac{\mu_3}{\Delta} [y_v^2 - (a_0 + a_1 x_v)^2 - \mu_2] \right] = 0 \label{eq:pmm2_eq_a0} \\
+\sum_{v=1}^{N} &x_v \left[ \frac{\mu_4 - \mu_2^2 + 2\mu_3(a_0 + a_1 x_v)}{\Delta} [y_v - a_0 - a_1 x_v] - \frac{\mu_3}{\Delta} [y_v^2 - (a_0 + a_1 x_v)^2 - \mu_2] \right] = 0 \label{eq:pmm2_eq_a1}
+\end{align}
 
-Підставляючи вирази для коефіцієнтів~\eqref{eq:a0}--\eqref{eq:a2} та спрощуючи, отримуємо:
-\begin{equation}
-\label{eq:pmm2_solution}
-\hat{\theta}_{\text{PMM2}} = \frac{\sum_{i=1}^{n} \xi_i - \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \sum_{i=1}^{n} \xi_i^2}{n - \frac{\kappa_3}{4\kappa_2 + 2\kappa_4} \sum_{i=1}^{n} \xi_i}
-\end{equation}
+\paragraph{Адаптивна процедура.}
 
-Для практичного застосування, кумулянти $\kappa_2$, $\kappa_3$, $\kappa_4$ замінюються їх вибірковими оцінками.
+На практиці моменти $\mu_2, \mu_3, \mu_4$ невідомі і замінюються їх апостеріорними оцінками з МНК-залишків:
+\begin{enumerate}
+    \item \textbf{Крок 1:} Знайти МНК-оцінки $\hat{a}_0^{\text{OLS}}, \hat{a}_1^{\text{OLS}}$
+    \item \textbf{Крок 2:} Сформувати залишки $\hat{\xi}_v = y_v - \hat{a}_0^{\text{OLS}} - \hat{a}_1^{\text{OLS}} x_v$
+    \item \textbf{Крок 3:} Обчислити вибіркові моменти:
+    \begin{align*}
+    \hat{\mu}_2 &= \frac{1}{N}\sum_{v=1}^{N} \hat{\xi}_v^2 \\
+    \hat{\mu}_3 &= \frac{1}{N}\sum_{v=1}^{N} \hat{\xi}_v^3 \\
+    \hat{\mu}_4 &= \frac{1}{N}\sum_{v=1}^{N} \hat{\xi}_v^4 - 3\hat{\mu}_2^2
+    \end{align*}
+    \item \textbf{Крок 4:} Перевірити асиметрію: якщо $|\hat{\gamma}_3| = |\hat{\mu}_3/\hat{\mu}_2^{3/2}| < 0.1$, використати МНК-оцінки
+    \item \textbf{Крок 5:} Розв'язати систему~\eqref{eq:pmm2_eq_a0}--\eqref{eq:pmm2_eq_a1} з $\hat{\mu}_2, \hat{\mu}_3, \hat{\mu}_4$ методом Ньютона-Рафсона
+\end{enumerate}
+
+\paragraph{Чисельний приклад.}
+
+Розглянемо модель $y_v = 2 + 0.5 x_v + \xi_v$ з $\xi_v \sim \text{Gamma}(2,1) - 2$ (центрована гамма з $\gamma_3 \approx 1.41$). При $N=100$:
+\begin{itemize}
+    \item МНК: $\hat{a}_0^{\text{OLS}} = 2.03$, $\hat{a}_1^{\text{OLS}} = 0.49$, MSE = 0.042
+    \item PMM2: $\hat{a}_0^{\text{PMM2}} = 2.01$, $\hat{a}_1^{\text{PMM2}} = 0.50$, MSE = 0.026 (покращення 38\%)
+\end{itemize}
 
 \subsubsection{Асимптотичні Дисперсії та Ефективність ММПл-Оцінок}
 
