@@ -694,6 +694,13 @@ J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\parti
 \subsection{Асимптотичні Властивості PMM2 для ARIMA}
 \label{subsec:asymptotic_theory}
 
+Для аналізу асимптотики перепишемо систему умов~\eqref{eq:pmm2_score_arima} у вигляді усередненого вектору моментних рівнянь. Нехай $k = p+q$ --- кількість параметрів та
+\begin{equation}
+\label{eq:gn_definition}
+\mathbf{g}_n(\boldsymbol{\theta}) = \frac{1}{n} \sum_{t=1}^{n} \boldsymbol{\psi}_t(\boldsymbol{\theta}), \qquad \boldsymbol{\psi}_t(\boldsymbol{\theta}) = \big(x_{1,t}(\boldsymbol{\theta}) s_t(\boldsymbol{\theta}), \ldots, x_{k,t}(\boldsymbol{\theta}) s_t(\boldsymbol{\theta})\big)^\top.
+\end{equation}
+Тоді оцінювач PMM2 визначається умовою $\mathbf{g}_n(\hat{\boldsymbol{\theta}}_{\text{PMM2}}) = \mathbf{0}$, тобто є Z-оцінкою у сенсі Newey \& McFadden (1994).
+
 \subsubsection{Консистентність}
 
 \begin{theorem}[Консистентність PMM2]
@@ -715,11 +722,11 @@ PMM2 оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консис�
 \begin{proof}[Ескіз доведення]
 Доведення базується на застосуванні теорем про M-оцінки для часових рядів. Ключові кроки:
 \begin{enumerate}
-    \item Показати, що цільова функція $P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})/n$ збігається рівномірно до детермінованого ліміту $Q(\boldsymbol{\theta})$ за законом великих чисел для залежних даних (ергодична теорема).
+    \item Показати, що $\mathbf{g}_n(\boldsymbol{\theta})$ збігається рівномірно до $\mathbf{g}(\boldsymbol{\theta}) = \mathbb{E}[\boldsymbol{\psi}_t(\boldsymbol{\theta})]$ за законом великих чисел для ергодичних процесів.
 
-    \item Показати, що $Q(\boldsymbol{\theta})$ має єдиний максимум в $\boldsymbol{\theta}_0$.
+    \item Показати, що система моментних рівнянь $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$ має єдиний розв'язок у $\boldsymbol{\theta}_0$ (умова ідентифікації).
 
-    \item Застосувати теорему 2.1 з White (1994) для M-оцінок часових рядів.
+    \item Застосувати теорему 2.1 з White (1994) або теорему 7.1 з Newey \& McFadden (1994) для Z-оцінок з залежними даними.
 \end{enumerate}
 Детальне доведення вимагає перевірки умов рівномірної збіжності та ідентифікації, що є стандартною процедурою для часових рядів.
 \end{proof}
@@ -740,8 +747,8 @@ PMM2 оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консис�
 \end{equation}
 з матрицями:
 \begin{align}
-\mathbf{A} &= \mathbb{E}\left[ -\frac{\partial^2 P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta} \partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_A} \\
-\mathbf{B} &= \mathbb{E}\left[ \frac{\partial P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}} \frac{\partial P_2(\varepsilon_t; \boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_B}
+\mathbf{A} &= \mathbb{E}\left[ \frac{\partial \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_A} \\
+\mathbf{B} &= \mathbb{E}\left[ \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)\, \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)^\top \right] \label{eq:matrix_B}
 \end{align}
 \end{theorem}
 
@@ -752,7 +759,7 @@ PMM2 оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консис�
 \label{eq:estimated_covariance}
 \hat{\boldsymbol{\Sigma}}_{\text{PMM2}} = \hat{\mathbf{A}}^{-1} \hat{\mathbf{B}} (\hat{\mathbf{A}}^{-1})^\top
 \end{equation}
-де $\hat{\mathbf{A}}$ та $\hat{\mathbf{B}}$ --- вибіркові аналоги матриць~\eqref{eq:matrix_A}--\eqref{eq:matrix_B}, обчислені при $\boldsymbol{\theta} = \hat{\boldsymbol{\theta}}_{\text{PMM2}}$.
+де $\hat{\mathbf{A}} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})}{\partial \boldsymbol{\theta}^\top}$ та $\hat{\mathbf{B}} = \frac{1}{n} \sum_{t=1}^{n} \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})\, \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})^\top$ --- вибіркові аналоги матриць~\eqref{eq:matrix_A}--\eqref{eq:matrix_B}.
 
 Стандартні похибки параметрів:
 \begin{equation}
@@ -776,7 +783,7 @@ RE_{\text{det}} = \left( \frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{
 RE_{\text{trace}} = \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})}
 \end{equation}
 
-Для простих ARIMA моделей (наприклад, ARIMA(1,1,0)), відносна ефективність добре апроксимується формулою~\eqref{eq:relative_efficiency}.
+В асимптотичному випадку із ростом обсягу вібірок, відносна ефективність добре апроксимується формулою~\eqref{eq:re_pmm2_ols}.
 
 \subsection{Практичні Аспекти Реалізації}
 \label{subsec:implementation}
