@@ -515,106 +515,113 @@ J_{2N}^{(p,q)} = \frac{\mu_4^2 - \mu_2\mu_4}{\mu_2(\mu_4^2 - \mu_2\mu_4 + \mu_3^
 Пряме застосування PMM2 до ARIMA моделей стикається з декількома викликами:
 
 \begin{enumerate}
-    \item \textbf{Нестаціонарність:} Диференціювання вносить додаткові джерела варіації.
+    \item \textbf{Нестаціонарність:} оператор диференціювання $\Delta^d$ змінює дисперсійну структуру та вимагає повторного визначення інформаційної матриці.
 
-    \item \textbf{Часова залежність:} Інновації $\varepsilon_t$ не спостерігаються безпосередньо, а обчислюються рекурсивно через залишки.
+    \item \textbf{Часова залежність:} інновації $\varepsilon_t$ не спостерігаються безпосередньо і відновлюються через рекурсію, що впливає на побудову регресорів $x_{p,t}$ у системі~\eqref{eq:pmm2_system_general}.
 
-    \item \textbf{Багатопараметричність:} ARIMA моделі мають $k = p + q$ параметрів, що потребує багатовимірної оптимізації.
+    \item \textbf{Багатопараметричність:} вектор параметрів $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ визначає як середню, так і шумову компоненти, отже всі $Q = p+q$ поліномів $L_{2N}^{(p)}$ з підрозділу~\ref{subsec:pmm_theory} взаємопов'язані.
 
-    \item \textbf{Ідентифікованість:} Необхідно забезпечити умови стаціонарності та оборотності.
+    \item \textbf{Ідентифікованість:} необхідно підтримувати умови стаціонарності та оборотності для того, щоб існували моменти, використані в Теоремі~\ref{thm:relative_efficiency_pmm2}.
 \end{enumerate}
 
-\subsubsection{Формулювання PMM2 для ARIMA}
+\subsubsection{Моментно-кумулянтне Формулювання PMM2 для ARIMA}
 
-Розглянемо ARIMA(p,d,q) модель з вектором параметрів $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$.
-
-\paragraph{Крок 1: Диференціювання.}
-
-Застосовуємо диференціювання порядку $d$ до вихідного ряду:
+Розглянемо ARIMA$(p,d,q)$ модель
+\begin{equation}
+\label{eq:arima_definition}
+\Phi(B)(1-B)^d y_t = \Theta(B) \varepsilon_t,\qquad \varepsilon_t \sim \text{i.i.d. }(0,\sigma^2),
+\end{equation}
+де $B$ --- оператор зсуву ($By_t = y_{t-1}$), $\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ та $\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$. Після диференціювання отримаємо стаціонарний ряд
 \begin{equation}
 \label{eq:differenced_series}
-z_t = \Delta^d y_t, \quad t = d+1, \ldots, T
+z_t = \Delta^d y_t,\qquad t=d+1,\ldots,T,\qquad n = T-d.
 \end{equation}
 
-Це дає стаціонарний ряд довжини $n = T - d$.
-
-\paragraph{Крок 2: Обчислення залишків.}
-
-Для заданого вектора параметрів $\boldsymbol{\theta}$, залишки обчислюються рекурсивно:
+Для будь-якого вектора параметрів $\boldsymbol{\theta}$ визначимо залишки як
 \begin{equation}
 \label{eq:residuals}
-\varepsilon_t(\boldsymbol{\theta}) = z_t - \sum_{i=1}^{p} \phi_i z_{t-i} - \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta})
+\varepsilon_t(\boldsymbol{\theta}) = z_t - \sum_{i=1}^{p} \phi_i z_{t-i} - \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta}),
 \end{equation}
-з початковими умовами $\varepsilon_t = 0$ для $t \leq 0$ та $z_t = \bar{z}$ для $t \leq 0$, де $\bar{z} = \frac{1}{n}\sum_{t=1}^{n} z_t$.
+з ініціалізаціями $\varepsilon_t = 0$ та $z_t = \bar{z}$ для $t \leq 0$, де $\bar{z} = \frac{1}{n}\sum_{t=1}^{n} z_t$.
 
-\paragraph{Крок 3: Оцінювання вибіркових кумулянтів.}
-
-Для заданого $\boldsymbol{\theta}$, обчислюємо вибіркові кумулянти залишків:
-\begin{align}
-\hat{\kappa}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}) \label{eq:sample_k2} \\
-\hat{\kappa}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}) \label{eq:sample_k3} \\
-\hat{\kappa}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}) - 3\hat{\kappa}_2^2(\boldsymbol{\theta}) \label{eq:sample_k4}
-\end{align}
-
-\paragraph{Крок 4: Побудова стохастичного полінома.}
-
-Стохастичний поліном PMM2 для багатопараметричної моделі:
+Як показано у підрозділі~\ref{subsec:pmm_theory}, система~\eqref{eq:pmm2_system_general} будується через регресори $x_{p,t}$, що в лінійній моделі збігаються з елементами матриці $\boldsymbol{X}$. Для ARIMA моделі детермінована частина
 \begin{equation}
-\label{eq:pmm2_multivariate}
-P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}) = \sum_{t=1}^{n} \left[ a_0 + a_1(\boldsymbol{\theta}) \varepsilon_t(\boldsymbol{\theta}) + a_2(\boldsymbol{\theta}) \varepsilon_t^2(\boldsymbol{\theta}) \right]
+\label{eq:eta_definition}
+\eta_t(\boldsymbol{\theta}) = \mathbb{E}\left[z_t \mid \mathcal{F}_{t-1}\right] = \sum_{i=1}^{p} \phi_i z_{t-i} + \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta})
 \end{equation}
-де коефіцієнти визначаються через вибіркові кумулянти:
-\begin{align}
-a_0 &= \text{const} \label{eq:a0_arima} \\
-a_1(\boldsymbol{\theta}) &= \frac{\hat{\kappa}_3(\boldsymbol{\theta})}{4\hat{\kappa}_2(\boldsymbol{\theta}) + 2\hat{\kappa}_4(\boldsymbol{\theta})} \label{eq:a1_arima} \\
-a_2(\boldsymbol{\theta}) &= -\frac{\hat{\kappa}_3(\boldsymbol{\theta})}{2(4\hat{\kappa}_2(\boldsymbol{\theta}) + 2\hat{\kappa}_4(\boldsymbol{\theta}))} \label{eq:a2_arima}
-\end{align}
-
-\paragraph{Крок 5: Оцінювач PMM2 для ARIMA.}
-
-PMM2 оцінювач для ARIMA визначається як:
+призводить до визначення ``псевдорегресорів''
 \begin{equation}
-\label{eq:pmm2_arima_estimator}
-\hat{\boldsymbol{\theta}}_{\text{PMM2}} = \arg\max_{\boldsymbol{\theta} \in \Theta} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})
+\label{eq:x_definition}
+x_{p,t}(\boldsymbol{\theta}) = \frac{\partial \eta_t(\boldsymbol{\theta})}{\partial \theta_p} = -\,\frac{\partial \varepsilon_t(\boldsymbol{\theta})}{\partial \theta_p},
 \end{equation}
-де $\Theta$ --- простір параметрів, що задовольняє умови стаціонарності та оборотності.
+які є прямою адаптацією конструкції з~\eqref{eq:vector_estimation}. Рекурсії для цих величин відрізняються для AR та MA параметрів.
 
-Еквівалентно, максимізація стохастичного полінома зводиться до розв'язання системи нелінійних рівнянь:
+\paragraph{AR параметри.}
+Для $j=1,\ldots,p$:
 \begin{equation}
-\label{eq:pmm2_system}
-\frac{\partial P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta})}{\partial \boldsymbol{\theta}} = \mathbf{0}
+\label{eq:x_phi_recursion}
+x_{\phi_j,t} = z_{t-j} + \sum_{k=1}^{q} \theta_k x_{\phi_j,t-k},\qquad x_{\phi_j,t} = 0 \text{ для } t \leq 0.
 \end{equation}
 
-\subsubsection{Градієнт та Гессіан для Ньютона-Рафсона}
-
-Для ефективного розв'язання системи~\eqref{eq:pmm2_system}, використовуємо метод Ньютона-Рафсона, що потребує градієнта та Гессіана цільової функції.
-
-\paragraph{Градієнт.}
-
-$j$-й компонент градієнта:
+\paragraph{MA параметри.}
+Використовуючи $\varepsilon_{t} = z_t - \eta_t$, маємо для $j=1,\ldots,q$:
 \begin{equation}
-\label{eq:gradient_j}
-\frac{\partial P_2}{\partial \theta_j} = \sum_{t=1}^{n} \left[ a_1 \frac{\partial \varepsilon_t}{\partial \theta_j} + 2 a_2 \varepsilon_t \frac{\partial \varepsilon_t}{\partial \theta_j} + \frac{\partial a_1}{\partial \theta_j} \varepsilon_t + \frac{\partial a_2}{\partial \theta_j} \varepsilon_t^2 \right]
+\label{eq:x_theta_recursion}
+x_{\theta_j,t} = \varepsilon_{t-j}(\boldsymbol{\theta}) + \sum_{k=1}^{q} \theta_k x_{\theta_j,t-k},\qquad x_{\theta_j,t} = 0 \text{ для } t \leq 0.
 \end{equation}
-
-де $\frac{\partial \varepsilon_t}{\partial \theta_j}$ обчислюється рекурсивно з~\eqref{eq:residuals}:
+Похідні залишків, які будуть потрібні при чисельному розв'язанні, отримуємо безпосередньо з~\eqref{eq:x_definition}:
 \begin{equation}
 \label{eq:residual_derivative}
-\frac{\partial \varepsilon_t}{\partial \theta_j} = \begin{cases}
--z_{t-j} - \sum_{k=1}^{q} \theta_k \frac{\partial \varepsilon_{t-k}}{\partial \phi_j} & \text{якщо } \theta_j = \phi_j \text{ (AR параметр)} \\
--\varepsilon_{t-j+p} - \sum_{k=1}^{q} \theta_k \frac{\partial \varepsilon_{t-k}}{\partial \theta_j} & \text{якщо } \theta_j \text{ (MA параметр)}
-\end{cases}
+\frac{\partial \varepsilon_t(\boldsymbol{\theta})}{\partial \theta_p} = -x_{p,t}(\boldsymbol{\theta}).
 \end{equation}
 
-\paragraph{Гессіан.}
-
-Елемент Гессіана:
+\paragraph{Оцінювання моментів та кумулянтів.}
+Для поточної ітерації $\boldsymbol{\theta}$ обчислюємо вибіркові кумулянти залишків
+\begin{align}
+\hat{\kappa}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}), \label{eq:sample_k2} \\
+\hat{\kappa}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}), \label{eq:sample_k3} \\
+\hat{\kappa}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}) - 3\hat{\kappa}_2^2(\boldsymbol{\theta}). \label{eq:sample_k4}
+\end{align}
+Вони є оцінками моментів $\mu_r$ у формулі~\eqref{eq:pmm2_system_general}: $\hat{\mu}_2 = \hat{\kappa}_2$, $\hat{\mu}_3 = \hat{\kappa}_3$, $\hat{\mu}_4 = \hat{\kappa}_4 + 3\hat{\kappa}_2^2$. Звідси
 \begin{equation}
-\label{eq:hessian_jl}
-\frac{\partial^2 P_2}{\partial \theta_j \partial \theta_l} = \sum_{t=1}^{n} \left[ a_1 \frac{\partial^2 \varepsilon_t}{\partial \theta_j \partial \theta_l} + 2 a_2 \left( \frac{\partial \varepsilon_t}{\partial \theta_j} \frac{\partial \varepsilon_t}{\partial \theta_l} + \varepsilon_t \frac{\partial^2 \varepsilon_t}{\partial \theta_j \partial \theta_l} \right) + \cdots \right]
+\label{eq:delta_hat}
+\hat{\Delta}(\boldsymbol{\theta}) = \hat{\mu}_2 \big(\hat{\mu}_4 - \hat{\mu}_2^2\big) - \hat{\mu}_3^2 = \hat{\kappa}_2 \left(\hat{\kappa}_4 + 2\hat{\kappa}_2^2\right) - \hat{\kappa}_3^2,
 \end{equation}
+що є емпіричним аналогом~\eqref{eq:delta_definition}.
 
-На практиці, часто використовується наближення Гессіана або метод квазі-Ньютона (BFGS) для уникнення обчислення других похідних.
+\paragraph{Стохастичний поліном другого порядку.}
+Згідно з~\eqref{eq:pmm2_quadratic_form}, $p$-та рівноважна умова для ARIMA набуває вигляду
+\begin{equation}
+\label{eq:pmm2_score_arima}
+g_p(\boldsymbol{\theta}) = \sum_{t=1}^{n} x_{p,t}(\boldsymbol{\theta})\, s_t(\boldsymbol{\theta}) = 0,
+\end{equation}
+де
+\begin{equation}
+\label{eq:score_inner_term}
+s_t(\boldsymbol{\theta}) = \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t(\boldsymbol{\theta})}{\hat{\Delta}} \big[z_t - \eta_t(\boldsymbol{\theta})\big] - \frac{\hat{\mu}_3}{\hat{\Delta}} \left[z_t^2 - \eta_t^2(\boldsymbol{\theta}) - \hat{\mu}_2 \right].
+\end{equation}
+З врахуванням того, що $z_t - \eta_t = \varepsilon_t$, співвідношення~\eqref{eq:pmm2_score_arima} є прямою адаптацією багатопараметричної системи~\eqref{eq:pmm2_system_general} до ARIMA моделей. Варто підкреслити, що при $\hat{\kappa}_3 = 0$ отримаємо $s_t(\boldsymbol{\theta}) = [z_t - \eta_t(\boldsymbol{\theta})]/\hat{\kappa}_2$, і PMM2 вироджується в МНК, що узгоджується з Теоремою~\ref{thm:relative_efficiency_pmm2}.
+
+\subsubsection{Чисельне Розв'язання Системи PMM2}
+
+Побудуємо векторну функцію
+\begin{equation}
+\label{eq:vector_score}
+\mathbf{g}(\boldsymbol{\theta}) = \big(g_1(\boldsymbol{\theta}),\ldots,g_{p+q}(\boldsymbol{\theta})\big)^\top,
+\end{equation}
+яка є градієнтом стохастичного полінома за параметрами. Знаходження $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ зводиться до розв'язання $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$. Метод Ньютона-Рафсона використовує матрицю Якобі
+\begin{equation}
+\label{eq:jacobian_definition}
+J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\partial \theta_\ell} = \sum_{t=1}^{n} \left[ \frac{\partial x_{p,t}}{\partial \theta_\ell} s_t(\boldsymbol{\theta}) + x_{p,t}(\boldsymbol{\theta}) \frac{\partial s_t(\boldsymbol{\theta})}{\partial \theta_\ell} \right],
+\end{equation}
+де перша складова відображає взаємозалежність ``псевдорегресорів'', а друга --- чутливість стохастичного полінома до зміни моментів.
+
+Диференціюючи рекурсії~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}, отримуємо допоміжні співвідношення: похідні $x_{\phi_j,t}$ за AR-параметрами повторюють структуру~\eqref{eq:x_phi_recursion}, а похідні за MA-параметрами містять додаткові доданки $x_{\phi_j,t-m}$ (для всіх $m=1,\ldots,q$), що враховують залежність від коефіцієнтів $\theta_m$. Аналогічно, похідні $x_{\theta_j,t}$ включають похідні залишків (через~\eqref{eq:residual_derivative}) та ковзні ланцюги. Вирази для $\partial s_t / \partial \theta_\ell$ містять похідні кумулянтів:
+\begin{equation}
+\label{eq:ds_term}
+\frac{\partial s_t(\boldsymbol{\theta})}{\partial \theta_\ell} = \frac{\partial }{\partial \theta_\ell} \left[ \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t}{\hat{\Delta}} \varepsilon_t - \frac{\hat{\mu}_3}{\hat{\Delta}} \left(2 \eta_t \varepsilon_t + \varepsilon_t^2 - \hat{\mu}_2\right) \right],
+\end{equation}
+які обчислюються через ланцюгове правило та рекурсії~\eqref{eq:residual_derivative}. На практиці, для стабілізації алгоритму доцільно використовувати симетризовану апроксимацію Якобіана (наприклад, квазі-Ньютон BFGS), що коректно враховує структуру~\eqref{eq:jacobian_definition}.
 
 \subsection{Алгоритм Оцінювання PMM2 для ARIMA}
 \label{subsec:algorithm}
@@ -644,15 +651,17 @@ $j$-й компонент градієнта:
 
     \STATE \textit{3.2. Обчислити вибіркові кумулянти} $\hat{\kappa}_2, \hat{\kappa}_3, \hat{\kappa}_4$ за формулами~\eqref{eq:sample_k2}--\eqref{eq:sample_k4}
 
-    \STATE \textit{3.3. Обчислити коефіцієнти} $a_1, a_2$ за формулами~\eqref{eq:a1_arima}--\eqref{eq:a2_arima}
+    \STATE \textit{3.3. Побудувати псевдорегресори} $x_{p,t}(\boldsymbol{\theta}^{(k-1)})$ за рекурсіями~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}
 
-    \STATE \textit{3.4. Обчислити градієнт} $\mathbf{g}^{(k)} = \nabla_{\boldsymbol{\theta}} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:gradient_j}
+    \STATE \textit{3.4. Обчислити внутрішні оцінки} $\eta_t = z_t - \varepsilon_t$ та $s_t(\boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:score_inner_term}
 
-    \STATE \textit{3.5. Обчислити Гессіан} $\mathbf{H}^{(k)} = \nabla^2_{\boldsymbol{\theta}} P_2(\boldsymbol{\varepsilon}; \boldsymbol{\theta}^{(k-1)})$ або BFGS апроксимацію
+    \STATE \textit{3.5. Обчислити вектор} $\mathbf{g}^{(k)}$ за~\eqref{eq:vector_score} (компоненти~\eqref{eq:pmm2_score_arima})
 
-    \STATE \textit{3.6. Оновити параметри:} $\boldsymbol{\theta}^{(k)} \leftarrow \boldsymbol{\theta}^{(k-1)} - (\mathbf{H}^{(k)})^{-1} \mathbf{g}^{(k)}$
+    \STATE \textit{3.6. Обчислити або апроксимувати Якобіан} $\mathbf{J}^{(k)}$ відповідно до~\eqref{eq:jacobian_definition}
 
-    \STATE \textit{3.7. Перевірити обмеження:} Якщо $\boldsymbol{\theta}^{(k)}$ порушує стаціонарність/оборотність, проектувати на допустимий простір
+    \STATE \textit{3.7. Оновити параметри:} розв'язати $\mathbf{J}^{(k)} \Delta \boldsymbol{\theta}^{(k)} = \mathbf{g}^{(k)}$ та покласти $\boldsymbol{\theta}^{(k)} \leftarrow \boldsymbol{\theta}^{(k-1)} - \Delta \boldsymbol{\theta}^{(k)}$
+
+    \STATE \textit{3.8. Перевірити обмеження:} Якщо $\boldsymbol{\theta}^{(k)}$ порушує стаціонарність/оборотність, проектувати на допустимий простір
 
 \UNTIL $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\| < \epsilon$ або $k > k_{\max}$
 
@@ -669,18 +678,18 @@ $j$-й компонент градієнта:
 \begin{itemize}
     \item \textbf{Обчислення залишків:} $O(nk)$ операцій на ітерацію, де $k = p + q$.
 
-    \item \textbf{Обчислення кумулянтів:} $O(n)$ операцій на ітерацію.
+    \item \textbf{Обчислення кумулянтів та $s_t$:} $O(n)$ операцій на ітерацію.
 
-    \item \textbf{Обчислення градієнта:} $O(nk)$ операцій.
+    \item \textbf{Формування $\mathbf{g}$:} $O(nk)$ операцій.
 
-    \item \textbf{Обчислення Гессіана:} $O(nk^2)$ операцій (або $O(k^2)$ для BFGS апроксимації).
+    \item \textbf{Оцінювання Якобіана:} $O(nk^2)$ операцій (або $O(k^2)$ для квазі-Ньютона).
 
-    \item \textbf{Розв'язання системи:} $O(k^3)$ операцій для обернення Гессіана.
+    \item \textbf{Розв'язання лінійної системи:} $O(k^3)$ операцій.
 
     \item \textbf{Загальна складність:} $O(I \cdot nk^2)$, де $I$ --- кількість ітерацій (типово $I = 10$--$50$).
 \end{itemize}
 
-Порівняно з класичним MLE, PMM2 має подібну обчислювальну складність, оскільки обидва методи потребують ітеративної оптимізації з обчисленням градієнтів та Гессіанів.
+Порівняно з класичним MLE, PMM2 має подібну обчислювальну складність, оскільки обидва методи потребують ітеративної оптимізації з формуванням векторів умов та їхніх Якобіанів.
 
 \subsection{Асимптотичні Властивості PMM2 для ARIMA}
 \label{subsec:asymptotic_theory}
