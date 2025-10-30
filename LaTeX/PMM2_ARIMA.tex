@@ -524,7 +524,7 @@ J_{2N}^{(p,q)} = \frac{\mu_4^2 - \mu_2\mu_4}{\mu_2(\mu_4^2 - \mu_2\mu_4 + \mu_3^
     \item \textbf{Ідентифікованість:} необхідно підтримувати умови стаціонарності та оборотності для того, щоб існували моменти, використані в Теоремі~\ref{thm:relative_efficiency_pmm2}.
 \end{enumerate}
 
-\subsubsection{Моментно-кумулянтне Формулювання PMM2 для ARIMA}
+\subsubsection{Моментне Формулювання PMM2 для ARIMA}
 
 Розглянемо ARIMA$(p,d,q)$ модель
 \begin{equation}
@@ -575,17 +575,17 @@ x_{\theta_j,t} = \varepsilon_{t-j}(\boldsymbol{\theta}) + \sum_{k=1}^{q} \theta_
 \frac{\partial \varepsilon_t(\boldsymbol{\theta})}{\partial \theta_p} = -x_{p,t}(\boldsymbol{\theta}).
 \end{equation}
 
-\paragraph{Оцінювання моментів та кумулянтів.}
-Для поточної ітерації $\boldsymbol{\theta}$ обчислюємо вибіркові кумулянти залишків
+\paragraph{Оцінювання центральних моментів.}
+Для поточної ітерації $\boldsymbol{\theta}$ обчислюємо вибіркові центральні моменти залишків
 \begin{align}
-\hat{\kappa}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}), \label{eq:sample_k2} \\
-\hat{\kappa}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}), \label{eq:sample_k3} \\
-\hat{\kappa}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}) - 3\hat{\kappa}_2^2(\boldsymbol{\theta}). \label{eq:sample_k4}
+\hat{\mu}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}), \label{eq:sample_m2} \\
+\hat{\mu}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}), \label{eq:sample_m3} \\
+\hat{\mu}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}). \label{eq:sample_m4}
 \end{align}
-Вони є оцінками моментів $\mu_r$ у формулі~\eqref{eq:pmm2_system_general}: $\hat{\mu}_2 = \hat{\kappa}_2$, $\hat{\mu}_3 = \hat{\kappa}_3$, $\hat{\mu}_4 = \hat{\kappa}_4 + 3\hat{\kappa}_2^2$. Звідси
+Звідси
 \begin{equation}
 \label{eq:delta_hat}
-\hat{\Delta}(\boldsymbol{\theta}) = \hat{\mu}_2 \big(\hat{\mu}_4 - \hat{\mu}_2^2\big) - \hat{\mu}_3^2 = \hat{\kappa}_2 \left(\hat{\kappa}_4 + 2\hat{\kappa}_2^2\right) - \hat{\kappa}_3^2,
+\hat{\Delta}(\boldsymbol{\theta}) = \hat{\mu}_2 \big(\hat{\mu}_4 - \hat{\mu}_2^2\big) - \hat{\mu}_3^2,
 \end{equation}
 що є емпіричним аналогом~\eqref{eq:delta_definition}.
 
@@ -600,7 +600,7 @@ g_p(\boldsymbol{\theta}) = \sum_{t=1}^{n} x_{p,t}(\boldsymbol{\theta})\, s_t(\bo
 \label{eq:score_inner_term}
 s_t(\boldsymbol{\theta}) = \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t(\boldsymbol{\theta})}{\hat{\Delta}} \big[z_t - \eta_t(\boldsymbol{\theta})\big] - \frac{\hat{\mu}_3}{\hat{\Delta}} \left[z_t^2 - \eta_t^2(\boldsymbol{\theta}) - \hat{\mu}_2 \right].
 \end{equation}
-З врахуванням того, що $z_t - \eta_t = \varepsilon_t$, співвідношення~\eqref{eq:pmm2_score_arima} є прямою адаптацією багатопараметричної системи~\eqref{eq:pmm2_system_general} до ARIMA моделей. Варто підкреслити, що при $\hat{\kappa}_3 = 0$ отримаємо $s_t(\boldsymbol{\theta}) = [z_t - \eta_t(\boldsymbol{\theta})]/\hat{\kappa}_2$, і PMM2 вироджується в МНК, що узгоджується з Теоремою~\ref{thm:relative_efficiency_pmm2}.
+З врахуванням того, що $z_t - \eta_t = \varepsilon_t$, співвідношення~\eqref{eq:pmm2_score_arima} є прямою адаптацією багатопараметричної системи~\eqref{eq:pmm2_system_general} до ARIMA моделей. Варто підкреслити, що при $\hat{\mu}_3 = 0$ отримаємо $s_t(\boldsymbol{\theta}) = [z_t - \eta_t(\boldsymbol{\theta})]/\hat{\mu}_2$, і PMM2 вироджується в МНК, що узгоджується з Теоремою~\ref{thm:relative_efficiency_pmm2}.
 
 \subsubsection{Чисельне Розв'язання Системи PMM2}
 
@@ -616,7 +616,7 @@ J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\parti
 \end{equation}
 де перша складова відображає взаємозалежність ``псевдорегресорів'', а друга --- чутливість стохастичного полінома до зміни моментів.
 
-Диференціюючи рекурсії~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}, отримуємо допоміжні співвідношення: похідні $x_{\phi_j,t}$ за AR-параметрами повторюють структуру~\eqref{eq:x_phi_recursion}, а похідні за MA-параметрами містять додаткові доданки $x_{\phi_j,t-m}$ (для всіх $m=1,\ldots,q$), що враховують залежність від коефіцієнтів $\theta_m$. Аналогічно, похідні $x_{\theta_j,t}$ включають похідні залишків (через~\eqref{eq:residual_derivative}) та ковзні ланцюги. Вирази для $\partial s_t / \partial \theta_\ell$ містять похідні кумулянтів:
+Диференціюючи рекурсії~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}, отримуємо допоміжні співвідношення: похідні $x_{\phi_j,t}$ за AR-параметрами повторюють структуру~\eqref{eq:x_phi_recursion}, а похідні за MA-параметрами містять додаткові доданки $x_{\phi_j,t-m}$ (для всіх $m=1,\ldots,q$), що враховують залежність від коефіцієнтів $\theta_m$. Аналогічно, похідні $x_{\theta_j,t}$ включають похідні залишків (через~\eqref{eq:residual_derivative}) та ковзні ланцюги. Вирази для $\partial s_t / \partial \theta_\ell$ містять похідні моментів:
 \begin{equation}
 \label{eq:ds_term}
 \frac{\partial s_t(\boldsymbol{\theta})}{\partial \theta_\ell} = \frac{\partial }{\partial \theta_\ell} \left[ \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t}{\hat{\Delta}} \varepsilon_t - \frac{\hat{\mu}_3}{\hat{\Delta}} \left(2 \eta_t \varepsilon_t + \varepsilon_t^2 - \hat{\mu}_2\right) \right],
@@ -649,7 +649,7 @@ J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\parti
 
     \STATE \textit{3.1. Обчислити залишки} $\varepsilon_t(\boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:residuals}
 
-    \STATE \textit{3.2. Обчислити вибіркові кумулянти} $\hat{\kappa}_2, \hat{\kappa}_3, \hat{\kappa}_4$ за формулами~\eqref{eq:sample_k2}--\eqref{eq:sample_k4}
+    \STATE \textit{3.2. Обчислити центральні моменти} $\hat{\mu}_2, \hat{\mu}_3, \hat{\mu}_4$ за формулами~\eqref{eq:sample_m2}--\eqref{eq:sample_m4}
 
     \STATE \textit{3.3. Побудувати псевдорегресори} $x_{p,t}(\boldsymbol{\theta}^{(k-1)})$ за рекурсіями~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}
 
@@ -667,7 +667,7 @@ J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\parti
 
 \STATE \textbf{Крок 4: Фінальні обчислення}
 \STATE Повернути $\hat{\boldsymbol{\theta}}_{\text{PMM2}} \leftarrow \boldsymbol{\theta}^{(k)}$
-\STATE Обчислити оцінку дисперсії: $\hat{\sigma}^2 \leftarrow \hat{\kappa}_2(\hat{\boldsymbol{\theta}}_{\text{PMM2}})$
+\STATE Обчислити оцінку дисперсії: $\hat{\sigma}^2 \leftarrow \hat{\mu}_2(\hat{\boldsymbol{\theta}}_{\text{PMM2}})$
 
 \RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}}, \hat{\sigma}^2$
 \end{algorithmic}
@@ -678,7 +678,7 @@ J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\parti
 \begin{itemize}
     \item \textbf{Обчислення залишків:} $O(nk)$ операцій на ітерацію, де $k = p + q$.
 
-    \item \textbf{Обчислення кумулянтів та $s_t$:} $O(n)$ операцій на ітерацію.
+    \item \textbf{Обчислення моментів та $s_t$:} $O(n)$ операцій на ітерацію.
 
     \item \textbf{Формування $\mathbf{g}$:} $O(nk)$ операцій.
 
