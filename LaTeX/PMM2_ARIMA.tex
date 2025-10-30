@@ -510,345 +510,198 @@ J_{2N}^{(p,q)} = \frac{\mu_4^2 - \mu_2\mu_4}{\mu_2(\mu_4^2 - \mu_2\mu_4 + \mu_3^
 \subsection{PMM2 для ARIMA Моделей: Адаптація Методу}
 \label{subsec:pmm2_arima}
 
-\subsubsection{Мотивація: Чому Класичний PMM2 Потребує Адаптації}
+\subsubsection{Мотивація та принцип наближення}
 
-Пряме застосування PMM2 до ARIMA моделей стикається з декількома викликами:
+Ключовим елементом адаптації PMM2 до ARIMA-процесів є етап попередньї стаціонаризації: диференціювання $d$-го порядку забезпечує застосовність конструкцій із підрозділу~\ref{subsec:pmm_theory} до стаціонарного ряду $z_t$. Саме після цієї трансформації базовий метод надійно відтворює інновації, а PMM2-корекція поліпшує оцінки в умовах асиметрії. Такий підхід зберігає головну перевагу PMM2 --- чутливість до вищих моментів --- і водночас уникaє складних рекурсій для похідних псевдорегресорів. Це дає можливість замість повного переписування рекурсій для кожного набору параметрів застосовати просту дворівневу схему:
 
 \begin{enumerate}
-    \item \textbf{Нестаціонарність:} оператор диференціювання $\Delta^d$ змінює дисперсійну структуру та вимагає повторного визначення інформаційної матриці.
-
-    \item \textbf{Часова залежність:} інновації $\varepsilon_t$ не спостерігаються безпосередньо і відновлюються через рекурсію, що впливає на побудову регресорів $x_{p,t}$ у системі~\eqref{eq:pmm2_system_general}.
-
-    \item \textbf{Багатопараметричність:} вектор параметрів $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ визначає як середню, так і шумову компоненти, отже всі $Q = p+q$ поліномів $L_{2N}^{(p)}$ з підрозділу~\ref{subsec:pmm_theory} взаємопов'язані.
-
-    \item \textbf{Ідентифікованість:} необхідно підтримувати умови стаціонарності та оборотності для того, щоб існували моменти, використані в Теоремі~\ref{thm:relative_efficiency_pmm2}.
+    \item \textbf{Базовий крок.} Оцінюємо модель ARIMA$(p,d,q)$ стандартним методом (CSS або ML) та зберігаємо отримані залишки як емпіричні інновації.
+    \item \textbf{PMM2-корекція.} Фіксуємо побудовану на попередньому кроці дизайн-матрицю та застосовуємо поліноміальне коригування другого порядку, що враховує асиметрію й ексцес інновацій.
 \end{enumerate}
 
-\subsubsection{Моментне Формулювання PMM2 для ARIMA}
+\subsubsection{Конструкція псевдорегресорів}
 
-Розглянемо ARIMA$(p,d,q)$ модель
-\begin{equation}
-\label{eq:arima_definition}
-\Phi(B)(1-B)^d y_t = \Theta(B) \varepsilon_t,\qquad \varepsilon_t \sim \text{i.i.d. }(0,\sigma^2),
-\end{equation}
-де $B$ --- оператор зсуву ($By_t = y_{t-1}$), $\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ та $\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$. Після диференціювання отримаємо стаціонарний ряд
+Нехай
 \begin{equation}
 \label{eq:differenced_series}
-z_t = \Delta^d y_t,\qquad t=d+1,\ldots,T,\qquad n = T-d.
+z_t = \Delta^d y_t,\qquad t=d+1,\ldots,T,\qquad n = T-d,
 \end{equation}
+--- стаціонаризований ряд. На першому кроці оцінюємо ARIMA$(p,d,q)$ класичним методом і одержуємо залишки $\widehat{\varepsilon}_t^{\text{CSS}}$. Для ефективної довжини $n_\text{eff} = n - m$, де $m = \max(p,q)$, формуємо вектор регресорів
+\begin{equation}
+\label{eq:design_row}
+\mathbf{x}_t = \big(z_{t-1},\ldots,z_{t-p},\widehat{\varepsilon}_{t-1}^{\text{CSS}},\ldots,\widehat{\varepsilon}_{t-q}^{\text{CSS}}\big)^\top,
+\qquad t = m+1,\ldots,n.
+\end{equation}
+Якщо у моделі присутній зсув, до $\mathbf{x}_t$ додається одиничний стовпчик. Побудована матриця $\mathbf{X} = (\mathbf{x}_{m+1},\ldots,\mathbf{x}_{n})^\top$ не залежить від параметрів, тому подальша оптимізація редукується до задачі, описаної у підрозділі~\ref{subsec:pmm_theory}.
 
-Для будь-якого вектора параметрів $\boldsymbol{\theta}$ визначимо залишки як
-\begin{equation}
-\label{eq:residuals}
-\varepsilon_t(\boldsymbol{\theta}) = z_t - \sum_{i=1}^{p} \phi_i z_{t-i} - \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta}),
-\end{equation}
-з ініціалізаціями $\varepsilon_t = 0$ та $z_t = \bar{z}$ для $t \leq 0$, де $\bar{z} = \frac{1}{n}\sum_{t=1}^{n} z_t$.
+\subsubsection{Моментне калібрування й стохастичний поліном}
 
-Як показано у підрозділі~\ref{subsec:pmm_theory}, система~\eqref{eq:pmm2_system_general} будується через регресори $x_{p,t}$, що в лінійній моделі збігаються з елементами матриці $\boldsymbol{X}$. Для ARIMA моделі детермінована частина
+Використовуючи залишки базового кроку, розраховуємо центральні моменти
 \begin{equation}
-\label{eq:eta_definition}
-\eta_t(\boldsymbol{\theta}) = \mathbb{E}\left[z_t \mid \mathcal{F}_{t-1}\right] = \sum_{i=1}^{p} \phi_i z_{t-i} + \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}(\boldsymbol{\theta})
+\label{eq:css_moments}
+\hat{\mu}_k = \frac{1}{n_\text{eff}} \sum_{t=m+1}^{n} \Big(\widehat{\varepsilon}_t^{\text{CSS}} - \bar{\varepsilon}\Big)^k,\qquad k=2,3,4,
 \end{equation}
-призводить до визначення ``псевдорегресорів''
-\begin{equation}
-\label{eq:x_definition}
-x_{p,t}(\boldsymbol{\theta}) = \frac{\partial \eta_t(\boldsymbol{\theta})}{\partial \theta_p} = -\,\frac{\partial \varepsilon_t(\boldsymbol{\theta})}{\partial \theta_p},
-\end{equation}
-які є прямою адаптацією конструкції з~\eqref{eq:vector_estimation}. Рекурсії для цих величин відрізняються для AR та MA параметрів.
-
-\paragraph{AR параметри.}
-Для $j=1,\ldots,p$:
-\begin{equation}
-\label{eq:x_phi_recursion}
-x_{\phi_j,t} = z_{t-j} + \sum_{k=1}^{q} \theta_k x_{\phi_j,t-k},\qquad x_{\phi_j,t} = 0 \text{ для } t \leq 0.
-\end{equation}
-
-\paragraph{MA параметри.}
-Використовуючи $\varepsilon_{t} = z_t - \eta_t$, маємо для $j=1,\ldots,q$:
-\begin{equation}
-\label{eq:x_theta_recursion}
-x_{\theta_j,t} = \varepsilon_{t-j}(\boldsymbol{\theta}) + \sum_{k=1}^{q} \theta_k x_{\theta_j,t-k},\qquad x_{\theta_j,t} = 0 \text{ для } t \leq 0.
-\end{equation}
-Похідні залишків, які будуть потрібні при чисельному розв'язанні, отримуємо безпосередньо з~\eqref{eq:x_definition}:
-\begin{equation}
-\label{eq:residual_derivative}
-\frac{\partial \varepsilon_t(\boldsymbol{\theta})}{\partial \theta_p} = -x_{p,t}(\boldsymbol{\theta}).
-\end{equation}
-
-\paragraph{Оцінювання центральних моментів.}
-Для поточної ітерації $\boldsymbol{\theta}$ обчислюємо вибіркові центральні моменти залишків
-\begin{align}
-\hat{\mu}_2(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^2(\boldsymbol{\theta}), \label{eq:sample_m2} \\
-\hat{\mu}_3(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^3(\boldsymbol{\theta}), \label{eq:sample_m3} \\
-\hat{\mu}_4(\boldsymbol{\theta}) &= \frac{1}{n} \sum_{t=1}^{n} \varepsilon_t^4(\boldsymbol{\theta}). \label{eq:sample_m4}
-\end{align}
-Звідси
+де $\bar{\varepsilon}$ --- їхнє вибіркове середнє. Як і у базовому PMM2, визначаємо
 \begin{equation}
 \label{eq:delta_hat}
-\hat{\Delta}(\boldsymbol{\theta}) = \hat{\mu}_2 \big(\hat{\mu}_4 - \hat{\mu}_2^2\big) - \hat{\mu}_3^2,
+\hat{\Delta} = \hat{\mu}_2(\hat{\mu}_4 - \hat{\mu}_2^2) - \hat{\mu}_3^2.
 \end{equation}
-що є емпіричним аналогом~\eqref{eq:delta_definition}.
-
-\paragraph{Стохастичний поліном другого порядку.}
-Згідно з~\eqref{eq:pmm2_quadratic_form}, $p$-та рівноважна умова для ARIMA набуває вигляду
+Нехай $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ та $\eta_t(\boldsymbol{\theta}) = \mathbf{x}_t^\top\boldsymbol{\theta}$. Тоді стохастичний поліном набуває вигляду
 \begin{equation}
-\label{eq:pmm2_score_arima}
-g_p(\boldsymbol{\theta}) = \sum_{t=1}^{n} x_{p,t}(\boldsymbol{\theta})\, s_t(\boldsymbol{\theta}) = 0,
+\label{eq:simplified_score}
+g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}\,
+\left[
+\frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t(\boldsymbol{\theta})}{\hat{\Delta}}\big(z_t - \eta_t(\boldsymbol{\theta})\big)
+-\frac{\hat{\mu}_3}{\hat{\Delta}}\Big(z_t^2 - \eta_t^2(\boldsymbol{\theta}) - \hat{\mu}_2\Big)
+\right]=0,
 \end{equation}
-де
-\begin{equation}
-\label{eq:score_inner_term}
-s_t(\boldsymbol{\theta}) = \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t(\boldsymbol{\theta})}{\hat{\Delta}} \big[z_t - \eta_t(\boldsymbol{\theta})\big] - \frac{\hat{\mu}_3}{\hat{\Delta}} \left[z_t^2 - \eta_t^2(\boldsymbol{\theta}) - \hat{\mu}_2 \right].
-\end{equation}
-З врахуванням того, що $z_t - \eta_t = \varepsilon_t$, співвідношення~\eqref{eq:pmm2_score_arima} є прямою адаптацією багатопараметричної системи~\eqref{eq:pmm2_system_general} до ARIMA моделей. Варто підкреслити, що при $\hat{\mu}_3 = 0$ отримаємо $s_t(\boldsymbol{\theta}) = [z_t - \eta_t(\boldsymbol{\theta})]/\hat{\mu}_2$, і PMM2 вироджується в МНК, що узгоджується з Теоремою~\ref{thm:relative_efficiency_pmm2}.
-
-\subsubsection{Чисельне Розв'язання Системи PMM2}
-
-Побудуємо векторну функцію
-\begin{equation}
-\label{eq:vector_score}
-\mathbf{g}(\boldsymbol{\theta}) = \big(g_1(\boldsymbol{\theta}),\ldots,g_{p+q}(\boldsymbol{\theta})\big)^\top,
-\end{equation}
-яка є градієнтом стохастичного полінома за параметрами. Знаходження $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ зводиться до розв'язання $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$. Метод Ньютона-Рафсона використовує матрицю Якобі
-\begin{equation}
-\label{eq:jacobian_definition}
-J_{p\ell}(\boldsymbol{\theta}) = \frac{\partial g_p(\boldsymbol{\theta})}{\partial \theta_\ell} = \sum_{t=1}^{n} \left[ \frac{\partial x_{p,t}}{\partial \theta_\ell} s_t(\boldsymbol{\theta}) + x_{p,t}(\boldsymbol{\theta}) \frac{\partial s_t(\boldsymbol{\theta})}{\partial \theta_\ell} \right],
-\end{equation}
-де перша складова відображає взаємозалежність ``псевдорегресорів'', а друга --- чутливість стохастичного полінома до зміни моментів.
-
-Диференціюючи рекурсії~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}, отримуємо допоміжні співвідношення: похідні $x_{\phi_j,t}$ за AR-параметрами повторюють структуру~\eqref{eq:x_phi_recursion}, а похідні за MA-параметрами містять додаткові доданки $x_{\phi_j,t-m}$ (для всіх $m=1,\ldots,q$), що враховують залежність від коефіцієнтів $\theta_m$. Аналогічно, похідні $x_{\theta_j,t}$ включають похідні залишків (через~\eqref{eq:residual_derivative}) та ковзні ланцюги. Вирази для $\partial s_t / \partial \theta_\ell$ містять похідні моментів:
-\begin{equation}
-\label{eq:ds_term}
-\frac{\partial s_t(\boldsymbol{\theta})}{\partial \theta_\ell} = \frac{\partial }{\partial \theta_\ell} \left[ \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t}{\hat{\Delta}} \varepsilon_t - \frac{\hat{\mu}_3}{\hat{\Delta}} \left(2 \eta_t \varepsilon_t + \varepsilon_t^2 - \hat{\mu}_2\right) \right],
-\end{equation}
-які обчислюються через ланцюгове правило та рекурсії~\eqref{eq:residual_derivative}. На практиці, для стабілізації алгоритму доцільно використовувати симетризовану апроксимацію Якобіана (наприклад, квазі-Ньютон BFGS), що коректно враховує структуру~\eqref{eq:jacobian_definition}.
+де $x_{j,t}$ --- $j$-та компонента $\mathbf{x}_t$. Система~\eqref{eq:simplified_score} є прямим аналогом рівнянь~\eqref{eq:pmm2_system_general} для фіксованої дизайн-матриці. У граничному симетричному випадку ($\hat{\mu}_3 = 0$) вона зводиться до МНК-оцінювання з ваговим множником $\hat{\mu}_2^{-1}$.
 
 \subsection{Алгоритм Оцінювання PMM2 для ARIMA}
 \label{subsec:algorithm}
 
 \begin{algorithm}[H]
-\caption{PMM2 для ARIMA(p,d,q)}
+\caption{Спрощена PMM2-оцінка для ARIMA$(p,d,q)$}
 \label{alg:pmm2_arima}
 \begin{algorithmic}[1]
-\REQUIRE Часовий ряд $\{y_t\}_{t=1}^T$, порядки $(p, d, q)$
-\ENSURE PMM2 оцінки параметрів $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$
+\REQUIRE Часовий ряд $\{y_t\}_{t=1}^T$, порядки $(p,d,q)$, вибір методу ініціалізації (CSS або ML)
+\ENSURE Вектор параметрів $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$, оцінка моментів $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$
 
-\STATE \textbf{Крок 1: Попередня обробка}
-\STATE Застосувати диференціювання: $z_t \leftarrow \Delta^d y_t$ для $t = d+1, \ldots, T$
-\STATE Обчислити $n \leftarrow T - d$
-\STATE Обчислити середнє: $\bar{z} \leftarrow \frac{1}{n}\sum_{t=1}^{n} z_t$
+\STATE \textbf{Диференціювання.} Обчислити $z_t = \Delta^d y_t$ згідно з~\eqref{eq:differenced_series}.
 
-\STATE \textbf{Крок 2: Ініціалізація}
-\STATE Отримати початкову оцінку $\boldsymbol{\theta}^{(0)}$ за допомогою CSS або OLS
-\STATE Встановити лічильник ітерацій: $k \leftarrow 0$
-\STATE Встановити критерій збіжності: $\epsilon \leftarrow 10^{-6}$
+\STATE \textbf{Базове оцінювання.} Одержати $\hat{\phi}_j^{\text{CSS}}$, $\hat{\theta}_k^{\text{CSS}}$ та залишки $\widehat{\varepsilon}_t^{\text{CSS}}$ стандартним методом.
 
-\STATE \textbf{Крок 3: Ітераційна процедура Ньютона-Рафсона}
-\REPEAT
-    \STATE $k \leftarrow k + 1$
+\STATE \textbf{Побудова дизайн-матриці.} Сформувати $\mathbf{X}$ із рядків~\eqref{eq:design_row} та відповідний вектор відгуків $\mathbf{z} = (z_{m+1},\ldots,z_n)^\top$.
 
-    \STATE \textit{3.1. Обчислити залишки} $\varepsilon_t(\boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:residuals}
+\STATE \textbf{Оцінювання моментів.} Розрахувати $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$ за формулою~\eqref{eq:css_moments} і величину $\hat{\Delta}$ з~\eqref{eq:delta_hat}.
 
-    \STATE \textit{3.2. Обчислити центральні моменти} $\hat{\mu}_2, \hat{\mu}_3, \hat{\mu}_4$ за формулами~\eqref{eq:sample_m2}--\eqref{eq:sample_m4}
+\STATE \textbf{Ініціалізація PMM2.} Взяти початкове наближення $\boldsymbol{\theta}^{(0)} = (\hat{\phi}_1^{\text{CSS}},\ldots,\hat{\phi}_p^{\text{CSS}},\hat{\theta}_1^{\text{CSS}},\ldots,\hat{\theta}_q^{\text{CSS}})^\top$.
 
-    \STATE \textit{3.3. Побудувати псевдорегресори} $x_{p,t}(\boldsymbol{\theta}^{(k-1)})$ за рекурсіями~\eqref{eq:x_phi_recursion}--\eqref{eq:x_theta_recursion}
+\STATE \textbf{Поліноміальна оптимізація.} Застосувати ітеративний розв'язувач PMM2 для фіксованої дизайн-матриці $\mathbf{X}$ (див. рівняння~\eqref{eq:simplified_score}). Процес зупиняємо, коли $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\|$ та норма моментних умов стають меншими за заданий поріг.
 
-    \STATE \textit{3.4. Обчислити внутрішні оцінки} $\eta_t = z_t - \varepsilon_t$ та $s_t(\boldsymbol{\theta}^{(k-1)})$ за формулою~\eqref{eq:score_inner_term}
+\STATE \textbf{Реконструкція залишків.} Прогнати фінальні параметри через модель ARIMA для отримання оновлених інновацій (вони використовуються у подальших діагностичних тестах).
 
-    \STATE \textit{3.5. Обчислити вектор} $\mathbf{g}^{(k)}$ за~\eqref{eq:vector_score} (компоненти~\eqref{eq:pmm2_score_arima})
-
-    \STATE \textit{3.6. Обчислити або апроксимувати Якобіан} $\mathbf{J}^{(k)}$ відповідно до~\eqref{eq:jacobian_definition}
-
-    \STATE \textit{3.7. Оновити параметри:} розв'язати $\mathbf{J}^{(k)} \Delta \boldsymbol{\theta}^{(k)} = \mathbf{g}^{(k)}$ та покласти $\boldsymbol{\theta}^{(k)} \leftarrow \boldsymbol{\theta}^{(k-1)} - \Delta \boldsymbol{\theta}^{(k)}$
-
-    \STATE \textit{3.8. Перевірити обмеження:} Якщо $\boldsymbol{\theta}^{(k)}$ порушує стаціонарність/оборотність, проектувати на допустимий простір
-
-\UNTIL $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\| < \epsilon$ або $k > k_{\max}$
-
-\STATE \textbf{Крок 4: Фінальні обчислення}
-\STATE Повернути $\hat{\boldsymbol{\theta}}_{\text{PMM2}} \leftarrow \boldsymbol{\theta}^{(k)}$
-\STATE Обчислити оцінку дисперсії: $\hat{\sigma}^2 \leftarrow \hat{\mu}_2(\hat{\boldsymbol{\theta}}_{\text{PMM2}})$
-
-\RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}}, \hat{\sigma}^2$
+\RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}} = \boldsymbol{\theta}^{(k_\star)}$, $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$.
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Обчислювальна складність.}
+\paragraph{Коментарі до реалізації.}
 
 \begin{itemize}
-    \item \textbf{Обчислення залишків:} $O(nk)$ операцій на ітерацію, де $k = p + q$.
-
-    \item \textbf{Обчислення моментів та $s_t$:} $O(n)$ операцій на ітерацію.
-
-    \item \textbf{Формування $\mathbf{g}$:} $O(nk)$ операцій.
-
-    \item \textbf{Оцінювання Якобіана:} $O(nk^2)$ операцій (або $O(k^2)$ для квазі-Ньютона).
-
-    \item \textbf{Розв'язання лінійної системи:} $O(k^3)$ операцій.
-
-    \item \textbf{Загальна складність:} $O(I \cdot nk^2)$, де $I$ --- кількість ітерацій (типово $I = 10$--$50$).
+    \item Алгоритм використовує лише одну дизайн-матрицю, побудовану з оцінок першого кроку. Тому обчислювальна складність визначається матричними добутками $O(n_\text{eff} k)$ та розв'язанням невеликої системи $k \times k$ на кожній ітерації PMM2 (у практиці достатньо 5--10 кроків).
+    \item Якщо вибіркові моменти високих порядків нестабільні, застосовується згладжування (експоненційне домішування з моментами попередньої ітерації), що поліпшує збіжність для коротких рядів.
+    \item Перевірка стаціонарності й оборотності виконується проєкцією коефіцієнтів на допустиму область: при виявленні коренів усередині одиничного кола коефіцієнти масштабуються до граничного значення.
 \end{itemize}
-
-Порівняно з класичним MLE, PMM2 має подібну обчислювальну складність, оскільки обидва методи потребують ітеративної оптимізації з формуванням векторів умов та їхніх Якобіанів.
 
 \subsection{Асимптотичні Властивості PMM2 для ARIMA}
 \label{subsec:asymptotic_theory}
 
-Для аналізу асимптотики перепишемо систему умов~\eqref{eq:pmm2_score_arima} у вигляді усередненого вектору моментних рівнянь. Нехай $k = p+q$ --- кількість параметрів та
-\begin{equation}
-\label{eq:gn_definition}
-\mathbf{g}_n(\boldsymbol{\theta}) = \frac{1}{n} \sum_{t=1}^{n} \boldsymbol{\psi}_t(\boldsymbol{\theta}), \qquad \boldsymbol{\psi}_t(\boldsymbol{\theta}) = \big(x_{1,t}(\boldsymbol{\theta}) s_t(\boldsymbol{\theta}), \ldots, x_{k,t}(\boldsymbol{\theta}) s_t(\boldsymbol{\theta})\big)^\top.
-\end{equation}
-Тоді оцінювач PMM2 визначається умовою $\mathbf{g}_n(\hat{\boldsymbol{\theta}}_{\text{PMM2}}) = \mathbf{0}$, тобто є Z-оцінкою у сенсі Newey \& McFadden (1994).
+Для аналізу зручно переписати систему~\eqref{eq:simplified_score} у вигляді усереднених моментних умов. Нехай $\mathbf{x}_t^0$ --- ``ідеальні'' регресори, побудовані з істинних інновацій $\varepsilon_t$, а $\widehat{\mathbf{x}}_t$ --- їхні емпіричні аналоги з формули~\eqref{eq:design_row}. Позначимо через
+\[
+\boldsymbol{\psi}_t(\boldsymbol{\theta}) = \widehat{\mathbf{x}}_t\, s_t(\boldsymbol{\theta})
+\]
+відповідний моментний внесок, де $s_t(\boldsymbol{\theta})$ --- вираз у дужках у~\eqref{eq:simplified_score}. Тоді оцінювач визначається умовою
+\[
+\mathbf{g}_{n_\text{eff}}(\boldsymbol{\theta}) =
+\frac{1}{n_\text{eff}}\sum_{t=m+1}^{n} \boldsymbol{\psi}_t(\boldsymbol{\theta}) = \mathbf{0}.
+\]
 
 \subsubsection{Консистентність}
 
-\begin{theorem}[Консистентність PMM2]
+\begin{theorem}[Консистентність спрощеної PMM2-оцінки]
 \label{thm:consistency}
-За умови, що:
+Нехай виконуються такі умови:
 \begin{enumerate}
-    \item ARIMA(p,d,q) модель правильно специфікована,
-    \item Інновації $\varepsilon_t$ є i.i.d. з нульовим середнім, скінченною дисперсією $\sigma^2 < \infty$, та скінченними моментами до четвертого порядку включно,
-    \item Справжній вектор параметрів $\boldsymbol{\theta}_0$ лежить у внутрішності компактного простору параметрів $\Theta$,
-    \item Умови стаціонарності та оборотності виконуються,
+    \item ARIMA$(p,d,q)$ модель правильно специфікована; інновації $\varepsilon_t$ є стаціонарними, ергодичними та мають скінченні моменти до четвертого порядку.
+    \item Початковий CSS/ML-оцінювач є консистентним: $\hat{\boldsymbol{\theta}}^{\text{CSS}} \xrightarrow{p} \boldsymbol{\theta}_0$.
+    \item Ряд $\{\widehat{\varepsilon}_t^{\text{CSS}}\}$ збігається в ймовірності до істинних інновацій у сенсі середнього квадратичного: $\frac{1}{n_\text{eff}}\sum (\widehat{\varepsilon}_t^{\text{CSS}} - \varepsilon_t)^2 \xrightarrow{p} 0$.
+    \item Матриця моментів $E[\mathbf{x}_t^0 (\mathbf{x}_t^0)^\top]$ невироджена.
 \end{enumerate}
-PMM2 оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консистентним:
-\begin{equation}
-\label{eq:consistency}
-\hat{\boldsymbol{\theta}}_{\text{PMM2}} \xrightarrow{p} \boldsymbol{\theta}_0 \quad \text{при } n \to \infty
-\end{equation}
+Тоді оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консистентним:
+\[
+\hat{\boldsymbol{\theta}}_{\text{PMM2}} \xrightarrow{p} \boldsymbol{\theta}_0.
+\]
 \end{theorem}
 
-\begin{proof}[Ескіз доведення]
-Доведення базується на застосуванні теорем про M-оцінки для часових рядів. Ключові кроки:
-\begin{enumerate}
-    \item Показати, що $\mathbf{g}_n(\boldsymbol{\theta})$ збігається рівномірно до $\mathbf{g}(\boldsymbol{\theta}) = \mathbb{E}[\boldsymbol{\psi}_t(\boldsymbol{\theta})]$ за законом великих чисел для ергодичних процесів.
-
-    \item Показати, що система моментних рівнянь $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$ має єдиний розв'язок у $\boldsymbol{\theta}_0$ (умова ідентифікації).
-
-    \item Застосувати теорему 2.1 з White (1994) або теорему 7.1 з Newey \& McFadden (1994) для Z-оцінок з залежними даними.
-\end{enumerate}
-Детальне доведення вимагає перевірки умов рівномірної збіжності та ідентифікації, що є стандартною процедурою для часових рядів.
+\begin{proof}[Ескіз]
+Пункти (2)--(3) гарантують збіжність $\widehat{\mathbf{x}}_t \xrightarrow{p} \mathbf{x}_t^0$ та $\hat{\mu}_k \xrightarrow{p} \mu_k$ для $k=2,3,4$. Враховуючи неперервність $s_t(\boldsymbol{\theta})$ за цими аргументами, отримаємо рівномірну збіжність $\mathbf{g}_{n_\text{eff}}(\boldsymbol{\theta}) \to \mathbf{g}(\boldsymbol{\theta}) = E[\mathbf{x}_t^0 s_t^0(\boldsymbol{\theta})]$. Єдиність кореня $\mathbf{g}(\boldsymbol{\theta})=\mathbf{0}$ (за умовою 4) і стандартний аргумент Z-оцінок (Newey \& McFadden, 1994) завершують доведення.
 \end{proof}
 
-\subsubsection{Асимптотична Нормальність}
+\subsubsection{Асимптотична нормальність}
 
-\begin{theorem}[Асимптотична нормальність PMM2]
+\begin{theorem}[Асимптотичний розподіл]
 \label{thm:asymptotic_normality}
-За умовами Теореми~\ref{thm:consistency}, PMM2 оцінювач є асимптотично нормальним:
-\begin{equation}
-\label{eq:asymptotic_normality}
-\sqrt{n}(\hat{\boldsymbol{\theta}}_{\text{PMM2}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}(0, \boldsymbol{\Sigma}_{\text{PMM2}})
-\end{equation}
-де асимптотична коваріаційна матриця:
-\begin{equation}
-\label{eq:asymptotic_covariance}
-\boldsymbol{\Sigma}_{\text{PMM2}} = \mathbf{A}^{-1} \mathbf{B} (\mathbf{A}^{-1})^\top
-\end{equation}
-з матрицями:
+За умов Теореми~\ref{thm:consistency} та додатково за умови, що $\{\varepsilon_t\}$ задовольняють центральній граничній теоремі для квадратно інтегровних функцій, маємо
+\[
+\sqrt{n_\text{eff}}\big(\hat{\boldsymbol{\theta}}_{\text{PMM2}} - \boldsymbol{\theta}_0\big) \xrightarrow{d} \mathcal{N}(0,\boldsymbol{\Sigma}_{\text{PMM2}}),
+\]
+де
 \begin{align}
-\mathbf{A} &= \mathbb{E}\left[ \frac{\partial \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right] \label{eq:matrix_A} \\
-\mathbf{B} &= \mathbb{E}\left[ \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)\, \boldsymbol{\psi}_t(\boldsymbol{\theta}_0)^\top \right] \label{eq:matrix_B}
+\mathbf{A} &= E\!\left[ \frac{\partial \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right],
+&
+\mathbf{B} &= E\!\left[ \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)\, \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)^\top \right],\\
+\boldsymbol{\Sigma}_{\text{PMM2}} &= \mathbf{A}^{-1}\mathbf{B}(\mathbf{A}^{-1})^\top,
 \end{align}
+а $\boldsymbol{\psi}_t^0(\cdot)$ --- моментна функція, побудована з істинних інновацій.
 \end{theorem}
 
-\paragraph{Оцінювання асимптотичної коваріації.}
-
-На практиці, асимптотична коваріаційна матриця оцінюється як:
-\begin{equation}
-\label{eq:estimated_covariance}
-\hat{\boldsymbol{\Sigma}}_{\text{PMM2}} = \hat{\mathbf{A}}^{-1} \hat{\mathbf{B}} (\hat{\mathbf{A}}^{-1})^\top
-\end{equation}
-де $\hat{\mathbf{A}} = \frac{1}{n} \sum_{t=1}^{n} \frac{\partial \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})}{\partial \boldsymbol{\theta}^\top}$ та $\hat{\mathbf{B}} = \frac{1}{n} \sum_{t=1}^{n} \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})\, \boldsymbol{\psi}_t(\hat{\boldsymbol{\theta}}_{\text{PMM2}})^\top$ --- вибіркові аналоги матриць~\eqref{eq:matrix_A}--\eqref{eq:matrix_B}.
-
-Стандартні похибки параметрів:
+На практиці матриці $\mathbf{A}$ та $\mathbf{B}$ апроксимуються вибірковими аналогами, в яких використовуються оцінені регресори та моменти. Стандартні похибки обчислюємо за формулою
 \begin{equation}
 \label{eq:standard_errors}
-\text{SE}(\hat{\theta}_j) = \sqrt{\frac{[\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}]_{jj}}{n}}
+\text{SE}(\hat{\theta}_j) = \sqrt{\frac{[\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}]_{jj}}{n_\text{eff}}},
 \end{equation}
+де $\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}$ отримується заміною математичних сподівань у визначеннях $\mathbf{A}$ та $\mathbf{B}$ на середні по вибірці.
 
-\subsubsection{Відносна Ефективність для ARIMA}
+\subsubsection{Відносна ефективність}
 
-Для багатопараметричних ARIMA моделей, відносна ефективність PMM2 щодо OLS може бути визначена через детермінанти або сліди коваріаційних матриць:
-
-\begin{equation}
+Оскільки вибраний підхід редукується до лінійного PMM2 із фіксованою $\mathbf{X}$, найбільш показовим є порівняння з МНК у тій самій дизайн-матриці. Відносну ефективність можна описати через детермінант або слід коваріаційних матриць:
+\begin{align}
 \label{eq:re_arima_det}
-RE_{\text{det}} = \left( \frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|} \right)^{1/k}
-\end{equation}
-
-або
-
-\begin{equation}
+RE_{\text{det}} &= \left(\frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|}\right)^{1/k},\\
 \label{eq:re_arima_trace}
-RE_{\text{trace}} = \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})}
-\end{equation}
-
-В асимптотичному випадку із ростом обсягу вібірок, відносна ефективність добре апроксимується формулою~\eqref{eq:re_pmm2_ols}.
+RE_{\text{trace}} &= \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})},
+\end{align}
+де $k=p+q$. Формули~\eqref{eq:re_arima_det}--\eqref{eq:re_arima_trace} прямо наслідують результати підрозділу~\ref{subsec:pmm_theory} та залишаються валідними у ``плагін''-налаштуванні, оскільки різниця між істинними й емпіричними регресорами є $o_p(1)$.
 
 \subsection{Практичні Аспекти Реалізації}
 \label{subsec:implementation}
 
-\subsubsection{Вибір Початкових Значень}
+\subsubsection{Вибір початкового оцінювача}
 
-Якість збіжності методу Ньютона-Рафсона суттєво залежить від початкових значень. Рекомендуємо наступну стратегію:
+Базовий крок задає ядро подальшої корекції. На практиці використовуємо:
+\begin{itemize}
+    \item \textbf{CSS} (\texttt{method = "CSS-ML"}) як початкову оцінку, що повертає параметри та залишки $\widehat{\varepsilon}_t^{\text{CSS}}$;
+    \item \textbf{ML} як запасний варіант, якщо CSS сигналізує про проблеми збіжності;
+    \item \textbf{Користувацькі старти} (опція пакета), коли базовий оцінювач відомий заздалегідь; PMM2 у такому разі працює як моментна поправка до заданої точки.
+\end{itemize}
 
-\begin{enumerate}
-    \item \textbf{Метод Юла-Вокера} для AR компоненти для отримання початкових значень $\phi_1^{(0)}, \ldots, \phi_p^{(0)}$.
-
-    \item \textbf{Conditional Sum of Squares (CSS)} для повної ARIMA моделі.
-
-    \item \textbf{Перевірка стаціонарності:} Обчислити корені характеристичного полінома $\Phi(z) = 0$ та переконатися, що $|z_i| > 1$. Якщо умова порушується, відкоригувати початкові значення шляхом проектування на область стаціонарності.
-\end{enumerate}
-
-\subsubsection{Забезпечення Обмежень}
-
-Для забезпечення стаціонарності та оборотності під час ітераційної оптимізації:
-
-\paragraph{Параметризація через часткові автокореляції.}
-
-Використовуємо параметризацію Box-Jenkins через часткові автокореляції (PACF), що автоматично гарантує стаціонарність:
-\begin{equation}
-\label{eq:pacf_parameterization}
-\phi_1, \ldots, \phi_p = \text{PACF}^{-1}(\alpha_1, \ldots, \alpha_p), \quad \alpha_i \in (-1, 1)
-\end{equation}
-
-Аналогічно для MA параметрів через перетворення Ансомба.
-
-\paragraph{Проектування на допустимий простір.}
-
-Якщо оновлений параметр $\boldsymbol{\theta}^{(k)}$ порушує обмеження, проектуємо його на найближчу допустиму точку:
-\begin{equation}
-\label{eq:projection}
-\boldsymbol{\theta}^{(k)} \leftarrow \arg\min_{\tilde{\boldsymbol{\theta}} \in \Theta} \|\tilde{\boldsymbol{\theta}} - \boldsymbol{\theta}^{(k)}\|^2
-\end{equation}
-
-\subsubsection{Діагностика Залишків}
-
-Після оцінювання параметрів, необхідно перевірити адекватність моделі через аналіз залишків:
-
-\begin{enumerate}
-    \item \textbf{Тест Люнга-Бокса} для автокореляції залишків:
-    \begin{equation}
-    \label{eq:ljung_box}
-    Q(m) = n(n+2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{n-k} \sim \chi^2(m - p - q)
-    \end{equation}
-    де $\hat{\rho}_k$ --- вибіркова автокореляція залишків на лагу $k$.
-
-    \item \textbf{Оцінка кумулянтів залишків:} Обчислити $\hat{\gamma}_3$ та $\hat{\gamma}_4$ для верифікації припущень про розподіл інновацій.
-
-    \item \textbf{Візуальна діагностика:} ACF/PACF графіки, Q-Q plot, гістограма залишків.
-\end{enumerate}
-
-\subsubsection{Обчислювальна Стабільність}
-
-Для забезпечення числової стабільності:
+\subsubsection{Нормування та згладжування}
 
 \begin{itemize}
-    \item \textbf{Нормалізація ряду:} Віднімаємо середнє та ділимо на стандартне відхилення.
+    \item Диференційований ряд $z_t$ центрується; за бажання його можна масштабувати на стандартне відхилення, щоб уникнути числових перепадів.
+    \item Перші $\max(p,q)$ залишків замінюються нулями --- це узгоджується з реалізацією CSS і не створює штучних ``великих'' моментів.
+    \item Центральні моменти $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$ допускають експоненційне згладжування ($\lambda \approx 0.25$), що стабілізує $s_t(\boldsymbol{\theta})$ за асиметричних розподілів.
+\end{itemize}
 
-    \item \textbf{Регуляризація Гессіана:} Додаємо малу діагональну матрицю $\lambda \mathbf{I}$ до Гессіана для уникнення сингулярності.
+\subsubsection{Регуляризація та контроль обмежень}
 
-    \item \textbf{Line search:} Використовуємо line search (backtracking) для забезпечення збільшення цільової функції на кожній ітерації.
+\begin{itemize}
+    \item Рівняння \eqref{eq:simplified_score} розв'язуються з діагональною добавкою $J \leftarrow J + \lambda I$ (типово $\lambda=10^{-6}$); якщо $cond(J)>10^6$, $\lambda$ збільшується в кілька разів.
+    \item Після кожного оновлення коефіцієнти масштабуються так, щоб модулі коренів AR- і MA-поліномів перевищували $1+\delta$ ($\delta = 10^{-4}$), тобто виконується проєкція на допустимий простір.
+    \item Якщо навіть після проєкції моментний критерій не покращується (backtracking вичерпано), алгоритм повертає попередження та залишає базові оцінки.
+\end{itemize}
+
+\subsubsection{Пост-обробка та діагностика}
+
+\begin{itemize}
+    \item Фінальні параметри передаються у \texttt{stats::arima} з опцією \texttt{fixed}, що дає оновлені залишки та лог-правдоподібність без повторного оптимізаційного циклу.
+    \item Разом з оцінками повертаються кумулянти та коефіцієнт $g$, аби можна було порівняти теоретичне зменшення дисперсії з емпіричним.
+    \item Рекомендується проводити стандартні тести (Ljung--Box, Jarque--Bera) та аналізувати Q-Q графіки; у пакеті використовується статистика Люнга-Бокса
+    \begin{equation}
+    \label{eq:ljung_box}
+    Q(m) = n(n+2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{n-k},
+    \end{equation}
+    що порівнюється з $\chi^2(m - p - q)$, а автокореляції $\hat{\rho}_k$ розраховуються вже для PMM2-залишків.
 \end{itemize}
 
 % ============================================
