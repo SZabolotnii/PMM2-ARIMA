@@ -1002,8 +1002,8 @@ VR(\theta_j) = \frac{\text{Var}_{\text{OLS}}(\theta_j) - \text{Var}_{\text{PMM2}
     ymin=0.8, ymax=2.0,
 ]
 
-% Theoretical curve
-\addplot[domain=0:2.5, samples=100, color=blue, thick, dashed]
+% Theoretical curve (restrict domain to avoid singularity near sqrt(5))
+\addplot[domain=0:2.0, samples=100, color=blue, thick, dashed]
     {(2+3)/(2+3-x^2)};
 \addlegendentry{Теоретична RE}
 
@@ -2094,7 +2094,7 @@ PMM2 може бути застосований до стандартизова�
 % ============================================
 % BIBLIOGRAPHY (Placeholder)
 % ============================================
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{references}
 
 % Note: Create references.bib file with all citations
