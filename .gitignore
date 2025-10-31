@@ -10,6 +10,7 @@ Rplots.pdf
 .DS_Store
 
 .vscode
+.claude
 
 # LaTeX build artifacts
 *.aux
