@@ -1378,10 +1378,12 @@ Monte Carlo дослідження підтверджує наступні кл�
 
 \begin{table}[htbp]
 \centering
-\footnotesize
+\begingroup
+\setlength{\tabcolsep}{5pt} % стискаємо проміжки для компактності
+\scriptsize
 \caption{Комплексні результати для WTI Crude Oil даних}
 \label{tab:wti_comprehensive_results}
-\begin{tabular}{@{}llrrrrrrrrr@{}}
+\begin{tabular}{@{}llrrrrrrrr@{}}
 \toprule
 \textbf{Модель} & \textbf{Метод} & \textbf{AIC} & \textbf{BIC} & \textbf{RMSE} & \textbf{MAE} & \textbf{Log-Lik} & $\gamma_3$ & $\gamma_4$ & \textbf{Час (с)} \\
 \midrule
@@ -1406,6 +1408,7 @@ ARIMA(2,1,2) & CSS-ML & 10124.31 & 10150.63 & 1.8929 & 1.3807 & -5056.15 & -0.69
              & PMM2   & 10146.01 & 10167.20 & 1.9088 & 1.3922 & -5067.00 & -0.708 & 5.505 & 0.168 \\
 \bottomrule
 \end{tabular}
+\endgroup
 \end{table}
 
 \noindent\textit{Примітки:} Зеленим кольором виділено найкращу модель за критерієм BIC. Жовтим --- порівнювана модель CSS-ML. Всі моделі пройшли Ljung-Box тест ($p > 0.05$, відсутня автокореляція залишків).
