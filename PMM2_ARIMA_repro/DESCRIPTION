@@ -13,5 +13,6 @@ Imports:
     gridExtra,
     RColorBrewer,
     tseries,
-    knitr
+    knitr,
+    MASS
 LazyData: false

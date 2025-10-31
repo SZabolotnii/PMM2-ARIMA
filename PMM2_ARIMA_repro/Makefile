@@ -1,4 +1,4 @@
-.PHONY: all analysis plots report quick-demo latex clean
+.PHONY: all analysis plots report quick-demo montecarlo latex clean
 
 all: analysis plots report
 
@@ -13,6 +13,9 @@ report:
 
 quick-demo:
 	Rscript scripts/arima_oil_quick_demo.R
+
+montecarlo:
+	Rscript scripts/run_monte_carlo.R
 
 latex:
 	latexmk -pdf -cd latex/PMM2_ARIMA.tex
