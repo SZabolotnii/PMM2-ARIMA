@@ -9,13 +9,31 @@ cat("Data: WTI Crude Oil Prices (DCOILWTICO)\n")
 cat("=======================================================\n\n")
 
 # Load data
-data_path <- system.file("extdata", "DCOILWTICO.csv", package = "EstemPMM")
-if (!file.exists(data_path) || data_path == "") {
-  data_path <- file.path("PMM2-ARIMA", "data", "DCOILWTICO.csv")
+candidate_paths <- c(
+  system.file("extdata", "DCOILWTICO.csv", package = "EstemPMM"),
+  file.path("Experiment_R", "data", "DCOILWTICO.csv")
+)
+
+script_path <- tryCatch(normalizePath(sys.frames()[[1]]$ofile), error = function(e) NA_character_)
+if (!is.na(script_path)) {
+  script_dir <- dirname(script_path)
+  candidate_paths <- c(
+    candidate_paths,
+    file.path(script_dir, "data", "DCOILWTICO.csv"),
+    file.path(dirname(script_dir), "Experiment_R", "data", "DCOILWTICO.csv")
+  )
 }
 
-if (!file.exists(data_path)) {
-  stop("Data file DCOILWTICO.csv not found. Please ensure it exists in data/ directory.")
+data_path <- ""
+for (candidate in candidate_paths) {
+  if (nzchar(candidate) && file.exists(candidate)) {
+    data_path <- candidate
+    break
+  }
+}
+
+if (!file.exists(data_path) || !nzchar(data_path)) {
+  stop("Data file DCOILWTICO.csv not found. Please ensure it exists in Experiment_R/data directory.")
 }
 
 # Read and clean data
