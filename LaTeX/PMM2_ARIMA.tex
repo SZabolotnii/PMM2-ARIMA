@@ -85,12 +85,11 @@
 
 % Розподіли
 \newcommand{\Normal}{\mathcal{N}}
-\newcommand{\Gamma}{\text{Gamma}}
+\newcommand{\Gammadist}{\text{Gamma}}
 \newcommand{\Lognormal}{\text{Lognormal}}
 \newcommand{\Chisq}{\chi^2}
 
 % Кумулянти та моменти
-\newcommand{\kappa}{\text{cum}}
 \newcommand{\gammathree}{\gamma_3}
 \newcommand{\gammafour}{\gamma_4}
 
@@ -120,7 +119,7 @@
 
 \textbf{Мета дослідження.} У даній роботі ми розробляємо та досліджуємо застосування методу максимізації поліномів другого порядку (PMM2) для оцінювання параметрів ARIMA(p,d,q) моделей з негаусовими інноваціями. PMM2, розроблений Ю.П. Кунченко, є напівпараметричним методом, що використовує часткову параметризацію через моменти та кумулянти вищих порядків замість повної функції густини ймовірності.
 
-\textbf{Методологія.} Ми розробили повний алгоритм PMM2 для ARIMA моделей, що включає диференціювання ряду, перевірку стаціонарності та ітеративну процедуру Ньютона-Рафсона для розв'язання системи PMM2 рівнянь. Для валідації методу проведено комплексні Monte Carlo симуляції з 2000 повторень для кожної конфігурації, що охоплюють різні розміри вибірки (N~$\in$~\{100, 200, 500, 1000\}) та чотири типи розподілів інновацій: гаусовий (контроль), гамма $\Gamma(2,1)$ з $\gamma_3 \approx 1.41$, логнормальний з $\gamma_3 \approx 2.0$, та $\chi^2(3)$ з $\gamma_3 \approx 1.63$.
+\textbf{Методологія.} Ми розробили повний алгоритм PMM2 для ARIMA моделей, що включає диференціювання ряду, перевірку стаціонарності та ітеративну процедуру Ньютона-Рафсона для розв'язання системи PMM2 рівнянь. Для валідації методу проведено комплексні Monte Carlo симуляції з 2000 повторень для кожної конфігурації, що охоплюють різні розміри вибірки (N~$\in$~\{100, 200, 500, 1000\}) та чотири типи розподілів інновацій: гаусовий (контроль), гамма $\Gammadist(2,1)$ з $\gamma_3 \approx 1.41$, логнормальний з $\gamma_3 \approx 2.0$, та $\chi^2(3)$ з $\gamma_3 \approx 1.63$.
 
 \textbf{Результати.} Емпіричні результати демонструють, що PMM2 забезпечує суттєве підвищення ефективності оцінювання для асиметричних розподілів (відносна ефективність визначається формулою~\eqref{eq:re_pmm2_ols}). Для ARIMA(1,1,0) моделі з гамма-розподіленими інноваціями при N=500 отримано відносну ефективність RE=1.58 (що відповідає 37\% зменшенню середньоквадратичної похибки), для логнормального розподілу RE=1.71 (42\% покращення), а для $\chi^2(3)$ RE=1.90 (47\% покращення). Для гаусових інновацій PMM2 демонструє ефективність близьку до OLS (RE~$\approx$~1.0), що узгоджується з теорією. Ефективність методу зростає з розміром вибірки та є стабільною для N~$\geq$~200.
 
@@ -144,7 +143,7 @@
 
 \textbf{Objective.} This study develops and investigates the application of the second-order Polynomial Maximization Method (PMM2) for estimating ARIMA(p,d,q) model parameters under non-Gaussian innovations. PMM2, developed by Y.P. Kunchenko, is a semi-parametric method that utilizes partial parameterization through higher-order moments and cumulants instead of full probability density specification.
 
-\textbf{Methodology.} We developed a complete PMM2 algorithm for ARIMA models, incorporating series differencing, stationarity testing, and a Newton-Raphson iterative procedure for solving the PMM2 system of equations. Comprehensive Monte Carlo simulations with 2000 replications per configuration were conducted, spanning different sample sizes (N~$\in$~\{100, 200, 500, 1000\}) and four innovation distributions: Gaussian (control), Gamma $\Gamma(2,1)$ with $\gamma_3 \approx 1.41$, Lognormal with $\gamma_3 \approx 2.0$, and $\chi^2(3)$ with $\gamma_3 \approx 1.63$.
+\textbf{Methodology.} We developed a complete PMM2 algorithm for ARIMA models, incorporating series differencing, stationarity testing, and a Newton-Raphson iterative procedure for solving the PMM2 system of equations. Comprehensive Monte Carlo simulations with 2000 replications per configuration were conducted, spanning different sample sizes (N~$\in$~\{100, 200, 500, 1000\}) and four innovation distributions: Gaussian (control), Gamma $\Gammadist(2,1)$ with $\gamma_3 \approx 1.41$, Lognormal with $\gamma_3 \approx 2.0$, and $\chi^2(3)$ with $\gamma_3 \approx 1.63$.
 
 \textbf{Results.} Empirical results demonstrate that PMM2 provides substantial efficiency gains for asymmetric distributions. For an ARIMA(1,1,0) model with gamma-distributed innovations at N=500, we obtained relative efficiency RE=1.58 (corresponding to 37\% mean squared error reduction), for lognormal distribution RE=1.71 (42\% improvement), and for $\chi^2(3)$ RE=1.90 (47\% improvement). For Gaussian innovations, PMM2 exhibits efficiency close to OLS (RE~$\approx$~1.0), consistent with theory. Method efficiency increases with sample size and is stable for N~$\geq$~200.
 
@@ -802,7 +801,7 @@ RE_{\text{trace}} &= \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr
     \item \textbf{Розподіли інновацій:} Чотири типи розподілів
     \begin{itemize}
         \item \textbf{Gaussian} $\mathcal{N}(0,1)$: $\gamma_3 = 0$, $\gamma_4 = 0$ (контроль)
-        \item \textbf{Gamma} $\Gamma(2,1)$: $\gamma_3 \approx 1.41$, $\gamma_4 \approx 3.0$
+        \item \textbf{Gamma} $\Gammadist(2,1)$: $\gamma_3 \approx 1.41$, $\gamma_4 \approx 3.0$
         \item \textbf{Lognormal} $\text{LN}(0, 0.5^2)$: $\gamma_3 \approx 2.0$, $\gamma_4 \approx 6.2$
         \item \textbf{Chi-squared} $\chi^2(3)$: $\gamma_3 \approx 1.63$, $\gamma_4 \approx 4.0$
     \end{itemize}
