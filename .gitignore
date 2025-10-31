@@ -3,6 +3,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rproj
 
 # Generated analysis outputs
 Rplots.pdf
