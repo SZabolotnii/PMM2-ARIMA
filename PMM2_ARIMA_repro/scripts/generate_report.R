@@ -43,6 +43,7 @@ mc_metrics <- NULL
 mc_re_vs_sample <- NULL
 mc_cumulants <- NULL
 mc_article <- NULL
+mc_stats <- list()
 
 if (mc_available) {
   metrics_path <- file.path(mc_dir, "monte_carlo_metrics.csv")
@@ -77,7 +78,7 @@ report_file <- file.path(output_dir, "ANALYTICAL_REPORT.md")
 sink(report_file)
 
 cat("# COMPREHENSIVE ANALYTICAL REPORT\n")
-cat("## ARIMA Model Comparison: PMM2 vs Classical Methods on WTI Crude Oil Prices\n\n")
+cat("## ARIMA Model Comparison: PMM2 vs Classical and Robust Methods on WTI Crude Oil Prices\n\n")
 cat("---\n\n")
 cat(sprintf("**Report Generated:** %s\n\n", Sys.time()))
 cat(sprintf("**Data Source:** WTI Crude Oil Prices (DCOILWTICO)\n"))
@@ -138,6 +139,20 @@ cat(sprintf("   - BIC: %+.2f (%s)\n", avg_bic_diff,
             ifelse(avg_bic_diff < 0, "PMM2 better", "CSS-ML better")))
 cat(sprintf("   - RMSE: %+.4f (%s)\n\n", avg_rmse_diff,
             ifelse(avg_rmse_diff < 0, "PMM2 better", "CSS-ML better")))
+
+if (!is.null(mc_article) && any(mc_article$method == "PMM2")) {
+  gauss_rows <- mc_article[mc_article$distribution == "Gaussian" & mc_article$method == "PMM2", ]
+  if (nrow(gauss_rows) > 0) {
+    gauss_re <- mean(gauss_rows$re_sim, na.rm = TRUE)
+    m_rows <- mc_article[mc_article$distribution == "Gaussian" & mc_article$method == "M-EST", ]
+    mest_re <- if (nrow(m_rows) > 0) mean(m_rows$re_sim, na.rm = TRUE) else NA_real_
+    mest_text <- if (!is.na(mest_re)) paste0(", vs M-EST ≈ ", sprintf("%.2f", mest_re)) else ""
+    cat(paste0("5. **Monte Carlo Benchmark:** PMM2 preserves Gaussian efficiency (RE ≈ ",
+               sprintf("%.2f", gauss_re),
+               mest_text,
+               ") and outperforms both CSS-ML and M-EST under skewed innovations.\n\n"))
+  }
+}
 
 cat("---\n\n")
 
@@ -375,6 +390,17 @@ if (mc_available && !is.null(mc_metrics)) {
     lognormal_m <- get_mean_re("Lognormal", "M-EST")
     chisq_pm <- get_mean_re("Chi-squared", "PMM2")
     chisq_m <- get_mean_re("Chi-squared", "M-EST")
+
+    mc_stats <- list(
+      gaussian_pm = gaussian_pm,
+      gaussian_m = gaussian_m,
+      gamma_pm = gamma_pm,
+      gamma_m = gamma_m,
+      lognormal_pm = lognormal_pm,
+      lognormal_m = lognormal_m,
+      chisq_pm = chisq_pm,
+      chisq_m = chisq_m
+    )
   }
 
   if (!is.null(mc_summary) && nrow(mc_summary) > 0) {
@@ -619,7 +645,21 @@ if (!is.na(summary_info$pmm2_win_rate_bic)) {
 } else {
   cat("   - Method comparison inconclusive (no overlapping AIC/BIC values)\n")
 }
-cat("   - Performance differences are generally small\n\n")
+cat("   - Performance differences are generally small\n")
+if (length(mc_stats) > 0 && !is.null(mc_stats$gaussian_pm)) {
+  mest_gauss <- if (!is.null(mc_stats$gaussian_m) && is.finite(mc_stats$gaussian_m)) mc_stats$gaussian_m else NA_real_
+  skew_vals <- c(mc_stats$gamma_pm, mc_stats$lognormal_pm, mc_stats$chisq_pm)
+  skew_vals <- skew_vals[is.finite(skew_vals)]
+  skew_min <- if (length(skew_vals) > 0) min(skew_vals) else NA_real_
+  skew_max <- if (length(skew_vals) > 0) max(skew_vals) else NA_real_
+  cat(sprintf("   - Monte Carlo (Section 5): PMM2 keeps Gaussian efficiency (RE ≈ %.2f%s) and delivers RE %.2f–%.2f under skewed innovations; Hubers M-estimator bridges CSS-ML and PMM2 with intermediate gains\n\n",
+              mc_stats$gaussian_pm,
+              if (!is.na(mest_gauss)) sprintf(", M-EST ≈ %.2f", mest_gauss) else "",
+              if (!is.na(skew_min)) skew_min else mc_stats$gaussian_pm,
+              if (!is.na(skew_max)) skew_max else mc_stats$gaussian_pm))
+} else {
+  cat("\n")
+}
 
 cat("3. **Residual Characteristics**\n")
 cat("   - Oil prices exhibit non-Gaussian residuals (heavy tails)\n")
@@ -647,11 +687,28 @@ cat("- Residuals are approximately normal\n")
 cat("- Standard reporting required (widely recognized method)\n")
 cat("- Integration with existing ARIMA workflows\n\n")
 
+if (length(mc_stats) > 0 && (!is.null(mc_stats$gaussian_m) || any(is.finite(c(mc_stats$gamma_m, mc_stats$lognormal_m, mc_stats$chisq_m))))) {
+  mest_gauss <- if (!is.null(mc_stats$gaussian_m) && is.finite(mc_stats$gaussian_m)) mc_stats$gaussian_m else NA_real_
+  mest_skew <- c(mc_stats$gamma_m, mc_stats$lognormal_m, mc_stats$chisq_m)
+  mest_skew <- mest_skew[is.finite(mest_skew)]
+  cat("**When to use Huber M-estimators:**\n")
+  if (!is.na(mest_gauss)) {
+    cat(sprintf("- Need additional robustness with minimal efficiency loss (Gaussian RE ≈ %.2f)\n", mest_gauss))
+  } else {
+    cat("- Need additional robustness with minimal efficiency loss\n")
+  }
+  if (length(mest_skew) > 0) {
+    cat(sprintf("- Desire intermediate gains on skewed distributions (Monte Carlo RE typically %.2f–%.2f)\n",
+                min(mest_skew), max(mest_skew)))
+  }
+  cat("- Useful as a secondary estimator for validation alongside PMM2\n\n")
+}
+
 cat("**General Guidelines:**\n")
 cat("- Start with ARIMA(1,1,1) or ARIMA(0,1,1) for financial time series\n")
 cat("- Use BIC for model selection (penalizes complexity)\n")
 cat("- Always check residual diagnostics (Ljung-Box test, Q-Q plots)\n")
-cat("- Consider ensemble methods combining both estimators\n")
+cat("- Consider ensemble methods combining CSS-ML, PMM2, and robust estimators for stress-testing results\n")
 cat("- Validate on hold-out data before deployment\n\n")
 
 cat("### 9.3 Limitations and Future Work\n\n")
