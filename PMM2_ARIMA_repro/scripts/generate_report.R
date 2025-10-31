@@ -37,6 +37,39 @@ comparison <- read.csv(file.path(output_dir, "method_comparison.csv"))
 desc_stats <- read.csv(file.path(output_dir, "descriptive_stats.csv"))
 param_mse <- read.csv(file.path(output_dir, "parameter_mse_ratio.csv"))
 
+mc_dir <- file.path(output_dir, "monte_carlo")
+mc_available <- dir.exists(mc_dir)
+mc_metrics <- NULL
+mc_re_vs_sample <- NULL
+mc_cumulants <- NULL
+mc_article <- NULL
+
+if (mc_available) {
+  metrics_path <- file.path(mc_dir, "monte_carlo_metrics.csv")
+  if (file.exists(metrics_path)) {
+    mc_metrics <- read.csv(metrics_path, stringsAsFactors = FALSE)
+  } else {
+    mc_available <- FALSE
+  }
+
+  if (mc_available) {
+    sample_path <- file.path(mc_dir, "arima110_re_vs_sample_size.csv")
+    if (file.exists(sample_path)) {
+      mc_re_vs_sample <- read.csv(sample_path, stringsAsFactors = FALSE)
+    }
+
+    cumulants_path <- file.path(mc_dir, "arima110_residual_cumulants.csv")
+    if (file.exists(cumulants_path)) {
+      mc_cumulants <- read.csv(cumulants_path, stringsAsFactors = FALSE)
+    }
+
+    article_path <- file.path(mc_dir, "article_comparison.csv")
+    if (file.exists(article_path)) {
+      mc_article <- read.csv(article_path, stringsAsFactors = FALSE)
+    }
+  }
+}
+
 cat("Generating comprehensive analytical report...\n\n")
 
 # Create report file
@@ -279,8 +312,185 @@ cat(sprintf("| Time | %.4f s | %.4f s | %+.4f s |\n\n",
 
 cat("---\n\n")
 
+if (mc_available && !is.null(mc_metrics)) {
+  cat("## 5. MONTE CARLO EXPERIMENT: SYNTHETIC VALIDATION\n\n")
+  cat("Synthetic simulations benchmark PMM2, CSS-ML, and robust Hubers M-estimators under controlled innovation distributions.\n\n")
+
+  mc_phi1 <- mc_metrics[mc_metrics$model == "ARIMA(1,1,0)" &
+                          mc_metrics$parameter == "phi1", , drop = FALSE]
+  mc_summary <- NULL
+  gaussian_pm <- NA_real_
+  gaussian_m <- NA_real_
+  gamma_pm <- NA_real_
+  gamma_m <- NA_real_
+  lognormal_pm <- NA_real_
+  lognormal_m <- NA_real_
+  chisq_pm <- NA_real_
+  chisq_m <- NA_real_
+
+  if (nrow(mc_phi1) > 0) {
+    agg_re <- aggregate(mc_phi1$relative_efficiency,
+                        by = list(distribution = mc_phi1$distribution,
+                                  method = mc_phi1$method),
+                        FUN = function(x) mean(x, na.rm = TRUE))
+    names(agg_re)[3] <- "mean_re"
+
+    agg_vr <- aggregate(mc_phi1$variance_reduction,
+                        by = list(distribution = mc_phi1$distribution,
+                                  method = mc_phi1$method),
+                        FUN = function(x) mean(x, na.rm = TRUE))
+    names(agg_vr)[3] <- "mean_vr"
+
+    mc_summary <- merge(agg_re, agg_vr, by = c("distribution", "method"), all = TRUE)
+    dist_order <- c("Gaussian", "Gamma", "Lognormal", "Chi-squared")
+    method_order <- c("CSS", "OLS", "M-EST", "PMM2")
+    mc_summary$distribution <- factor(mc_summary$distribution, levels = dist_order)
+    mc_summary$method <- factor(mc_summary$method, levels = method_order)
+    mc_summary <- mc_summary[order(mc_summary$distribution, mc_summary$method), ]
+    mc_summary$distribution <- as.character(mc_summary$distribution)
+    mc_summary$method <- as.character(mc_summary$method)
+    mc_summary$mean_re_value <- mc_summary$mean_re
+    mc_summary$mean_vr_value <- mc_summary$mean_vr
+    mc_summary$MeanRE <- ifelse(is.na(mc_summary$mean_re_value),
+                                "NA",
+                                sprintf("%.3f", mc_summary$mean_re_value))
+    mc_summary$MeanVR <- ifelse(is.na(mc_summary$mean_vr_value),
+                                "--",
+                                sprintf("%+.1f", mc_summary$mean_vr_value))
+
+    get_mean_re <- function(dist, method) {
+      idx <- which(mc_summary$distribution == dist & mc_summary$method == method)
+      if (length(idx) == 0) {
+        NA_real_
+      } else {
+        mc_summary$mean_re_value[idx[1]]
+      }
+    }
+
+    gaussian_pm <- get_mean_re("Gaussian", "PMM2")
+    gaussian_m <- get_mean_re("Gaussian", "M-EST")
+    gamma_pm <- get_mean_re("Gamma", "PMM2")
+    gamma_m <- get_mean_re("Gamma", "M-EST")
+    lognormal_pm <- get_mean_re("Lognormal", "PMM2")
+    lognormal_m <- get_mean_re("Lognormal", "M-EST")
+    chisq_pm <- get_mean_re("Chi-squared", "PMM2")
+    chisq_m <- get_mean_re("Chi-squared", "M-EST")
+  }
+
+  if (!is.null(mc_summary) && nrow(mc_summary) > 0) {
+    cat("### 5.1 Mean Relative Efficiency (ARIMA(1,1,0), $\\phi_1$)\n\n")
+    cat("| Distribution | Method | Mean RE | Mean VR (%) |\n")
+    cat("|--------------|--------|---------|--------------|\n")
+    for (i in seq_len(nrow(mc_summary))) {
+      cat(sprintf("| %s | %s | %s | %s |\n",
+                  mc_summary$distribution[i],
+                  mc_summary$method[i],
+                  mc_summary$MeanRE[i],
+                  mc_summary$MeanVR[i]))
+    }
+    cat("\n")
+  }
+
+  cat("### 5.2 Key Observations\n\n")
+  if (!is.na(gaussian_pm)) {
+    if (!is.na(gaussian_m)) {
+      cat(sprintf("- **Gaussian innovations:** PMM2 mean RE = %.2f, M-EST = %.2f (CSS/OLS baseline = 1.00).\n",
+                  gaussian_pm, gaussian_m))
+    } else {
+      cat(sprintf("- **Gaussian innovations:** PMM2 mean RE = %.2f while classical estimators remain at 1.00.\n",
+                  gaussian_pm))
+    }
+  }
+  if (!is.na(gamma_pm)) {
+    if (!is.na(gamma_m)) {
+      cat(sprintf("- **Gamma innovations ($\\gamma_3 \\approx 1.4$):** PMM2 mean RE = %.2f versus M-EST = %.2f.\n",
+                  gamma_pm, gamma_m))
+    } else {
+      cat(sprintf("- **Gamma innovations ($\\gamma_3 \\approx 1.4$):** PMM2 mean RE = %.2f.\n",
+                  gamma_pm))
+    }
+  }
+  if (!is.na(lognormal_pm)) {
+    if (!is.na(lognormal_m)) {
+      cat(sprintf("- **Lognormal innovations ($\\gamma_3 \\approx 2.0$):** PMM2 mean RE = %.2f, M-EST = %.2f.\n",
+                  lognormal_pm, lognormal_m))
+    } else {
+      cat(sprintf("- **Lognormal innovations ($\\gamma_3 \\approx 2.0$):** PMM2 mean RE = %.2f.\n",
+                  lognormal_pm))
+    }
+  }
+  if (!is.na(chisq_pm)) {
+    if (!is.na(chisq_m)) {
+      cat(sprintf("- **Chi-squared innovations ($\\gamma_3 \\approx 1.6$):** PMM2 mean RE = %.2f, M-EST = %.2f.\n",
+                  chisq_pm, chisq_m))
+    } else {
+      cat(sprintf("- **Chi-squared innovations ($\\gamma_3 \\approx 1.6$):** PMM2 mean RE = %.2f.\n",
+                  chisq_pm))
+    }
+  }
+  if (!is.null(mc_article) && nrow(mc_article) > 0) {
+    pm_rows <- mc_article[mc_article$method == "PMM2" &
+                            !is.na(mc_article$rmse_ratio), , drop = FALSE]
+    if (nrow(pm_rows) > 0) {
+      mean_rmse_ratio <- mean(pm_rows$rmse_ratio, na.rm = TRUE)
+      cat(sprintf("- **Alignment with manuscript tables:** average PMM2 RMSE ratio = %.2f (1.00 indicates perfect agreement).\n",
+                  mean_rmse_ratio))
+    }
+  }
+  cat("\n")
+
+  if (!is.null(mc_re_vs_sample) && nrow(mc_re_vs_sample) > 0) {
+    dist_order <- c("Gaussian", "Gamma", "Lognormal", "Chi-squared")
+    mc_re_vs_sample$distribution <- factor(mc_re_vs_sample$distribution,
+                                           levels = dist_order)
+    mc_re_vs_sample <- mc_re_vs_sample[order(mc_re_vs_sample$distribution), ]
+    mc_re_vs_sample$distribution <- as.character(mc_re_vs_sample$distribution)
+
+    format_re_value <- function(x) {
+      if (is.na(x)) {
+        "--"
+      } else {
+        sprintf("%.2f", x)
+      }
+    }
+
+    cat("### 5.3 Sample Size Effect (PMM2 RE)\n\n")
+    cat("| Distribution | N=100 | N=200 | N=500 | N=1000 |\n")
+    cat("|--------------|-------|-------|-------|--------|\n")
+    for (i in seq_len(nrow(mc_re_vs_sample))) {
+      row <- mc_re_vs_sample[i, ]
+      cat(sprintf("| %s | %s | %s | %s | %s |\n",
+                  row$distribution,
+                  format_re_value(row$RE_N100),
+                  format_re_value(row$RE_N200),
+                  format_re_value(row$RE_N500),
+                  format_re_value(row$RE_N1000)))
+    }
+    cat("\n")
+  }
+
+  if (!is.null(mc_cumulants) && nrow(mc_cumulants) > 0) {
+    cat("### 5.4 Residual Cumulants under PMM2\n\n")
+    cat("| Distribution | True Skew | Residual Skew (mean ± sd) | Residual Kurtosis (mean ± sd) |\n")
+    cat("|--------------|-----------|---------------------------|-------------------------------|\n")
+    for (i in seq_len(nrow(mc_cumulants))) {
+      row <- mc_cumulants[i, ]
+      cat(sprintf("| %s | %.2f | %.2f ± %.2f | %.2f ± %.2f |\n",
+                  row$distribution,
+                  row$true_skewness,
+                  row$residual_skewness_mean,
+                  row$residual_skewness_sd,
+                  row$residual_kurtosis_mean,
+                  row$residual_kurtosis_sd))
+    }
+    cat("\n")
+  }
+
+  cat("---\n\n")
+}
+
 # ==================== PARAMETER MSE RATIO ====================
-cat("## 5. PARAMETER ESTIMATE MSE RATIO\n\n")
+cat("## 6. PARAMETER ESTIMATE MSE RATIO\n\n")
 
 cat("Estimator quality is evaluated via the theoretical ratio ")
 cat("\\( g = 1 - c_3^2/(2 + c_4) \\), where \\(c_3\\) and \\(c_4\\) are ")
@@ -307,9 +517,9 @@ cat("Values < 1 favor PMM2, > 1 favor CSS-ML; ratios derive from observed residu
 cat("---\n\n")
 
 # ==================== RESIDUAL ANALYSIS ====================
-cat("## 6. RESIDUAL ANALYSIS\n\n")
+cat("## 7. RESIDUAL ANALYSIS\n\n")
 
-cat("### 6.1 Distribution Characteristics\n\n")
+cat("### 7.1 Distribution Characteristics\n\n")
 
 cat("**Skewness by Method and Model:**\n\n")
 cat("| Model | CSS-ML | PMM2 | Closer to Zero |\n")
@@ -339,7 +549,7 @@ for (model in unique(results$Model)) {
 }
 cat("\n")
 
-cat("### 6.2 Interpretation\n\n")
+cat("### 7.2 Interpretation\n\n")
 
 avg_kurt_css <- mean(abs(avg_css$Kurtosis))
 avg_kurt_pmm2 <- mean(abs(avg_pmm2$Kurtosis))
@@ -362,7 +572,7 @@ if (avg_kurt_css > 3) {
 cat("---\n\n")
 
 # ==================== COMPUTATIONAL EFFICIENCY ====================
-cat("## 7. COMPUTATIONAL EFFICIENCY\n\n")
+cat("## 8. COMPUTATIONAL EFFICIENCY\n\n")
 
 cat("| Model | CSS-ML Time (s) | PMM2 Time (s) | Speedup Factor |\n")
 cat("|-------|----------------|---------------|----------------|\n")
@@ -385,9 +595,9 @@ cat(sprintf("**Average Speedup:** %.2fx (%s is faster)\n\n",
 cat("---\n\n")
 
 # ==================== CONCLUSIONS ====================
-cat("## 8. CONCLUSIONS AND RECOMMENDATIONS\n\n")
+cat("## 9. CONCLUSIONS AND RECOMMENDATIONS\n\n")
 
-cat("### 8.1 Main Findings\n\n")
+cat("### 9.1 Main Findings\n\n")
 
 cat("1. **Model Selection**\n")
 cat(sprintf("   - Best overall model: **%s** using **%s**\n",
@@ -425,7 +635,7 @@ if (avg_speedup > 1) {
   cat(sprintf("   - But difference is negligible (%.2fx)\n\n", 1/avg_speedup))
 }
 
-cat("### 8.2 Practical Recommendations\n\n")
+cat("### 9.2 Practical Recommendations\n\n")
 
 cat("**When to use PMM2:**\n")
 cat("- Data exhibits strong non-Gaussian characteristics (|kurtosis| > 3)\n")
@@ -444,7 +654,7 @@ cat("- Always check residual diagnostics (Ljung-Box test, Q-Q plots)\n")
 cat("- Consider ensemble methods combining both estimators\n")
 cat("- Validate on hold-out data before deployment\n\n")
 
-cat("### 8.3 Limitations and Future Work\n\n")
+cat("### 9.3 Limitations and Future Work\n\n")
 
 cat("**Limitations:**\n")
 cat("- Single dataset (WTI oil prices)\n")
