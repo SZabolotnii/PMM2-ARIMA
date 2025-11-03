@@ -12,10 +12,12 @@ This directory bundles everything reviewers need to regenerate the empirical res
 
 ## Requirements
 
-- R ≥ 4.3 (tested with 4.3.2).
-- R packages: `EstemPMM`, `ggplot2`, `gridExtra`, `RColorBrewer`, `tseries`, `knitr`, `MASS`.
-  - Install via CRAN where possible, and obtain `EstemPMM` from the project repository:  
-    `remotes::install_github("SZabolotnii/EstemPMM")`
+- R ≥ 4.3 (tested with 4.5.1).
+- R packages: `EstemPMM` (version 0.1.1), `ggplot2`, `gridExtra`, `RColorBrewer`, `tseries`, `knitr`, `MASS`.
+  - Install CRAN packages: `install.packages(c("ggplot2", "gridExtra", "RColorBrewer", "tseries", "knitr", "MASS"))`
+  - Install `EstemPMM` version 0.1.1 from the included archive:
+    `install.packages("EstemPMM2-lib/EstemPMM_0.1.1.tar.gz", repos = NULL, type = "source")`
+  - Alternatively, install from GitHub: `remotes::install_github("SZabolotnii/EstemPMM")`
 - Optional: `pandoc` if you plan to convert the Markdown report to HTML/PDF, and a LaTeX distribution (`TeXLive`, `TinyTeX`, …) to compile `latex/PMM2_ARIMA.tex`.
 
 ## Reproducing the WTI Experiment
@@ -86,9 +88,13 @@ Rscript scripts/run_monte_carlo.R --standardize-innov=false --css-method=CSS-ML
 - `article_comparison.csv` – порівняння симуляцій з опублікованими значеннями та нові колонки з відхиленнями.
 - Колонка `M-EST` у зведених файлах містить результати Hubерівських M-оцінок для AR-компонентів, що дає змогу порівняти PMM2/CSS з робастними оцінками.
 
-## Open Items
+## Software Versions
 
-- **`EstemPMM` provenance:** document the exact commit or release used when you freeze the archive so reviewers can install the same implementation.
+- **R:** Version 4.5.1 (2025-06-13)
+- **EstemPMM:** Version 0.1.1 (included in `EstemPMM2-lib/EstemPMM_0.1.1.tar.gz`)
+- **Platform:** macOS Sequoia 15.6.1 (aarch64-apple-darwin24.4.0)
+- **Random seed:** All scripts use `set.seed(12345)` for reproducibility
+- **Session info:** Complete R environment details available in `sessionInfo.txt`
 
 ## Housekeeping
 

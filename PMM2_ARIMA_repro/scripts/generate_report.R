@@ -1,6 +1,10 @@
 # Generate Comprehensive Analytical Report
 # This script creates a detailed markdown report with all findings
 
+
+# Set seed for reproducibility
+set.seed(12345)
+
 get_script_dir <- function() {
   frame_files <- vapply(sys.frames(), function(f) {
     if (!is.null(f$ofile)) f$ofile else NA_character_

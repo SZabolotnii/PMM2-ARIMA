@@ -1,6 +1,10 @@
 # Master Script: Run Complete ARIMA Comparison Study
 # This script orchestrates the entire research pipeline
 
+
+# Set seed for reproducibility
+set.seed(12345)
+
 get_script_dir <- function() {
   # Try to resolve the path when sourced or executed via Rscript
   frame_files <- vapply(sys.frames(), function(f) {
