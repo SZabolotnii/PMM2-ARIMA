@@ -8,7 +8,7 @@ authors:
     given-names: Serhii
     email: serhii.zabolotnii@example.com
     orcid: https://orcid.org/0000-0000-0000-0000
-repository-code: "https://github.com/SZabolotnii/PMM2-ARIMA"
+repository-code: "https://github.com/SZabolotnii/PMM2ARIMARepro"
 license: MIT
 keywords:
   - time series

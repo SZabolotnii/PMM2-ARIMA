@@ -1,6 +1,6 @@
 # PMM2-ARIMA Reproducibility Package
 
-This directory bundles everything reviewers need to regenerate the empirical results that feed into `latex/PMM2_ARIMA.tex`. The scripts reproduce both the WTI case-study analysis and the Monte Carlo experiments from Section 3.
+This directory bundles everything reviewers need to regenerate the empirical results that feed into `latex/PMM2_ARIMA.tex`. The scripts reproduce both the WTI case-study analysis and the Monte Carlo experiments from Section 3.
 
 ## Repository Layout
 
@@ -52,41 +52,41 @@ Rscript scripts/generate_report.R
 
 After a successful run you should see:
 
-- `results/full_results.csv` – values used in Table \ref{tab:wti_comprehensive_results} of the manuscript.
-- `results/method_comparison.csv` – deltas reported in Table \ref{tab:wti_method_comparison}.
-- `results/descriptive_stats.csv` – descriptive panel in Section 4.
+- `results/full_results.csv` – values used in Table \ref{tab:wti_comprehensive_results} of the manuscript.
+- `results/method_comparison.csv` – deltas reported in Table \ref{tab:wti_method_comparison}.
+- `results/descriptive_stats.csv` – descriptive panel in Section 4.
 - `results/plots/*.png` – Figures 1–10 (numbered to match captions).
 - `results/ANALYTICAL_REPORT.md` – extended prose that aligns with the LaTeX discussion.
 - `results/monte_carlo/*.csv` – simulation summaries mirroring the Monte Carlo tables (per-model metrics, relative efficiencies, residual cumulants).
-- `results/monte_carlo/article_comparison.csv` – expanded table that juxtaposes симуляційні оцінки з опублікованими у статті величинами та додає відхилення/співвідношення.
+- `results/monte_carlo/article_comparison.csv` – expanded table that juxtaposes simulation estimates with published article values and adds deviations/ratios.
 
 The numerical values in the LaTeX tables were exported by doubling the AIC/BIC scores for formatting purposes; the CSV files contain the raw outputs from R. Reviewers can regenerate the manuscript by re-running the scripts and then compiling `latex/PMM2_ARIMA.tex`.
 
-## Monte Carlo симуляції
+## Monte Carlo Simulations
 
-The dedicated driver `scripts/run_monte_carlo.R` reconstructs the simulation study (default: 2000 повторень на комбінацію, seed = 12345). Expect the full run to take 20–40 хвилин залежно від обладнання.
+The dedicated driver `scripts/run_monte_carlo.R` reconstructs the simulation study (default: 2000 replications per combination, seed = 12345). Expect the full run to take 20–40 minutes depending on hardware.
 
 ```bash
-# Повний запуск Monte Carlo
+# Full Monte Carlo run
 Rscript scripts/run_monte_carlo.R
 
-# Кастомізація (менше повторень для швидкої перевірки)
+# Customization (fewer replications for quick verification)
 Rscript scripts/run_monte_carlo.R --reps=200 --seed=20250101
 
-# Варіація припущень
+# Variation of assumptions
 Rscript scripts/run_monte_carlo.R --standardize-innov=false --css-method=CSS-ML
 ```
 
-Опції `--standardize-innov` та `--css-method` дають змогу перевіряти чутливість до масштабу інновацій та типу класичної оцінки (доступні значення: `CSS`, `CSS-ML`, `ML`). Прапорець `--m-est=false` вимикає додаткові робастні оцінки, які за замовчуванням обчислюються для AR-компонент.
+Options `--standardize-innov` and `--css-method` allow checking sensitivity to innovation scale and type of classical estimate (available values: `CSS`, `CSS-ML`, `ML`). The `--m-est=false` flag disables additional robust estimates, which are computed by default for AR components.
 
-Ключові артефакти:
+Key artifacts:
 
-- `monte_carlo_metrics.csv` – повний зріз метрик (bias, var, MSE, RE, VR) для кожної моделі, параметра й розподілу.
-- `arima110_summary.csv`, `arima110_re_vs_sample_size.csv` – дані для таблиць ARIMA(1,1,0) та залежності RE від N.
-- `arima011_summary.csv`, `arima111_summary.csv`, `arima210_summary.csv` – скорочені порівняння для інших конфігурацій.
-- `arima110_residual_cumulants.csv` – середні кумулянти залишків PMM2 (Таблиця \ref{tab:residual_cumulants}).
-- `article_comparison.csv` – порівняння симуляцій з опублікованими значеннями та нові колонки з відхиленнями.
-- Колонка `M-EST` у зведених файлах містить результати Hubерівських M-оцінок для AR-компонентів, що дає змогу порівняти PMM2/CSS з робастними оцінками.
+- `monte_carlo_metrics.csv` – complete cross-section of metrics (bias, var, MSE, RE, VR) for each model, parameter, and distribution.
+- `arima110_summary.csv`, `arima110_re_vs_sample_size.csv` – data for ARIMA(1,1,0) tables and RE dependence on N.
+- `arima011_summary.csv`, `arima111_summary.csv`, `arima210_summary.csv` – condensed comparisons for other configurations.
+- `arima110_residual_cumulants.csv` – average cumulants of PMM2 residuals (Table \ref{tab:residual_cumulants}).
+- `article_comparison.csv` – comparison of simulations with published values and new columns with deviations.
+- The `M-EST` column in summary files contains results of Huber M-estimates for AR components, allowing comparison of PMM2/CSS with robust estimates.
 
 ## Software Versions
 
