@@ -280,87 +280,36 @@ PMM метод успішно застосовувався до різноман
 \subsection{ARIMA Моделі: Основи та Класичне Оцінювання}
 \label{subsec:arima_basics}
 
-\subsubsection{Визначення ARIMA(p,d,q) Моделі}
-
-Авторегресійна інтегрована модель ковзного середнього ARIMA(p,d,q) описує часовий ряд $\{y_t\}_{t=1}^T$ через три компоненти: авторегресійну (AR) порядку $p$, диференціювання порядку $d$, та ковзного середнього (MA) порядку $q$.
-
-\begin{definition}[ARIMA(p,d,q) модель]
-Часовий ряд $\{y_t\}$ слідує ARIMA(p,d,q) моделі, якщо $d$-та різниця ряду
-\begin{equation}
-\label{eq:differencing}
-z_t = \Delta^d y_t = (1-B)^d y_t
-\end{equation}
-задовольняє стаціонарну та оборотну ARMA(p,q) модель:
+Розглянемо стандартну ARIMA(p,d,q) модель для часового ряду $\{y_t\}_{t=1}^T$, де $d$-та різниця $z_t = \Delta^d y_t = (1-B)^d y_t$ задовольняє стаціонарну та оборотну ARMA(p,q) модель:
 \begin{equation}
 \label{eq:arma}
 \Phi(B) z_t = \Theta(B) \varepsilon_t
 \end{equation}
-де $B$ --- оператор зсуву ($B y_t = y_{t-1}$), та
-\begin{align}
-\Phi(B) &= 1 - \phi_1 B - \phi_2 B^2 - \cdots - \phi_p B^p \label{eq:ar_poly} \\
-\Theta(B) &= 1 + \theta_1 B + \theta_2 B^2 + \cdots + \theta_q B^q \label{eq:ma_poly}
-\end{align}
-є поліномами авторегресії та ковзного середнього відповідно, а $\{\varepsilon_t\}$ --- послідовність незалежних однаково розподілених (i.i.d.) інновацій з нульовим середнім та дисперсією $\sigma^2$.
-\end{definition}
+де $B$ --- оператор зсуву, $\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ та $\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$ --- поліноми авторегресії та ковзного середнього, а $\{\varepsilon_t\}$ --- послідовність i.i.d. інновацій з $\E[\varepsilon_t] = 0$ та $\text{Var}[\varepsilon_t] = \sigma^2$. Корені характеристичних рівнянь $\Phi(z) = 0$ та $\Theta(z) = 0$ лежать поза одиничним колом, що гарантує стаціонарність та оборотність відповідно.
 
-Еквівалентно, ARIMA модель може бути записана у явній формі:
-\begin{equation}
-\label{eq:arima_explicit}
-y_t = \sum_{j=1}^{d} \binom{d}{j} (-1)^{j+1} y_{t-j} + \sum_{i=1}^{p} \phi_i z_{t-i} + \varepsilon_t + \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}
-\end{equation}
+\paragraph{Класичні методи оцінювання.} Нехай $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$ --- вектор параметрів розміру $k = p + q$. Два основні методи використовуються як базові для порівняння:
 
-\paragraph{Умови стаціонарності та оборотності.}
-
-\begin{itemize}
-    \item \textbf{Стаціонарність:} Корені характеристичного рівняння $\Phi(z) = 0$ лежать поза одиничним колом: $|z_i| > 1$ для всіх $i = 1, \ldots, p$.
-
-    \item \textbf{Оборотність:} Корені характеристичного рівняння $\Theta(z) = 0$ лежать поза одиничним колом: $|z_j| > 1$ для всіх $j = 1, \ldots, q$.
-\end{itemize}
-
-\subsubsection{Класичні Методи Оцінювання}
-
-Нехай $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$ --- вектор параметрів розміру $k = p + q$.
-
-\paragraph{Метод умовної суми квадратів (CSS).}
-
-CSS метод мінімізує умовну суму квадратів залишків:
-\begin{equation}
-\label{eq:css}
-\hat{\boldsymbol{\theta}}_{\text{CSS}} = \arg\min_{\boldsymbol{\theta}} S(\boldsymbol{\theta}) = \arg\min_{\boldsymbol{\theta}} \sum_{t=p+1}^{T} \varepsilon_t^2(\boldsymbol{\theta})
-\end{equation}
-де $\varepsilon_t(\boldsymbol{\theta})$ --- залишки, обчислені рекурсивно з початковими умовами $\varepsilon_t = 0$ для $t \leq 0$ та $z_t = 0$ для $t \leq 0$.
-
-\paragraph{Звичайний метод найменших квадратів (OLS).}
-
-Для авторегресійної частини, OLS оцінює параметри через лінійну регресію:
+\textit{Метод найменших квадратів (OLS)} для AR компоненти:
 \begin{equation}
 \label{eq:ols}
 \hat{\boldsymbol{\phi}}_{\text{OLS}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{z}
 \end{equation}
-де $\mathbf{z} = (z_{p+1}, \ldots, z_T)^\top$ та $\mathbf{X}$ --- матриця регресорів розміру $(T-p) \times p$ з елементами $X_{ti} = z_{t-i}$.
+де $\mathbf{z} = (z_{p+1}, \ldots, z_T)^\top$ та $\mathbf{X}$ --- матриця лагових значень.
 
-\paragraph{Метод максимальної правдоподібності (MLE).}
-
-За припущення гаусовості інновацій $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$, MLE максимізує функцію правдоподібності:
+\textit{Метод максимальної правдоподібності (MLE)} за припущення $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$:
 \begin{equation}
 \label{eq:mle}
 \hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta} \mid \mathbf{y}) = \arg\max_{\boldsymbol{\theta}} \left\{ -\frac{T}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{t=1}^{T} \varepsilon_t^2(\boldsymbol{\theta}) \right\}
 \end{equation}
 
-За умови нормальності, MLE є асимптотично ефективним, консистентним та асимптотично нормальним:
-\begin{equation}
-\label{eq:mle_asymptotic}
-\sqrt{T}(\hat{\boldsymbol{\theta}}_{\text{MLE}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2 \left[\E\left(\frac{\partial \varepsilon_t}{\partial \boldsymbol{\theta}} \frac{\partial \varepsilon_t}{\partial \boldsymbol{\theta}^\top}\right)\right]^{-1}\right)
-\end{equation}
-
-Однак, ці властивості порушуються за умов негаусовості інновацій.
+За умови нормальності інновацій, MLE досягає асимптотичної ефективності: $\sqrt{T}(\hat{\boldsymbol{\theta}}_{\text{MLE}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}(0, \mathbf{I}^{-1}(\boldsymbol{\theta}_0))$, де $\mathbf{I}(\boldsymbol{\theta}_0)$ --- інформаційна матриця Фішера. Однак за негаусовості інновацій MLE втрачає оптимальність, а OLS залишається консистентним, але неефективним. Ця проблема мотивує розробку альтернативних методів оцінювання, адаптованих до негаусових розподілів.
 
 \subsection{Теоретичні Основи Методу Максимізації Поліномів}
 \label{subsec:pmm_theory}
 
 \subsubsection{Стохастичні Поліноми}
 
-Метод максимізації поліномів (ММПл) базується на концепції стохастичних поліномів, що є поліноміальними функціями випадкових величин з коефіцієнтами, що залежать від параметрів моделі. Цей метод було розроблено для оцінювання параметрів коли імовірнісні властивості даних суттєво відрізняються від гаусового (нормального) закону.
+Метод максимізації поліномів (PMM) базується на концепції стохастичних поліномів, що є поліноміальними функціями випадкових величин з коефіцієнтами, що залежать від параметрів моделі. Цей метод було розроблено для оцінювання параметрів коли імовірнісні властивості даних суттєво відрізняються від гаусового (нормального) закону.
 
 \begin{definition}[Стохастичний поліном порядку $S$ загального виду]
 Для послідовності випадкових величин $y_v$, $v = \overline{1,N}$, та векторного параметра $\mathbf{a}$, стохастичний поліном порядку $S$ загального виду визначається як:
@@ -408,7 +357,7 @@ f_{SN}^{(p)}(y_v, x_v) = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv}^{(p)} [\phi_i(y_v)
 
 \subsubsection{PMM для Асиметричних Розподілів}
 
-Розглянемо застосування стохастичних поліномів до лінійної багатофакторної регресії з асиметрично розподіленою випадковою складовою~\cite{zabolotnii2018polynomial}. Як базисні функції використовуються степеневі перетворення, математичними сподіваннями від яких є моменти відповідного порядку. Нехай спостереження $\{y_v\}_{v=1}^N$ описуються моделлю
+Розглянемо застосування стохастичних поліномів на прикладі лінійної багатофакторної регресії з асиметрично розподіленою випадковою складовою~\cite{zabolotnii2018polynomial}. Як базисні функції використовуються степеневі перетворення, математичними сподіваннями від яких є моменти відповідного порядку. Нехай спостереження $\{y_v\}_{v=1}^N$ описуються моделлю
 \begin{equation}
 \label{eq:multiple_regression_model}
 y_v = \boldsymbol{x}_v^\top \boldsymbol{\theta} + \xi_v, \qquad \boldsymbol{x}_v = (1, x_{1,v}, \ldots, x_{Q-1,v})^\top,
@@ -441,12 +390,10 @@ y_v = \boldsymbol{x}_v^\top \boldsymbol{\theta} + \xi_v, \qquad \boldsymbol{x}_v
 \phi_2(y_v) &= y_v^2, & \Psi_{2v} &= \eta_v^2(\boldsymbol{\theta}) + \mu_2.
 \end{align}
 Матричні елементи $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv}\Psi_{jv}$ визначаються центральними моментами до четвертого порядку, а оптимальні коефіцієнти~\eqref{eq:optimal_coefficients} набувають вигляду
-\begin{align}
-\label{eq:pmm2_k1_general}
-k_{1,v}^{(p)} &= \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta} \, x_{p,v},\\
-\label{eq:pmm2_k2_general}
-k_{2,v}^{(p)} &= -\frac{\mu_3}{\Delta} \, x_{p,v},
-\end{align}
+\begin{equation}
+\label{eq:pmm2_k_general}
+k_{1,v}^{(p)} = \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta} \, x_{p,v}, \quad k_{2,v}^{(p)} = -\frac{\mu_3}{\Delta} \, x_{p,v},
+\end{equation}
 де
 \begin{equation}
 \label{eq:delta_definition}
@@ -523,40 +470,28 @@ J_{SN}^{(p,q)} = \sum_{v=1}^{N} \sum_{i=1}^{S} \sum_{j=1}^{S} k_{iv}^{(p)} k_{jv
 
 Важлива властивість ММПл полягає у тому, що при збільшенні числа членів стохастичного поліному $S$ дисперсія оцінок зменшується, оскільки кількість добутої інформації асимптотично (при $S \to \infty$) прямує до інформації по Фішеру.
 
-\begin{theorem}[Відносна ефективність PMM2 щодо OLS для асиметричних розподілів]
+\begin{theorem}[Відносна ефективність PMM2 щодо OLS]
 \label{thm:pmm2_basic}
-За умови, що інновації $\varepsilon_t$ мають скінченні моменти до четвертого порядку включно та асиметричний характер розподілу ($\gamma_3 \neq 0$), відносна ефективність PMM2 оцінювача ($S=2$) щодо OLS визначається формулою:
+За умови, що інновації $\varepsilon_t$ мають скінченні моменти до четвертого порядку включно та асиметричний розподіл ($\gamma_3 \neq 0$), відносна ефективність PMM2 щодо OLS визначається як
 \begin{equation}
 \label{eq:re_pmm2_ols}
-\RE_{\text{PMM2/OLS}} = \frac{\Var(\hat{\theta}_{\text{OLS}})}{\Var(\hat{\theta}_{\text{PMM2}})} = \frac{2 + \gamma_4}{2 + \gamma_4 - \gamma_3^2}
+\RE_{\text{PMM2/OLS}} = \frac{\Var(\hat{\theta}_{\text{OLS}})}{\Var(\hat{\theta}_{\text{PMM2}})} = \frac{2 + \gamma_4}{2 + \gamma_4 - \gamma_3^2},
 \end{equation}
-де $\gamma_3$ та $\gamma_4$ --- стандартизовані коефіцієнти асиметрії та ексцесу інновацій відповідно, а $\RE > 1$ означає виграш PMM2 у точності відносно OLS.
+де $\gamma_3$ та $\gamma_4$ --- стандартизовані коефіцієнти асиметрії та ексцесу.
 \end{theorem}
 
 \begin{proof}[Ескіз доведення]
-Доведення базується на співвідношенні варіаційних матриць:
-\begin{equation}
-\mathbf{V}_{\text{PMM2}} = \frac{1}{\RE_{\text{PMM2/OLS}}} \cdot \mathbf{V}_{\text{OLS}}
-\end{equation}
-Для лінійної регресії кількість добутої інформації при $S=1$ дорівнює $J_{1N}^{(p,q)} = \frac{1}{\mu_2}\sum_{v=1}^{N} x_{v,p} x_{v,q}$, що збігається з МНК. Для $S=2$ з урахуванням оптимальних коефіцієнтів отримуємо
-\begin{equation}
-J_{2N}^{(p,q)} = \frac{\mu_4^2 - \mu_2\mu_4}{\mu_2(\mu_4^2 - \mu_2\mu_4 + \mu_3^2)} \sum_{v=1}^{N} x_{v,p} x_{v,q}
-\end{equation}
-Відношення інформацій $J_{2N}/J_{1N}$ дає коефіцієнт відносної ефективності, а перехід від моментного до кумулянтного опису дає формулу~\eqref{eq:re_pmm2_ols}. Детальне доведення наведено в~\cite{kunchenko2002polynomial}.
+Відношення інформаційних матриць $J_{SN}^{(p,q)} = \E\left[\frac{\partial^2 Q_S}{\partial\theta_p\partial\theta_q}\right]$ для $S=1$ (збігається з OLS) та $S=2$ (з оптимальними коефіцієнтами) дає $\mathbf{V}_{\text{PMM2}} = \RE^{-1}_{\text{PMM2/OLS}} \cdot \mathbf{V}_{\text{OLS}}$. Перехід до стандартизованих кумулянтів дає формулу~\eqref{eq:re_pmm2_ols}. Детальне доведення наведено в~\cite{kunchenko2002polynomial}.
 \end{proof}
 
 \paragraph{Інтерпретація відносної ефективності.}
 
 \begin{itemize}
-    \item Для гаусових інновацій ($\gamma_3 = 0$, $\gamma_4 = 0$): $\RE = 1$, тобто PMM еквівалентний OLS, оскільки оцінки співпадають.
-
-    \item Для асиметричних розподілів ($\gamma_3 \neq 0$): $\RE > 1$, що означає виграш PMM2 у точності. Наприклад, для $\gamma_3 = 1.5$ та $\gamma_4 = 3$: $\RE \approx 1.82$, що відповідає зменшенню дисперсії PMM2 на 45\% порівняно з OLS.
-
-    \item При використанні PMM2 відносний виграш у точності залежить лише від коефіцієнтів асиметрії $\gamma_3$ та ексцесу $\gamma_4$.
+    \item Для гаусових інновацій ($\gamma_3 = 0$, $\gamma_4 = 0$): $\RE = 1$, тобто PMM еквівалентний OLS, оскільки оцінки співпадають. Для асиметричних розподілів ($\gamma_3 \neq 0$): $\RE > 1$, що означає виграш PMM2 у точності, що залежить лише від коефіцієнтів асиметрії $\gamma_3$ та ексцесу $\gamma_4$.
 
     \item Коефіцієнт $\RE$ є безрозмірною величиною з діапазону $[1;\infty)$. При наближенні кумулянтних коефіцієнтів до меж допустимих областей відносна ефективність PMM2 зростає необмежено.
 
-    \item Асимптотично відносна ефективність є однаковою для всіх компонентів векторного параметра та не залежить від типу регресійної моделі (лінійна, поліноміальна чи нелінійна). При скінченних вибірках можливі малі відхилення (зазвичай < 5\%) через варіабельність оцінювання.
+    \item Асимптотично відносна ефективність є однаковою для всіх компонентів векторного параметра та не залежить від типу регресійної моделі (лінійна, поліноміальна чи нелінійна). При скінченних вибірках можливі відхилення через варіабельність оцінювання.
 \end{itemize}
 
 \subsection{PMM2 для ARIMA Моделей: Адаптація Методу}
@@ -640,8 +575,7 @@ g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}\,
 \paragraph{Коментарі до реалізації.}
 
 \begin{itemize}
-    \item Алгоритм використовує лише одну дизайн-матрицю, побудовану з оцінок першого кроку. Тому обчислювальна складність визначається матричними добутками $O(n_\text{eff} k)$ та розв'язанням невеликої системи $k \times k$ на кожній ітерації PMM2 (у практиці достатньо 5--10 кроків).
-    \item Якщо вибіркові моменти високих порядків нестабільні, застосовується згладжування (експоненційне домішування з моментами попередньої ітерації), що поліпшує збіжність для коротких рядів.
+    \item Алгоритм використовує лише одну дизайн-матрицю, побудовану з оцінок першого кроку. Тому обчислювальна складність визначається матричними добутками $O(n_\text{eff} k)$ та розв'язанням невеликої системи $k \times k$ на кожній ітерації PMM2.
     \item Перевірка стаціонарності й оборотності виконується проєкцією коефіцієнтів на допустиму область: при виявленні коренів усередині одиничного кола коефіцієнти масштабуються до граничного значення.
 \end{itemize}
 
@@ -685,8 +619,6 @@ g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}\,
 \end{proof}
 
 \textbf{Наслідок.} За умов леми~\ref{lem:generated_regressors}, асимптотична коваріаційна матриця PMM2-оцінок обчислюється стандартним способом (сендвіч-формула), без необхідності корекції на першокроковий оцінювач. Це виправдовує використання класичних формул для стандартних похибок у розділі~\ref{subsec:algorithm}.
-
-\textbf{Практичне зауваження.} Для скінченних вибірок ($N < 500$) можливі малі відхилення через неточність першокрокового оцінювання. У таких випадках рекомендується використовувати HAC (heteroskedasticity and autocorrelation consistent) стандартні похибки типу Newey-West для робастності.
 
 \subsubsection{Консистентність}
 
@@ -736,55 +668,12 @@ g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}\,
 
 \subsubsection{Відносна ефективність}
 
-Оскільки вибраний підхід редукується до лінійного PMM2 із фіксованою $\mathbf{X}$, найбільш показовим є порівняння з МНК у тій самій дизайн-матриці. Відносну ефективність можна описати через детермінант або слід коваріаційних матриць:
-\begin{align}
-\label{eq:re_arima_det}
-RE_{\text{det}} &= \left(\frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|}\right)^{1/k},\\
-\label{eq:re_arima_trace}
-RE_{\text{trace}} &= \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})},
-\end{align}
-де $k=p+q$. Формули~\eqref{eq:re_arima_det}--\eqref{eq:re_arima_trace} прямо наслідують результати підрозділу~\ref{subsec:pmm_theory} та залишаються валідними у ``плагін''-налаштуванні, оскільки різниця між істинними й емпіричними регресорами є $o_p(1)$.
-
-\subsection{Практичні Аспекти Реалізації}
-\label{subsec:implementation}
-
-\subsubsection{Вибір початкового оцінювача}
-
-Базовий крок задає ядро подальшої корекції. На практиці використовуємо:
-\begin{itemize}
-    \item \textbf{CSS} (\texttt{method = "CSS-ML"}) як початкову оцінку, що повертає параметри та залишки $\widehat{\varepsilon}_t^{\text{CSS}}$;
-    \item \textbf{ML} як запасний варіант, якщо CSS сигналізує про проблеми збіжності;
-    \item \textbf{Користувацькі старти} (опція пакета), коли базовий оцінювач відомий заздалегідь; PMM2 у такому разі працює як моментна поправка до заданої точки.
-\end{itemize}
-
-\subsubsection{Нормування та згладжування}
-
-\begin{itemize}
-    \item Диференційований ряд $z_t$ центрується; за бажання його можна масштабувати на стандартне відхилення, щоб уникнути числових перепадів.
-    \item Перші $\max(p,q)$ залишків замінюються нулями --- це узгоджується з реалізацією CSS і не створює штучних ``великих'' моментів.
-    \item Центральні моменти $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$ допускають експоненційне згладжування ($\lambda \approx 0.25$), що стабілізує $s_t(\boldsymbol{\theta})$ за асиметричних розподілів.
-\end{itemize}
-
-\subsubsection{Регуляризація та контроль обмежень}
-
-\begin{itemize}
-    \item Рівняння \eqref{eq:simplified_score} розв'язуються з діагональною добавкою $J \leftarrow J + \lambda I$ (типово $\lambda=10^{-6}$); якщо $cond(J)>10^6$, $\lambda$ збільшується в кілька разів.
-    \item Після кожного оновлення коефіцієнти масштабуються так, щоб модулі коренів AR- і MA-поліномів перевищували $1+\delta$ ($\delta = 10^{-4}$), тобто виконується проєкція на допустимий простір.
-    \item Якщо навіть після проєкції моментний критерій не покращується (backtracking вичерпано), алгоритм повертає попередження та залишає базові оцінки.
-\end{itemize}
-
-\subsubsection{Пост-обробка та діагностика}
-
-\begin{itemize}
-    \item Фінальні параметри передаються у \texttt{stats::arima} з опцією \texttt{fixed}, що дає оновлені залишки та лог-правдоподібність без повторного оптимізаційного циклу.
-    \item Разом з оцінками повертаються кумулянти та коефіцієнт $g$, аби можна було порівняти теоретичне зменшення дисперсії з емпіричним.
-    \item Рекомендується проводити стандартні тести (Ljung--Box, Jarque--Bera) та аналізувати Q-Q графіки; у пакеті використовується статистика Люнга-Бокса
-    \begin{equation}
-    \label{eq:ljung_box}
-    Q(m) = n(n+2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{n-k},
-    \end{equation}
-    що порівнюється з $\chi^2(m - p - q)$, а автокореляції $\hat{\rho}_k$ розраховуються вже для PMM2-залишків.
-\end{itemize}
+Оскільки вибраний підхід редукується до лінійного PMM2 із фіксованою $\mathbf{X}$, природним є порівняння з OLS у тій самій дизайн-матриці. Відносну ефективність можна описати через детермінант або слід коваріаційних матриць ($k=p+q$):
+\begin{equation}
+\label{eq:re_arima}
+RE_{\text{det}} = \left(\frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|}\right)^{1/k}, \quad RE_{\text{trace}} = \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})}.
+\end{equation}
+Ці міри прямо узагальнюють скалярну формулу~\eqref{eq:re_pmm2_ols} на багатопараметричний випадок та залишаються валідними у ``плагін''-налаштуванні, оскільки різниця між істинними й емпіричними регресорами є $o_p(1)$.
 
 % ============================================
 % SECTION 3: EMPIRICAL RESULTS
@@ -797,154 +686,17 @@ RE_{\text{trace}} &= \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr
 \subsection{Дизайн Monte Carlo Експерименту}
 \label{subsec:experiment_design}
 
-\subsubsection{Загальна Структура Експерименту}
+Проведено повнофакторний Monte Carlo експеримент з 2000 повторень для кожної комбінації:
 
-Наше Monte Carlo дослідження структуровано за трьома основними вимірами:
+\textbf{Розміри вибірки:} $N \in \{100, 200, 500, 1000\}$. \textbf{Моделі:} ARIMA(1,1,0) з $\phi_1 = 0.7$; ARIMA(0,1,1) з $\theta_1 = -0.5$; ARIMA(1,1,1) з $\phi_1 = 0.6, \theta_1 = -0.4$; ARIMA(2,1,0) з $\phi_1 = 0.5, \phi_2 = 0.3$. \textbf{Розподіли інновацій:} Gaussian $\mathcal{N}(0,1)$ ($\gamma_3 = 0, \gamma_4 = 0$); Gamma $\Gammadist(2,1)$ ($\gamma_3 \approx 1.41, \gamma_4 \approx 3.0$); Lognormal $\text{LN}(0, 0.5^2)$ ($\gamma_3 \approx 2.0, \gamma_4 \approx 6.2$); Chi-squared $\chi^2(3)$ ($\gamma_3 \approx 1.63, \gamma_4 \approx 4.0$).
 
-\begin{enumerate}
-    \item \textbf{Розміри вибірки:} $N \in \{100, 200, 500, 1000\}$
-    \begin{itemize}
-        \item $N = 100$ --- малі вибірки (типові для коротких фінансових історій)
-        \item $N = 200$ --- середні вибірки (квартальні економічні дані за 50 років)
-        \item $N = 500$ --- великі вибірки (місячні дані за 40+ років)
-        \item $N = 1000$ --- дуже великі вибірки (денні/тижневі дані)
-    \end{itemize}
+Загалом $4 \times 4 \times 4 \times 2000 = 128{,}000$ симуляцій.
 
-    \item \textbf{Конфігурації моделей:} ARIMA(p,d,q)
-    \begin{itemize}
-        \item ARIMA(1,1,0): $\phi_1 = 0.7$
-        \item ARIMA(0,1,1): $\theta_1 = -0.5$
-        \item ARIMA(1,1,1): $\phi_1 = 0.6$, $\theta_1 = -0.4$
-        \item ARIMA(2,1,0): $\phi_1 = 0.5$, $\phi_2 = 0.3$
-    \end{itemize}
+\paragraph{Процедура генерації.} Інновації $\tilde{\varepsilon}_t \sim F_{\varepsilon}$ стандартизуються до $\varepsilon_t = (\tilde{\varepsilon}_t - \E[\tilde{\varepsilon}_t])/\sqrt{\Var(\tilde{\varepsilon}_t)}$. ARIMA ряди генеруються рекурсивно за формулою~\eqref{eq:arma} з відкиданням 100 спостережень як burn-in. Для кожного ряду застосовуються три методи: CSS, OLS (для AR частини) та PMM2 (Алгоритм~\ref{alg:pmm2_arima}).
 
-    \item \textbf{Розподіли інновацій:} Чотири типи розподілів
-    \begin{itemize}
-        \item \textbf{Gaussian} $\mathcal{N}(0,1)$: $\gamma_3 = 0$, $\gamma_4 = 0$ (контроль)
-        \item \textbf{Gamma} $\Gammadist(2,1)$: $\gamma_3 \approx 1.41$, $\gamma_4 \approx 3.0$
-        \item \textbf{Lognormal} $\text{LN}(0, 0.5^2)$: $\gamma_3 \approx 2.0$, $\gamma_4 \approx 6.2$
-        \item \textbf{Chi-squared} $\chi^2(3)$: $\gamma_3 \approx 1.63$, $\gamma_4 \approx 4.0$
-    \end{itemize}
-\end{enumerate}
+\paragraph{Метрики ефективності.} Для методу $M$ та параметра $\theta_j$ обчислюються: зміщення $\Bias_M(\theta_j) = R^{-1}\sum_{r=1}^{R}(\hat{\theta}_{j,M}^{(r)} - \theta_{j,0})$, дисперсія $\Var_M(\theta_j)$, MSE $= \Bias_M^2 + \Var_M$, та відносна ефективність $\RE_{\text{PMM2/OLS}} = \MSE_{\text{OLS}}/\MSE_{\text{PMM2}}$.
 
-Для кожної комбінації $(N, \text{модель}, \text{розподіл})$ проведено \textbf{2000 Monte Carlo повторень}, що дає загальну кількість симуляцій:
-\begin{equation}
-\label{eq:total_simulations}
-4 \text{ (розміри)} \times 4 \text{ (моделі)} \times 4 \text{ (розподіли)} \times 2000 \text{ (повторення)} = 128{,}000 \text{ симуляцій}
-\end{equation}
-
-\subsubsection{Процедура Генерації Даних}
-
-Для кожного Monte Carlo повторення $r = 1, \ldots, 2000$:
-
-\paragraph{Крок 1: Генерація інновацій.}
-
-Генеруємо $n + d + 100$ інновацій з обраного розподілу та стандартизуємо їх до нульового середнього та одиничної дисперсії:
-\begin{align}
-\tilde{\varepsilon}_t &\sim F_{\varepsilon}(\cdot) \quad \text{(обраний розподіл)} \label{eq:raw_innovations} \\
-\varepsilon_t &= \frac{\tilde{\varepsilon}_t - \E[\tilde{\varepsilon}_t]}{\sqrt{\Var(\tilde{\varepsilon}_t)}} \label{eq:standardized_innovations}
-\end{align}
-
-Стандартизація гарантує, що всі розподіли мають однакову дисперсію $\sigma^2 = 1$, роблячи порівняння справедливим.
-
-\paragraph{Крок 2: Генерація ARIMA ряду.}
-
-Генеруємо ARIMA(p,d,q) ряд рекурсивно:
-\begin{equation}
-\label{eq:arima_generation}
-y_t = \sum_{j=1}^{d} \binom{d}{j} (-1)^{j+1} y_{t-j} + \sum_{i=1}^{p} \phi_i z_{t-i} + \varepsilon_t + \sum_{k=1}^{q} \theta_k \varepsilon_{t-k}
-\end{equation}
-
-Перші 100 спостережень відкидаємо як ``burn-in'' період для елімінації ефектів початкових умов.
-
-\paragraph{Крок 3: Оцінювання параметрів.}
-
-Для згенерованого ряду застосовуємо три методи оцінювання:
-\begin{itemize}
-    \item \textbf{CSS:} Мінімізація умовної суми квадратів~\eqref{eq:css}
-    \item \textbf{OLS:} Звичайний метод найменших квадратів~\eqref{eq:ols} (для AR частини)
-    \item \textbf{PMM2:} Метод максимізації поліномів другого порядку (Алгоритм~\ref{alg:pmm2_arima})
-\end{itemize}
-
-Зберігаємо оцінки $\hat{\boldsymbol{\theta}}^{(r)}_{\text{CSS}}$, $\hat{\boldsymbol{\theta}}^{(r)}_{\text{OLS}}$, $\hat{\boldsymbol{\theta}}^{(r)}_{\text{PMM2}}$ для кожного повторення.
-
-\subsubsection{Метрики Оцінювання Ефективності}
-
-Для кожного методу оцінювання $M \in \{\text{CSS}, \text{OLS}, \text{PMM2}\}$ та параметра $\theta_j$ обчислюємо наступні метрики:
-
-\paragraph{Зміщеність (Bias).}
-\begin{equation}
-\label{eq:bias}
-\Bias_M(\theta_j) = \frac{1}{R} \sum_{r=1}^{R} \left( \hat{\theta}_{j,M}^{(r)} - \theta_{j,0} \right)
-\end{equation}
-де $R = 2000$ --- кількість повторень, $\theta_{j,0}$ --- справжнє значення параметра.
-
-\paragraph{Дисперсія (Variance).}
-\begin{equation}
-\label{eq:variance}
-\Var_M(\theta_j) = \frac{1}{R-1} \sum_{r=1}^{R} \left( \hat{\theta}_{j,M}^{(r)} - \bar{\hat{\theta}}_j^M \right)^2
-\end{equation}
-де $\bar{\hat{\theta}}_j^M = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}_{j,M}^{(r)}$ --- вибіркове середнє оцінок.
-
-\paragraph{Середньоквадратична похибка (MSE).}
-\begin{equation}
-\label{eq:mse}
-\MSE_M(\theta_j) = \Bias_M^2(\theta_j) + \Var_M(\theta_j)
-\end{equation}
-
-\paragraph{Відносна ефективність (RE).}
-
-Порівнюємо PMM2 з OLS (або CSS для MA моделей):
-\begin{equation}
-\label{eq:relative_efficiency_empirical}
-\RE_{\text{PMM2/OLS}}(\theta_j) = \frac{\MSE_{\text{OLS}}(\theta_j)}{\MSE_{\text{PMM2}}(\theta_j)}
-\end{equation}
-
-Значення $\RE > 1$ вказує на те, що PMM2 має меншу MSE, тобто є більш ефективним.
-
-\paragraph{Зменшення дисперсії (Variance Reduction).}
-\begin{equation}
-\label{eq:variance_reduction}
-VR(\theta_j) = \frac{\Var_{\text{OLS}}(\theta_j) - \Var_{\text{PMM2}}(\theta_j)}{\Var_{\text{OLS}}(\theta_j)} \times 100\%
-\end{equation}
-
-Позитивні значення VR вказують на зменшення дисперсії завдяки PMM2.
-
-\subsubsection{Bootstrap Довірчі Інтервали}
-\label{subsubsec:bootstrap_ci}
-
-Для кількісної оцінки невизначеності Monte Carlo оцінок обчислено 95\% довірчі інтервали методом bias-corrected and accelerated (BCa) bootstrap~\cite{efron1993introduction, diciccio1996bootstrap}:
-
-\paragraph{Метод та Конфігурація.}
-\begin{itemize}
-    \item \textbf{Кількість реплікацій}: 1,000 bootstrap вибірок для кожної метрики
-    \item \textbf{Рівень довіри}: 95\%
-    \item \textbf{Метод}: BCa (коригування на зміщення та асиметрію)
-    \item \textbf{Fallback стратегія}: Percentile метод при збої BCa, нормальне наближення при збої обох
-\end{itemize}
-
-\paragraph{Обчислювальна процедура.}
-Для кожної комбінації (модель, розподіл, N, метод, параметр):
-\begin{enumerate}
-    \item Зберігаємо вихідні оцінки $\{\hat{\theta}_{j,M}^{(r)}\}_{r=1}^{R}$ з Monte Carlo симуляцій
-    \item Для кожної метрики $\psi$ (bias, variance, MSE): створюємо $B = 1000$ bootstrap вибірок з повторенням, обчислюємо $\psi^{*(b)}$ для кожної вибірки $b = 1, \ldots, B$, застосовуємо BCa коригування для асиметрії та зміщення, отримуємо довірчий інтервал $[\psi_{\text{lower}}, \psi_{\text{upper}}]$
-    \item Обчислюємо стандартну помилку: $SE(\psi) = \text{sd}(\{\psi^{*(b)}\}_{b=1}^B)$
-\end{enumerate}
-
-\paragraph{Успішність та Валідація.}
-\begin{itemize}
-    \item \textbf{Успішність обчислення CI}: 93.8\% для bias, variance, MSE
-    \item \textbf{Властивості CI}: Ширина зменшується з $N$ (підтверджує $\sqrt{N}$ закон)
-    \item \textbf{Перевірка покриття}: CI містять точкові оцінки; асиметричні для сильно скошених розподілів
-\end{itemize}
-
-\paragraph{Інтерпретація.}
-Довірчі інтервали дозволяють кількісно оцінити статистичну значимість переваг PMM2. Наприклад, для Gamma(2,1) інновацій при $N=500$:
-\begin{itemize}
-    \item CSS MSE: $0.00106$ [95\% CI: $0.00100$, $0.00113$]
-    \item PMM2 MSE: $0.00061$ [95\% CI: $0.00057$, $0.00065$]
-\end{itemize}
-Непересічність довірчих інтервалів підтверджує статистично значуще зменшення MSE на 42.5\%.
+\paragraph{Bootstrap довірчі інтервали.} Для кількісної оцінки невизначеності обчислено 95\% BCa bootstrap довірчі інтервали~\cite{efron1993introduction} з $B = 1000$ реплікацій для кожної метрики. Успішність обчислення CI: 93.8\%. Непересічність інтервалів підтверджує статистичну значимість переваг PMM2 (наприклад, для Gamma(2,1) при $N=500$: CSS MSE $0.00106$ [CI: $0.00100$, $0.00113$] vs PMM2 MSE $0.00061$ [CI: $0.00057$, $0.00065$], зменшення 42.5\%).
 
 \subsection{Результати для ARIMA(1,1,0) Моделі}
 \label{subsec:results_arima110}
