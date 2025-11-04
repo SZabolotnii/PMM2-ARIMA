@@ -51,18 +51,11 @@
 *.latexmk
 
 # --------------------------------------------
-# LaTeX Output PDFs (COMPILED DOCUMENTS)
+# LaTeX Directory (EXCLUDED FROM PUBLIC REPO)
 # --------------------------------------------
-# Keep source .tex files, ignore compiled PDFs
-# Uncomment the line below if you want to track PDFs:
-# !LaTeX/PMM2_ARIMA.pdf
-# !LaTeX/PMM2_ARIMA_ua.pdf
-LaTeX/*.pdf
-LaTeX/*_ua.pdf
-LaTeX/*_full_ua.pdf
-
-# But keep figure PDFs for inclusion
-!LaTeX/figures/*.pdf
+# LaTeX source files contain draft manuscript versions
+# Use this for internal work only
+LaTeX/
 
 # --------------------------------------------
 # Editor Temporary Files
@@ -160,9 +153,9 @@ packrat/src/
 # results/monte_carlo/*.csv
 # results/plots/*.png
 
-# Experimental directories (uncomment to ignore)
-# Experiment_R/
-# Experiment_Python/
+# Experimental directories (excluded from public repository)
+Experiment_R/
+Experiment_Python/
 
 # Large data files (if any)
 # data/raw/*.csv  # Uncomment if you have large datasets
