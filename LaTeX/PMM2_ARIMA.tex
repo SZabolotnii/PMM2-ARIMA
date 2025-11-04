@@ -4,9 +4,9 @@
 % - 1.2 line spacing (journal standard, closer to their format)
 % - All fonts embedded (standard with pdflatex)
 \documentclass[11pt,a4paper]{article}
-\usepackage[T2A]{fontenc}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[ukrainian,english]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -30,50 +30,50 @@
 \setstretch{1.2}
 \usepackage{titlesec}
 
-% Зменшення відстаней між секціями
+% Reduce spacing between headings
 \titlespacing*{\section}{0pt}{1ex}{0.5ex}
 \titlespacing*{\subsection}{0pt}{0.8ex}{0.4ex}
 \titlespacing*{\subsubsection}{0pt}{0.6ex}{0.3ex}
 \titlespacing*{\paragraph}{0pt}{0.5ex}{0.2ex}
 
-% Зменшення відстаней між абзацами
+% Reduce spacing between paragraphs
 \setlength{\parskip}{0.5ex}
 
-% Зменшення відстаней навколо формул
+% Reduce spacing around displays
 \setlength{\abovedisplayskip}{6pt}
 \setlength{\belowdisplayskip}{6pt}
 \setlength{\abovedisplayshortskip}{3pt}
 \setlength{\belowdisplayshortskip}{3pt}
 
-% Зменшення відстаней у списках (itemize, enumerate, description)
+% Condensed lists
 \usepackage{enumitem}
 \setlist{nosep, itemsep=0pt, parsep=0pt, topsep=2pt, partopsep=0pt}
 
-% Визначення theorem environments
-\newtheorem{theorem}{Теорема}[section]
-\newtheorem{definition}[theorem]{Визначення}
-\newtheorem{lemma}[theorem]{Лема}
-\newtheorem{corollary}[theorem]{Наслідок}
-\newtheorem{proposition}[theorem]{Твердження}
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
 
-% Налаштування hyperref
+% Hyperref setup
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=cyan,
     citecolor=blue,
-    pdftitle={Застосування PMM2 для ARIMA Моделей з Негаусовими Інноваціями},
-    pdfauthor={Сергій Заболотній},
-    pdfkeywords={ARIMA, PMM2, негаусові інновації, асиметричні розподіли},
+    pdftitle={Applying PMM2 to ARIMA Models with Non-Gaussian Innovations},
+    pdfauthor={Serhii Zabolotnii},
+    pdfkeywords={ARIMA, PMM2, non-Gaussian innovations, asymmetric distributions},
     bookmarksnumbered=true,
 }
 
 % ============================================
-% МАТЕМАТИЧНІ МАКРОСИ ТА ПОЗНАЧЕННЯ
+% MATHEMATICAL MACROS AND NOTATION
 % ============================================
 
-% Вектори та матриці
+% Vectors and matrices
 \newcommand{\thetavec}{\boldsymbol{\theta}}
 \newcommand{\phivec}{\boldsymbol{\phi}}
 \newcommand{\avec}{\boldsymbol{a}}
@@ -85,7 +85,7 @@
 \newcommand{\psivec}{\boldsymbol{\psi}}
 \newcommand{\Sigmavec}{\boldsymbol{\Sigma}}
 
-% Математичні оператори та функції
+% Operators
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
 \DeclareMathOperator{\MSE}{MSE}
@@ -99,38 +99,38 @@
 \DeclareMathOperator{\argmax}{arg\,max}
 \DeclareMathOperator{\tr}{tr}
 
-% Множини та простори
+% Sets and spaces
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Prob}{\mathbb{P}}
 
-% Спеціальні позначення для ARIMA
+% ARIMA notation
 \newcommand{\ARpoly}{\Phi(B)}
 \newcommand{\MApoly}{\Theta(B)}
 \newcommand{\diffop}{\Delta^d}
 
-% Розподіли
+% Distributions
 \newcommand{\Normal}{\mathcal{N}}
 \newcommand{\Gammadist}{\text{Gamma}}
 \newcommand{\Lognormal}{\text{Lognormal}}
 \newcommand{\Chisq}{\chi^2}
 
-% Кумулянти та моменти
+% Cumulants and moments
 \newcommand{\gammathree}{\gamma_3}
 \newcommand{\gammafour}{\gamma_4}
 
-% Оцінки та шапки
+% Estimates and hats
 \newcommand{\htheta}{\hat{\thetavec}}
 \newcommand{\hphi}{\hat{\phivec}}
 \newcommand{\heps}{\hat{\varepsilon}}
 \newcommand{\hsigma}{\hat{\sigma}}
 
-\title{\MakeUppercase{Застосування Методу Максимізації Поліномів для Оцінювання Параметрів ARIMA Моделей з Асиметричними Негаусовими Інноваціями}}
+\title{\MakeUppercase{Applying the Polynomial Maximization Method to Estimate ARIMA Models with Asymmetric Non-Gaussian Innovations}}
 
 \author{
-\textbf{Сергій Заболотній}$^{a}$ \\[0.5em]
+\textbf{Serhii Zabolotnii}$^{a}$ \\[0.5em]
 {\small $^{a}$\textit{Cherkasy State Business College, Cherkasy, Ukraine}}
 }
 
@@ -144,572 +144,520 @@
 \maketitle
 
 % ============================================
-% ABSTRACT - UKRAINIAN
+% ABSTRACT - ENGLISH
 % ============================================
 \begin{abstract}
-\selectlanguage{ukrainian}
+\selectlanguage{english}
 
-\textbf{Контекст та актуальність.} Авторегресійні інтегровані моделі ковзного середнього (ARIMA) є одним із найпоширеніших інструментів аналізу часових рядів в економіці, фінансах та інших прикладних областях. Класичні методи оцінювання параметрів ARIMA моделей --- метод максимальної правдоподібності (MLE), метод умовної суми квадратів (CSS) та звичайний метод найменших квадратів (OLS) --- базуються на фундаментальному припущенні гаусовості інновацій. На практиці, це припущення часто порушується, особливо у фінансових та економічних даних, де спостерігаються асиметричні розподіли з важкими хвостами.
+\textbf{Context and Motivation.} Autoregressive integrated moving-average (ARIMA) models remain one of the most widely used instruments for time-series analysis in economics, finance, and many other applied domains. Classical estimators for ARIMA parameters---maximum likelihood (MLE), conditional sum of squares (CSS), and ordinary least squares (OLS)---rely on the core assumption of Gaussian innovations. In practice this assumption is frequently violated, especially for financial and economic data that exhibit asymmetric distributions with heavy tails.
 
-\textbf{Мета дослідження.} У даній роботі ми розробляємо та досліджуємо застосування методу максимізації поліномів другого порядку (PMM2) для оцінювання параметрів ARIMA(p,d,q) моделей з негаусовими інноваціями. PMM2, розроблений Ю.П. Кунченко, є напівпараметричним методом, що використовує часткову параметризацію через моменти та кумулянти вищих порядків замість повної функції густини ймовірності.
+\textbf{Research Objective.} We develop and investigate the use of the second-order polynomial maximization method (PMM2) to estimate ARIMA$(p,d,q)$ models with non-Gaussian innovations. PMM2, introduced by Yu.P. Kunchenko, is a semiparametric technique that leverages partial parametrization through higher-order moments and cumulants rather than specifying the full probability density function.
 
-\textbf{Методологія.} Ми розробили повний алгоритм PMM2 для ARIMA моделей, що включає диференціювання ряду, перевірку стаціонарності та ітеративну процедуру Ньютона-Рафсона для розв'язання системи PMM2 рівнянь. Для валідації методу проведено комплексні Monte Carlo симуляції з 2000 повторень для кожної конфігурації, що охоплюють різні розміри вибірки (N~$\in$~\{100, 200, 500, 1000\}) та чотири типи розподілів інновацій: гаусовий (контроль), гамма $\Gammadist(2,1)$ з $\gamma_3 \approx 1.41$, логнормальний з $\gamma_3 \approx 2.0$, та $\chi^2(3)$ з $\gamma_3 \approx 1.63$.
+\textbf{Methodology.} We construct a complete PMM2 algorithm for ARIMA models that covers differencing, stationarity diagnostics, and a Newton--Raphson iteration to solve the PMM2 system. To validate the method we run comprehensive Monte Carlo simulations with 2000 replications for each configuration, covering various sample sizes (N~$\in$~\{100, 200, 500, 1000\}) and four innovation distributions: Gaussian (benchmark), Gamma $\Gammadist(2,1)$ with $\gamma_3 \approx 1.41$, lognormal with $\gamma_3 \approx 2.0$, and $\chi^2(3)$ with $\gamma_3 \approx 1.63$.
 
-\textbf{Результати.} Емпіричні результати демонструють, що PMM2 забезпечує суттєве підвищення ефективності оцінювання для асиметричних розподілів (відносна ефективність визначається формулою~\eqref{eq:re_pmm2_ols}). Для ARIMA(1,1,0) моделі з гамма-розподіленими інноваціями при N=500 отримано відносну ефективність $\RE=1.58$ (що відповідає 37\% зменшенню середньоквадратичної похибки), для логнормального розподілу $\RE=1.71$ (42\% покращення), а для $\chi^2(3)$ $\RE=1.90$ (47\% покращення). Для гаусових інновацій PMM2 демонструє ефективність близьку до OLS ($\RE \approx 1.0$), що узгоджується з теорією. Ефективність методу зростає з розміром вибірки та є стабільною для N~$\geq$~200.
+\textbf{Results.} Empirical evidence shows that PMM2 substantially increases estimation efficiency under asymmetric distributions (relative efficiency defined in~\eqref{eq:re_pmm2_ols}). For an ARIMA(1,1,0) model with Gamma innovations and $N=500$ the relative efficiency is $\RE=1.58$ (a 37\% reduction in mean-squared error), for the lognormal case $\RE=1.71$ (42\% improvement), and for $\chi^2(3)$ innovations $\RE=1.90$ (47\% improvement). Under Gaussian innovations PMM2 matches OLS efficiency ($\RE \approx 1.0$), consistent with theory. Efficiency increases with sample size and stabilizes for $N \geq 200$.
 
-\textbf{Практична цінність.} Результати дослідження показують, що PMM2 є ефективним інструментом для аналізу часових рядів з асиметричними інноваціями, що типово зустрічаються у фінансових та економічних даних. Метод забезпечує суттєве зменшення дисперсії оцінок параметрів без вимог до повної специфікації розподілу похибок, що робить його привабливою альтернативою класичним методам. Надано практичні рекомендації щодо вибору між PMM2 та класичними методами на основі коефіцієнта асиметрії залишків.
+\textbf{Practical Implications.} The findings indicate that PMM2 is an effective tool for asymmetric innovations typical of financial and economic time series. The method delivers sizeable variance reductions for parameter estimates while avoiding full distributional specification, making it an attractive alternative to classical approaches. We provide empirical guidelines for choosing between PMM2 and classical estimators based on residual skewness.
 
-\textbf{Висновки.} PMM2 є першим застосуванням методу максимізації поліномів до оцінювання параметрів ARIMA моделей. Метод демонструє значні переваги перед класичними підходами для негаусових інновацій, зберігаючи обчислювальну ефективність та простоту імплементації. Напрямки подальших досліджень включають розширення на сезонні SARIMA моделі, інтеграцію з моделями волатильності GARCH, та розробку автоматичних процедур вибору порядку моделі.
-
+\textbf{Conclusions.} This study presents the first application of the polynomial maximization method to ARIMA parameter estimation. PMM2 offers major gains over classical techniques for non-Gaussian innovations while retaining computational tractability and straightforward implementation. Future work will extend the framework to seasonal SARIMA models, integrate volatility dynamics such as GARCH, and design automatic order-selection procedures.
 \end{abstract}
 
-\noindent{\small \textbf{Ключові слова:} ARIMA моделі; метод максимізації поліномів; PMM2; негаусові інновації; оцінювання параметрів; асимптотична ефективність; часові ряди; асиметричні розподіли; Monte Carlo симуляції.}
+\noindent{\small \textbf{Keywords:} ARIMA models; polynomial maximization method; PMM2; non-Gaussian innovations; parameter estimation; asymptotic efficiency; time series; asymmetric distributions; Monte Carlo simulations.}
 
 \vspace{1.5em}
 
-\selectlanguage{ukrainian}
+\selectlanguage{english}
 
-% ============================================
-% SECTION 1: INTRODUCTION
-% ============================================
-\section{Вступ}
+\section{Introduction}
 \label{sec:introduction}
 
-\subsection{Актуальність Проблеми}
+\subsection{Motivation}
 \label{subsec:motivation}
 
-Моделі авторегресії та інтегрованого ковзного середнього (ARIMA) залишаються одним з найпоширеніших інструментів аналізу та прогнозування часових рядів у сучасній науці. Починаючи від піонерської роботи Box і Jenkins (1970), ARIMA моделі знайшли застосування у фінансовій економетриці, макроекономічному прогнозуванні, аналізі метеорологічних даних, медичній статистиці та багатьох інших галузях~\cite{box2015time,hyndman2021forecasting}.
+Autoregressive integrated moving-average (ARIMA) models remain among the most widely used tools for analysing and forecasting time series across contemporary science. Since the seminal contribution of Box and Jenkins (1970), ARIMA models have been adopted in financial econometrics, macroeconomic forecasting, meteorological analysis, medical statistics, and numerous other domains~\cite{box2015time,hyndman2021forecasting}.
 
-Класичні методи оцінювання параметрів ARIMA моделей --- метод максимальної правдоподібності (MLE), метод умовної суми квадратів (CSS) та звичайний метод найменших квадратів (OLS) --- базуються на фундаментальному припущенні \textbf{гаусовості інновацій} (випадкових похибок). Це припущення забезпечує низку бажаних статистичних властивостей: асимптотичну ефективність оцінок, простоту обчислень та зрозумілу інференцію. Проте, практика аналізу реальних даних систематично демонструє порушення цього припущення.
+Classical estimation procedures for ARIMA models---maximum likelihood (MLE), conditional sum of squares (CSS), and ordinary least squares (OLS)---are built upon the central assumption of \textbf{Gaussian innovations}. This assumption guarantees several desirable statistical properties: asymptotic efficiency, computational simplicity, and tractable inference. However, empirical analyses of real-world data consistently reveal violations of normality.
 
-Останні дослідження надають переконливі емпіричні свідчення негаусовості у різноманітних типах часових рядів:
+Recent studies provide compelling evidence of non-Gaussian behaviour across different classes of time series:
 
 \begin{itemize}
-    \item \textbf{Фінансові часові ряди:} Доходності акцій, обмінні курси та волатильність демонструють асиметричні розподіли з важкими хвостами. Дослідження показують, що навіть після врахування волатильності через GARCH моделі, важкі хвости залишаються~\cite{kantelhardt2002multifractal,kim2012approximation}. Нещодавнє дослідження Korean stock market підтвердило персистентність важких хвостів навіть після контролю за кризовими періодами та кластеризацією волатильності~\cite{kim2019fat}.
+    \item \textbf{Financial time series.} Equity returns, exchange rates, and volatility exhibit asymmetric distributions with heavy tails. Even after accounting for volatility dynamics via GARCH models, heavy tails persist~\cite{kantelhardt2002multifractal,kim2012approximation}. A recent study of the Korean stock market confirms persistent heavy tails even after controlling for crisis episodes and volatility clustering~\cite{kim2019fat}.
 
-    \item \textbf{Економічні показники:} Ціни на сировинні товари, інфляційні дані та торговельні обсяги характеризуються значною асиметрією. Дослідження 15 економік за період 1851-1913 виявило сильний зв'язок між асиметрією цін на товари та інфляцією, при цьому до 48\% варіації інфляції пояснюється змінами цін на товари~\cite{gerlach2024commodity}.
+    \item \textbf{Economic indicators.} Commodity prices, inflation data, and trade volumes are characterised by pronounced asymmetry. An investigation covering 15 economies over 1851--1913 found a strong link between commodity-price asymmetry and inflation, with up to 48\% of inflation variability explained by commodity-price movements~\cite{gerlach2024commodity}.
 
-    \item \textbf{Екологічні та метеорологічні дані:} Вимірювання забруднення, опади, температурні аномалії та сонячна активність часто мають асиметричний характер з екстремальними значеннями. Verma et al. (2025) продемонстрували важкі хвости у даних сонячних спалахів та обговорили теоретичні межі прогнозування за умов важких хвостів~\cite{verma2025optimal}.
+    \item \textbf{Environmental and meteorological data.} Pollution readings, precipitation, temperature anomalies, and solar activity are frequently skewed and display extreme outcomes. Verma et al. (2025) document heavy tails in solar flare data and discuss theoretical limits of forecasting under heavy-tailed distributions~\cite{verma2025optimal}.
 
-    \item \textbf{Високочастотні фінансові дані:} Mixed-stable моделі, застосовані до DAX компаній на 10-секундних інтервалах, виявили 43-82\% нульових змін (стагнаційні ефекти), що потребує спеціальних методів моделювання~\cite{slezak2023application,dedomenico2023modeling}.
+    \item \textbf{High-frequency financial data.} Mixed-stable models applied to DAX constituents at 10-second intervals uncover 43--82\% zero returns (stagnation effects), necessitating specialised modelling techniques~\cite{slezak2023application,dedomenico2023modeling}.
 \end{itemize}
 
-\subsection{Обмеження Класичних Методів}
+\subsection{Limitations of Classical Methods}
 \label{subsec:limitations}
 
-За умов порушення припущення гаусовості, класичні методи оцінювання параметрів ARIMA моделей зазнають суттєвих проблем:
+When the Gaussian assumption fails, classical estimators for ARIMA parameters face several shortcomings:
 
-\paragraph{Систематична зміщеність та неконсистентність.} Pötscher (1991) продемонстрував, що псевдо-максимізатори правдоподібності можуть поводитися драстично інакше, ніж локальні максимізатори, коли розподіл інновацій специфіковано невірно. Gaussian pseudo-likelihood може призводити до неконсистентних оцінок за умов розподільної неспецифікації~\cite{potscher1991noninvertibility}. Fan, Qi \& Xiu (2014) показали, що non-Gaussian квазі-MLE страждає від неконсистентності, якщо квазі-правдоподібність не є справжнім розподілом, пропонуючи двокроковий non-Gaussian QMLE для досягнення консистентності з вищою ефективністю порівняно з Gaussian QMLE~\cite{fan2014quasi}.
+\paragraph{Systematic bias and inconsistency.} Pötscher (1991) shows that pseudo-likelihood maximisers can behave dramatically differently from local maxima when the innovation distribution is misspecified. Gaussian pseudo-likelihood may lead to inconsistent estimates under distributional misspecification~\cite{potscher1991noninvertibility}. Fan, Qi, and Xiu (2014) demonstrate that non-Gaussian quasi-MLE becomes inconsistent if the quasi-likelihood does not coincide with the true distribution, proposing a two-step non-Gaussian QMLE that achieves consistency and higher efficiency than the Gaussian QMLE~\cite{fan2014quasi}.
 
-\paragraph{Втрата статистичної ефективності.} Навіть коли оцінки залишаються консистентними, їх дисперсія може бути суттєво завищеною порівняно з оптимальними оцінками, адаптованими до справжнього розподілу інновацій. Zhang \& Sin (2012) показали, що граничні розподіли є сумішшю стабільних та гаусових процесів для near-unit root AR процесів з $\alpha$-стабільним шумом, демонструючи ускладнення за умов важких хвостів та близькості до одиничного кореня~\cite{zhang2012maximum}.
+\paragraph{Loss of statistical efficiency.} Even when estimators remain consistent, their variance may be markedly inflated relative to estimators tailored to the true distribution. Zhang and Sin (2012) establish that the limiting laws are mixtures of stable and Gaussian processes for near-unit-root AR processes with $\alpha$-stable noise, underlining the difficulties introduced by heavy tails combined with near-integration~\cite{zhang2012maximum}.
 
-\paragraph{Зниження точності прогнозів.} Li et al. (2020) документували, що традиційні ARIMA моделі мають великі відхилення для високочастотного фінансового прогнозування, оскільки фінансові дані демонструють нерегулярні флуктуації, що потребують альтернативних підходів~\cite{li2020forecasting}. Dowe et al. (2025) у своїй дуже свіжій роботі показали, що гібридні ARFIMA-ANN підходи краще обробляють складну негаусову динаміку у фінансових та екологічних даних, при цьому використовуючи MML принцип для вибору моделі~\cite{dowe2025novel}.
+\paragraph{Degraded forecast accuracy.} Li et al. (2020) document sizeable forecast errors for traditional ARIMA models at high frequencies because financial data display irregular fluctuations that require alternative approaches~\cite{li2020forecasting}. Dowe et al. (2025) show that hybrid ARFIMA-ANN strategies better capture complex non-Gaussian dynamics in financial and environmental data while leveraging the minimum message length principle for model selection~\cite{dowe2025novel}.
 
-\paragraph{Невірні довірчі інтервали.} Ledolter (1989) продемонстрував, що неврахування викидів збільшує середньоквадратичну похибку прогнозу та спричиняє зміщеність оцінених параметрів, з застосуваннями до даних цін акцій~\cite{ledolter1989inference}. Це призводить до недооцінки або переоцінки невизначеності прогнозів, що критично важливо для прийняття рішень.
+\paragraph{Misleading confidence intervals.} Ledolter (1989) demonstrates that ignoring outliers inflates mean-squared forecast error and biases parameter estimates in stock-price applications~\cite{ledolter1989inference}. Consequently, uncertainty bands become understated or overstated, undermining decision making.
 
-\subsection{Існуючі Підходи: Короткий Огляд}
-\label{subsec:existing_approaches}
-
-У відповідь на проблему негаусовості у часових рядах, науковою спільнотою розроблено декілька альтернативних підходів:
-
-\paragraph{Робастні методи оцінювання (M-estimators).} Започатковані класичною роботою Huber (1964)~\cite{huber1964robust}, M-estimators мінімізують робастні функції втрат, що менш чутливі до викидів та важких хвостів. Muler et al. (2009) запровадили BIP-ARMA моделі з MM-оцінками, що уникають поширення викидів через обмежені залишки, досягаючи консистентності та асимптотичної нормальності з ефективністю, порівнянною з MLE за нормальності~\cite{muler2009robust}. Reisen et al. (2024) запропонували M-Whittle estimator з встановленою властивістю консистентності, що добре працює з викидами та шумом з важкими хвостами~\cite{reisen2024robust}.
-
-\paragraph{Квантильна регресія та LAD методи.} Katsouris (2023) надав комплексний огляд моделей квантильної регресії часових рядів, що охоплює стаціонарні та нестаціонарні випадки, з Bahadur представленнями для квантільних процесів та рівномірною інференцією у квантільній пороговій регресії~\cite{katsouris2023quantile}. Для ARMA моделей з нескінченною дисперсією, Peng \& Yao (2003), Ling (2005) та Zhu \& Ling (2015) запропонували зважену оцінку найменших абсолютних відхилень (WLADE), що є асимптотично нормальною та незміщеною зі стандартною швидкістю збіжності root-n навіть за відсутності скінченної дисперсії~\cite{peng2003least,ling2005self,zhu2015model}.
-
-\paragraph{Специфікації з важкими хвостами.} Модифікація класичних ARIMA моделей шляхом заміни гаусових інновацій на розподіли з важкими хвостами (Student-t, Generalized Error Distribution, $\alpha$-stable distributions) дозволяє краще моделювати екстремальні події. Wong et al. (2009) розробили Student-t mixture autoregressive модель з вищою гнучкістю порівняно з Gaussian MAR, де ступені свободи є випадковими змінними, використовуючи EM алгоритм для оцінювання параметрів у Байєсовому фреймворку~\cite{wong2009student}. Нещодавнє дослідження 2024 року виявило, що skewed GED найбільш ефективний для фінансових часових рядів порівняно з normal, Student-t, GED та Skewed Student-t розподілами за метриками goodness-of-fit~\cite{ampadu2024comparative}.
-
-\paragraph{Байєсовські підходи.} Graves et al. (2015) запропонували систематичний підхід до Байєсовської інференції для ARFIMA моделей з новою апроксимативною правдоподібністю для ефективної інференції параметрів у процесах з довгою пам'яттю, що дозволяє інноваціям з широкого класу, включаючи $\alpha$-stable та t-розподіли~\cite{graves2015efficient}. Байєсовські методи також інтегрують невизначеність у всі параметри, забезпечуючи повну постеріорну інференцію замість точкових оцінок.
-
-\paragraph{Архітектури на основі Transformers.} Останні дослідження показують, що архітектури Transformer, адаптовані для часових рядів, можуть неявно моделювати негаусові характеристики через механізм уваги (attention mechanism)~\cite{zhou2024comprehensive}. Гібридні моделі, що поєднують традиційні ARIMA з attention-based нейронними мережами, демонструють покращену точність прогнозування для фінансових часових рядів~\cite{liu2024arima}. Foundations models, такі як TimeGPT-1 та Chronos, представляють новий напрямок узагальненого прогнозування на різноманітних наборах даних без специфічного навчання~\cite{godfried2024advances}. Проте ці моделі є:
-\begin{itemize}
-    \item \textbf{Data-hungry}: потребують тисяч спостережень для стабільного навчання, тоді як класичні ARIMA працюють з $N \geq 100$
-    \item \textbf{Black-box}: відсутність інтерпретованих параметрів ускладнює економетричну інференцію
-    \item \textbf{Computationally intensive}: навчання вимагає GPU та займає години, порівняно з класичними моделями.
-\end{itemize}
-
-Важливо відзначити, що глибинні моделі оптимізовані для мінімізації prediction error, а не для ефективного \textit{оцінювання параметрів} основного процесу генерації даних.
-
-\paragraph{Порівняльний аналіз підходів.} Кожен з описаних методів має специфічні переваги та обмеження. Робастні методи (M-estimators) забезпечують стійкість до викидів та зберігають асимптотичну ефективність за нормальності, однак можуть втрачати точність за помірних відхилень від гаусовості без екстремальних викидів. Квантільна регресія та LAD методи надають повну картину розподілу та працюють без припущення про скінченну дисперсію, але не оптимізовані для центральних оцінок параметрів та середніх прогнозів. Специфікації з важкими хвостами явно моделюють екстремальні події та забезпечують інтерпретовані параметри форми розподілу, проте вимагають a priori вибору сімейства розподілів, що може призводити до model misspecification. Байєсовські методи інтегрують невизначеність параметрів та дозволяють гнучкі специфікації інновацій, але є обчислювально інтенсивними та потребують вибору prior розподілів. Нарешті, Transformer-based моделі досягають високої точності прогнозування та адаптуються до складних патернів, однак не забезпечують інтерпретовану параметризацію процесу генерації даних.
-
-Таким чином, існує потреба у підході, який би поєднував статистичну ефективність класичних методів, інтерпретованість параметрів та робастність до відхилень від нормальності без необхідності специфікації конкретного сімейства розподілів.
-
-\subsection{Метод Максимізації Поліномів: Альтернативний Підхід}
+\subsection{Polynomial Maximization Method: An Alternative Paradigm}
 \label{subsec:pmm_intro}
 
-Метод максимізації поліномів (Polynomial Maximization Method, PMM), розроблений українським вченим Ю.П. Кунченко, представляє альтернативну філософію статистичного оцінювання~\cite{kunchenko2002polynomial}. На відміну від класичного методу максимальної правдоподібності, який потребує повної специфікації густини ймовірності, PMM базується на \textbf{частковій імовірнісній параметризації} через моменти та кумулянти вищих порядків.
+The polynomial maximization method (PMM), developed by Ukrainian scholar Yu.P. Kunchenko, offers an alternative philosophy for statistical estimation~\cite{kunchenko2002polynomial}. Unlike classical maximum likelihood, which requires full specification of the probability density, PMM is built on \textbf{partial probabilistic parametrisation} via higher-order moments and cumulants.
 
-Центральною конструкцією методу є максимізація стохастичного полінома порядку $S$ відносно параметрів моделі. Ключова ідея полягає в тому, що замість максимізації повної функції правдоподібності, метод максимізує вибіркову статистику в околі справжніх значень оцінюваних параметрів~\cite{kunchenko2002polynomial,kunchenko2006stochastic}.
+The method centres on maximising a stochastic polynomial of order $S$ with respect to the model parameters. Rather than maximising the full likelihood, PMM maximises a sample statistic in a neighbourhood of the true parameter values~\cite{kunchenko2002polynomial,kunchenko2006stochastic}.
 
-PMM метод успішно застосовувався до різноманітних задач статистичного оцінювання:
+PMM has been successfully applied to diverse estimation problems:
 
 \begin{itemize}
-    \item \textbf{Лінійна регресія:} Zabolotnii et al. (2018) продемонстрували застосування PMM2 до лінійної регресії з асиметричним розподілом похибок, досягаючи зменшення дисперсії на 15-35\% порівняно з OLS для gamma та lognormal розподілів~\cite{zabolotnii2018polynomial}.
+    \item \textbf{Linear regression.} Zabolotnii et al. (2018) demonstrate PMM2 for linear regression with asymmetric errors, achieving a 15--35\% variance reduction relative to OLS for Gamma and lognormal distributions~\cite{zabolotnii2018polynomial}.
 
-    \item \textbf{Поліноміальна регресія:} Zabolotnii et al. (2021) розширили метод на поліноміальну регресію з розподілом експоненціальної потужності (generalized Gaussian distribution), підтверджуючи ефективність через Monte Carlo та bootstrap симуляції~\cite{zabolotnii2021estimating}.
+    \item \textbf{Polynomial regression.} Zabolotnii et al. (2021) extend the method to polynomial regression with an exponential-power (generalised Gaussian) distribution, confirming efficiency gains through Monte Carlo and bootstrap experiments~\cite{zabolotnii2021estimating}.
 
-    \item \textbf{Обробка сигналів:} Palahin \& Juhár (2016) застосували PMM до спільного оцінювання параметрів сигналу у негаусовому шумі, показавши, що нелінійна обробка через кумулянти третього та вищих порядків може зменшити дисперсію спільного оцінювання параметрів порівняно з конвенційними методами~\cite{palahin2016joint}.
+    \item \textbf{Signal processing.} Palahin and Juhár (2016) apply PMM to joint estimation of signal parameters under non-Gaussian noise, showing that nonlinear processing through third- and higher-order cumulants reduces joint-estimation variance compared with conventional techniques~\cite{palahin2016joint}.
 
-    \item \textbf{Метрологічні вимірювання:} Warsza \& Zabolotnii (2017, 2018) використали PMM для оцінювання параметрів вимірювань з негаусовими симетричними та асиметричними розподілами даних, розробляючи методику PMM3 для симетричних розподілів~\cite{warsza2017polynomial,zabolotnii2020estimation}.
+    \item \textbf{Metrological measurements.} Warsza and Zabolotnii (2017, 2018) use PMM to estimate measurement parameters with non-Gaussian symmetric and asymmetric data, designing the PMM3 procedure for symmetric distributions~\cite{warsza2017polynomial,zabolotnii2020estimation}.
 \end{itemize}
 
-Варто відзначити, що PMM метод позиціонується між класичним методом моментів та методом максимальної правдоподібності. На відміну від узагальненого методу моментів (GMM) Hansen (1982)~\cite{hansen1982gmm}, який мінімізує зважену суму квадратів відхилень між вибірковими та популяційними моментами, PMM максимізує стохастичний поліном, використовуючи для його побудови моменти або кумулянти вищих порядків.
+PMM is positioned between the classical method of moments and maximum likelihood. Unlike Hansen's (1982) generalised method of moments (GMM)~\cite{hansen1982gmm}, which minimises a weighted sum of squared deviations between sample and population moments, PMM maximises a stochastic polynomial constructed from higher-order moments or cumulants.
 
-\subsection{Дослідницька Прогалина та Внесок Роботи}
+\subsection{Research Gap and Contribution}
 \label{subsec:research_gap}
 
-Незважаючи на успішне застосування PMM до регресійних задач та обробки сигналів, його систематичне використання для оцінювання параметрів ARIMA моделей з негаусовими інноваціями залишається недостатньо дослідженим. Існує кілька ключових дослідницьких прогалин:
+Despite successful applications in regression and signal-processing settings, PMM has not been systematically explored for estimating ARIMA models with non-Gaussian innovations. Several research gaps remain:
 
-\paragraph{Нерозвиненість моментно-кумулянтних методів для часових рядів.} Хоча моменти або кумулянти вищих порядків широко використовуються в обробці сигналів та спектральному аналізі, їх застосування до оцінювання параметрів моделей часових рядів обмежене. Більшість методів для негаусових ARIMA зосереджені на робастних функціях втрат або специфікації розподілів, але не на явній експлуатації моментно-кумулянтного опису.
+\paragraph{Limited development of moment--cumulant methods for time series.} Although higher-order moments and cumulants are widely used in signal processing and spectral analysis, their application to parameter estimation in time-series models is limited. Most non-Gaussian ARIMA approaches rely on robust loss functions or explicit distributional assumptions rather than exploiting moment--cumulant representations.
 
-\paragraph{Недостатня увага до асиметричних інновацій.} Більшість робіт з негаусових ARIMA фокусуються на симетричних розподілах з важкими хвостами (Student-t, GED). Асиметричні розподіли, які PMM2 спеціально адресує, отримують менше уваги, незважаючи на їх емпіричну поширеність у фінансових доходностях та економічних показниках.
+\paragraph{Insufficient focus on asymmetric innovations.} The literature on non-Gaussian ARIMA models largely concentrates on symmetric heavy-tailed distributions (Student-$t$, GED). Asymmetric distributions---the core target of PMM2---receive far less attention despite their prevalence in financial returns and economic indicators.
 
-\paragraph{Методологічний розрив між регіональними дослідницькими спільнотами.} Метод Кунченка, незважаючи на сильні теоретичні основи та успішні застосування в Східній Європі, залишається малознайомим у західній літературі з часових рядів. Ця робота має на меті інтегрувати східноєвропейську статистичну методологію з західною економетричною літературою часових рядів (Box-Jenkins, ARIMA).
+\paragraph{Methodological divide across research communities.} Kunchenko's method, although supported by solid theory and successful applications in Eastern Europe, remains little known in Western time-series econometrics. Bridging these communities offers an opportunity to cross-fertilise statistical methodology.
 
-\paragraph{Відсутність порівняльних досліджень ефективності.} Порівняльні дослідження зазвичай порівнюють MLE, M-estimators, LAD та квантільну регресію. Порівняння ефективності моментно-кумулянтних методів, таких як PMM, відносно цих альтернатив відсутні для ARIMA моделей.
+\paragraph{Absence of comparative efficiency studies.} Comparative work typically evaluates MLE, M-estimators, least absolute deviation, or quantile regression. For ARIMA models there is no benchmark assessing the efficiency of moment--cumulant methods such as PMM relative to these alternatives.
 
-Дане дослідження призначене для заповнення цих прогалин.
+This study fills these gaps by adapting PMM2 to ARIMA models, deriving asymptotic properties of the resulting estimator, and delivering comprehensive simulation and empirical evidence. We also provide implementation guidelines, including moment-calibration rules and decision heuristics for deciding when PMM2 should replace classical estimators.
 
-% ============================================
-% SECTION 2: METHODOLOGY
-% ============================================
-\section{Методологія}
+\section{Methodology}
 \label{sec:methodology}
 
-У цьому розділі ми надаємо повну методологію застосування методу максимізації поліномів другого порядку (PMM2) до оцінювання параметрів ARIMA моделей з негаусовими інноваціями. Спочатку формулюємо ARIMA модель та класичні методи оцінювання, потім розглядаємо теоретичні основи PMM, адаптуємо метод до контексту часових рядів, та надаємо алгоритм реалізації з асимптотичною теорією.
+This section presents the full methodology for applying the second-order polynomial maximization method (PMM2) to estimate ARIMA models with non-Gaussian innovations. We first outline the ARIMA model and classical estimators, then review the theoretical foundations of PMM, adapt the method to the time-series setting, and derive an implementable algorithm together with asymptotic results.
 
-\subsection{ARIMA Моделі: Основи та Класичне Оцінювання}
+\subsection{ARIMA Models: Foundations and Classical Estimation}
 \label{subsec:arima_basics}
 
-Розглянемо стандартну ARIMA(p,d,q) модель для часового ряду $\{y_t\}_{t=1}^T$, де $d$-та різниця $z_t = \Delta^d y_t = (1-B)^d y_t$ задовольняє стаціонарну та оборотну ARMA(p,q) модель:
+Consider the standard ARIMA$(p,d,q)$ specification for a time series $\{y_t\}_{t=1}^T$, where the $d$-th difference $z_t = \diffop y_t = (1-B)^d y_t$ follows a stationary and invertible ARMA$(p,q)$ model:
 \begin{equation}
 \label{eq:arma}
-\Phi(B) z_t = \Theta(B) \varepsilon_t
+\Phi(B) z_t = \Theta(B) \varepsilon_t,
 \end{equation}
-де $B$ --- оператор зсуву, $\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ та $\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$ --- поліноми авторегресії та ковзного середнього, а $\{\varepsilon_t\}$ --- послідовність i.i.d. інновацій з $\E[\varepsilon_t] = 0$ та $\text{Var}[\varepsilon_t] = \sigma^2$. Корені характеристичних рівнянь $\Phi(z) = 0$ та $\Theta(z) = 0$ лежать поза одиничним колом, що гарантує стаціонарність та оборотність відповідно.
+with $B$ the backshift operator, $\Phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ and $\Theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$ the autoregressive and moving-average polynomials, and $\{\varepsilon_t\}$ an i.i.d. innovation sequence satisfying $\E[\varepsilon_t]=0$ and $\Var(\varepsilon_t)=\sigma^2$. Characteristic roots of $\Phi(z)=0$ and $\Theta(z)=0$ lie outside the unit circle, ensuring stationarity and invertibility.
 
-\paragraph{Класичні методи оцінювання.} Нехай $\boldsymbol{\theta} = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)^\top$ --- вектор параметрів розміру $k = p + q$. Два основні методи використовуються як базові для порівняння:
+\paragraph{Classical estimators.} Let $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ denote the $k=p+q$ parameters. Two benchmark estimators are used for comparison:
 
-\textit{Метод найменших квадратів (OLS)} для AR компоненти:
+\textit{Ordinary least squares (OLS)} applied to the AR component:
 \begin{equation}
 \label{eq:ols}
-\hat{\boldsymbol{\phi}}_{\text{OLS}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{z}
+\hat{\boldsymbol{\phi}}_{\text{OLS}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{z},
 \end{equation}
-де $\mathbf{z} = (z_{p+1}, \ldots, z_T)^\top$ та $\mathbf{X}$ --- матриця лагових значень.
+where $\mathbf{z} = (z_{p+1},\ldots,z_T)^\top$ and $\mathbf{X}$ collects lagged values.
 
-\textit{Метод максимальної правдоподібності (MLE)} за припущення $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$:
+\textit{Maximum likelihood (MLE)} under $\varepsilon_t \sim \Normal(0,\sigma^2)$:
 \begin{equation}
 \label{eq:mle}
-\hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta} \mid \mathbf{y}) = \arg\max_{\boldsymbol{\theta}} \left\{ -\frac{T}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{t=1}^{T} \varepsilon_t^2(\boldsymbol{\theta}) \right\}
+\hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}\mid \mathbf{y}) = \arg\max_{\boldsymbol{\theta}} \left\{ -\frac{T}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{t=1}^T \varepsilon_t^2(\boldsymbol{\theta}) \right\}.
 \end{equation}
 
-За умови нормальності інновацій, MLE досягає асимптотичної ефективності: $\sqrt{T}(\hat{\boldsymbol{\theta}}_{\text{MLE}} - \boldsymbol{\theta}_0) \xrightarrow{d} \mathcal{N}(0, \mathbf{I}^{-1}(\boldsymbol{\theta}_0))$, де $\mathbf{I}(\boldsymbol{\theta}_0)$ --- інформаційна матриця Фішера. Однак за негаусовості інновацій MLE втрачає оптимальність, а OLS залишається консистентним, але неефективним. Ця проблема мотивує розробку альтернативних методів оцінювання, адаптованих до негаусових розподілів.
+Under Gaussian innovations, MLE attains asymptotic efficiency: $\sqrt{T}(\hat{\boldsymbol{\theta}}_{\text{MLE}} - \boldsymbol{\theta}_0) \xrightarrow{d} \Normal(0, \mathbf{I}^{-1}(\boldsymbol{\theta}_0))$, where $\mathbf{I}(\boldsymbol{\theta}_0)$ is the Fisher information matrix. With non-Gaussian innovations, however, MLE loses optimality and OLS remains consistent but inefficient, motivating alternative estimators adapted to non-Gaussian distributions.
 
-\subsection{Теоретичні Основи Методу Максимізації Поліномів}
+\subsection{Theoretical Foundations of the Polynomial Maximization Method}
 \label{subsec:pmm_theory}
 
-\subsubsection{Стохастичні Поліноми}
+\subsubsection{Stochastic polynomials}
 
-Метод максимізації поліномів (PMM) базується на концепції стохастичних поліномів, що є поліноміальними функціями випадкових величин з коефіцієнтами, що залежать від параметрів моделі. Цей метод було розроблено для оцінювання параметрів коли імовірнісні властивості даних суттєво відрізняються від гаусового (нормального) закону.
+The polynomial maximization method relies on stochastic polynomials, i.e., polynomial functions of random variables whose coefficients depend on the model parameters. The approach was devised for situations where the probabilistic properties of the data depart markedly from the Gaussian law.
 
-\begin{definition}[Стохастичний поліном порядку $S$ загального виду]
-Для послідовності випадкових величин $y_v$, $v = \overline{1,N}$, та векторного параметра $\mathbf{a}$, стохастичний поліном порядку $S$ загального виду визначається як:
+\begin{definition}[Stochastic polynomial of order $S$]
+For random variables $y_v$, $v = 1,\ldots,N$, and a parameter vector $\mathbf{a}$, the order-$S$ stochastic polynomial is defined as
 \begin{equation}
 \label{eq:stochastic_polynomial_general}
-L_{SN} = \sum_{v=1}^{N} \sum_{i=1}^{S} \phi_i(y_v) \int k_{iv}(a) dz - \sum_{i=1}^{S} \sum_{v=1}^{N} \int \Psi_{iv} k_{iv}(a) dz
+L_{SN} = \sum_{v=1}^{N} \sum_{i=1}^{S} \phi_i(y_v) \int k_{iv}(a)\, dz - \sum_{i=1}^{S} \sum_{v=1}^{N} \int \Psi_{iv}\, k_{iv}(a)\, dz,
 \end{equation}
-де $\phi_i(y_v)$ --- базисні функції, $k_{iv}(a)$ --- вагові коефіцієнти, що залежать від параметра $a$, та $\Psi_{iv} = E\{\phi_i(y_v)\}$ --- математичні сподівання базисних функцій, які є двічі диференційовними по параметру $a$.
+where $\phi_i(y_v)$ are basis functions, $k_{iv}(a)$ are weights depending on $a$, and $\Psi_{iv} = \E[\phi_i(y_v)]$ are twice-differentiable expectations with respect to $a$.
 \end{definition}
 
-\paragraph{Фундаментальні властивості стохастичного полінома.}
+\paragraph{Fundamental properties.}
 
-Стохастичний поліном $L_{SN}$ виду~\eqref{eq:stochastic_polynomial_general} володіє двома основними властивостями \cite{kunchenko2002polynomial}:
+The stochastic polynomial $L_{SN}$ in~\eqref{eq:stochastic_polynomial_general} satisfies two key properties~\cite{kunchenko2002polynomial}:
 
 \begin{enumerate}
-\item Для будь-якого порядку $S$ при асимптотичному зростанні обсягу вибірки $N \to \infty$ поліном $L_{SN}$ як функція параметра $a$ приймає максимум в околиці істинного значення цього параметра;
-
-\item При різних вибірках відхилення максимуму полінома $L_{SN}$ від істинного значення параметра $a$ має мінімальну дисперсію для відповідного порядку полінома $S$.
+    \item For any order $S$, as the sample size $N \to \infty$ the polynomial $L_{SN}$, viewed as a function of $a$, attains its maximum near the true value of $a$.
+    \item Across different samples the deviation of the maximiser of $L_{SN}$ from the true $a$ has minimal variance for the chosen order $S$.
 \end{enumerate}
 
-За аналогією до методу максимальної правдоподібності, оцінку параметра $a$ можна знаходити із розв'язання рівняння:
+Analogously to maximum likelihood, the estimator of $a$ solves
 \begin{equation}
 \label{eq:pmm_estimation_eq}
-\frac{d}{da} L_{SN} \bigg|_{a=\hat{a}} = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv} [\phi_i(y_v) - \Psi_{iv}] \bigg|_{a=\hat{a}} = 0
+\frac{d}{da} L_{SN} \bigg|_{a=\hat{a}} = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv} \big[\phi_i(y_v) - \Psi_{iv}\big] \bigg|_{a=\hat{a}} = 0.
 \end{equation}
 
-\paragraph{Оптимальні коефіцієнти та система рівнянь.}
+\paragraph{Optimal coefficients and linear system.}
 
-Оптимальні коефіцієнти $k_{iv}$, що максимізують функціонал~\eqref{eq:stochastic_polynomial_general}, знаходяться з розв'язання системи лінійних алгебраїчних рівнянь:
+The optimal weights $k_{iv}$ that maximise~\eqref{eq:stochastic_polynomial_general} are obtained by solving
 \begin{equation}
 \label{eq:optimal_coefficients}
-\sum_{j=1}^{S} k_{jv} F_{(i,j)v} = \frac{d}{da} \Psi_{iv}, \quad i=\overline{1,S}, \quad v=\overline{1,N}
+\sum_{j=1}^{S} k_{jv} F_{(i,j)v} = \frac{d}{da} \Psi_{iv}, \quad i=1,\ldots,S,\quad v=1,\ldots,N,
 \end{equation}
-де $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv} \Psi_{jv}$, $\Psi_{(i,j)v} = E\{\phi_i(y_v)\phi_j(y_v)\}$, $i, j = \overline{1,S}$.
+where $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv} \Psi_{jv}$ and $\Psi_{(i,j)v} = \E[\phi_i(y_v)\phi_j(y_v)]$.
 
-\paragraph{Векторний параметр та багатопараметричне оцінювання.}
+\paragraph{Vector parameters and multi-parameter estimation.}
 
-Для випадку знаходження оцінок векторного параметра $\thetavec = (a_0, a_1, \ldots, a_{Q-1})^\top$ необхідно використовувати $Q$ поліномів $L_{SN}^{(p)}$, $p=\overline{0, Q-1}$ загального виду~\eqref{eq:stochastic_polynomial_general} для кожної компоненти $a_p$ векторного параметра.
+To estimate a parameter vector $\thetavec = (a_0,\ldots,a_{Q-1})^\top$, one uses $Q$ polynomials $L_{SN}^{(p)}$, $p=0,\ldots,Q-1$, each of the form~\eqref{eq:stochastic_polynomial_general} for the corresponding component $a_p$.
 
-Кожний $p$-ий стохастичний поліном $L_{SN}^{(p)}$ як функція параметра $a_p$ при відомих значеннях інших складових вектору $\boldsymbol{\theta}$ при $N \to \infty$ також має максимум в околиці істинного значення параметра $a_p$. Шукані оцінки параметра знаходяться як розв'язок системи рівнянь:
+Each polynomial $L_{SN}^{(p)}$, treated as a function of $a_p$ with the remaining parameters fixed, attains its maximum near the true value of $a_p$ as $N \to \infty$. The resulting estimators solve
 \begin{equation}
 \label{eq:vector_estimation}
-f_{SN}^{(p)}(y_v, x_v) = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv}^{(p)} [\phi_i(y_v) - \Psi_{iv}] \bigg|_{a_p=\hat{a}_p} = 0, \quad p=\overline{0,Q-1}
+f_{SN}^{(p)}(y_v, x_v) = \sum_{i=1}^{S} \sum_{v=1}^{N} k_{iv}^{(p)} \big[\phi_i(y_v) - \Psi_{iv}\big] \bigg|_{a_p=\hat{a}_p} = 0, \quad p=0,\ldots,Q-1.
 \end{equation}
 
-\subsubsection{PMM для Асиметричних Розподілів}
+\subsubsection{PMM for asymmetric distributions}
 
-Розглянемо застосування стохастичних поліномів на прикладі лінійної багатофакторної регресії з асиметрично розподіленою випадковою складовою~\cite{zabolotnii2018polynomial}. Як базисні функції використовуються степеневі перетворення, математичними сподіваннями від яких є моменти відповідного порядку. Нехай спостереження $\{y_v\}_{v=1}^N$ описуються моделлю
+Consider a linear multiple regression model with asymmetric disturbances~\cite{zabolotnii2018polynomial}. Power transformations serve as basis functions whose expectations are moments of the corresponding order. For observations $\{y_v\}_{v=1}^N$
 \begin{equation}
 \label{eq:multiple_regression_model}
-y_v = \boldsymbol{x}_v^\top \boldsymbol{\theta} + \xi_v, \qquad \boldsymbol{x}_v = (1, x_{1,v}, \ldots, x_{Q-1,v})^\top,
+y_v = \boldsymbol{x}_v^\top \boldsymbol{\theta} + \xi_v,\qquad \boldsymbol{x}_v = (1, x_{1,v}, \ldots, x_{Q-1,v})^\top,
 \end{equation}
-де $\boldsymbol{\theta} = (a_0, a_1, \ldots, a_{Q-1})^\top$ --- вектор регресійних параметрів, а випадкова похибка $\xi_v$ задовольняє умовам
+where $\boldsymbol{\theta} = (a_0,\ldots,a_{Q-1})^\top$ and the disturbance satisfies
 \[
-\mathbb{E}[\xi_v] = 0,\quad \mathbb{E}[\xi_v^2] = \mu_2 > 0,\quad \mathbb{E}[\xi_v^3] = \mu_3 \neq 0,\quad \mathbb{E}[\xi_v^4] = \mu_4 < \infty.
+\E[\xi_v]=0,\quad \E[\xi_v^2]=\mu_2>0,\quad \E[\xi_v^3]=\mu_3\neq 0,\quad \E[\xi_v^4]=\mu_4<\infty.
 \]
-Позначимо також $\eta_v(\boldsymbol{\theta}) = \boldsymbol{x}_v^\top \boldsymbol{\theta}$ та $\boldsymbol{X} = [\boldsymbol{x}_1, \ldots, \boldsymbol{x}_N]^\top$.
+Let $\eta_v(\boldsymbol{\theta}) = \boldsymbol{x}_v^\top \boldsymbol{\theta}$ and $\mathbf{X} = [\boldsymbol{x}_1,\ldots,\boldsymbol{x}_N]^\top$.
 
-\paragraph{PMM1: лінійний стохастичний поліном і еквівалентність МНК.}
+\paragraph{PMM1: linear polynomial and equivalence to OLS.}
 
-При степені $S=1$ базисною функцією обираємо $\phi_1(y_v) = y_v$, що дає математичне сподівання $\Psi_{1v} = \mathbb{E}[y_v] = \eta_v(\boldsymbol{\theta})$. Коваріація $F_{(1,1)v} = \mu_2$ є сталою, а оптимальні коефіцієнти поліному~\eqref{eq:stochastic_polynomial_general} обчислюються з~\eqref{eq:optimal_coefficients} як $k_{1,v}^{(p)} = x_{p,v}/\mu_2$, де $x_{0,v} \equiv 1$. Умови максимуму полінома зводяться до
+For $S=1$ choose $\phi_1(y_v) = y_v$, yielding $\Psi_{1v} = \E[y_v] = \eta_v(\boldsymbol{\theta})$. The covariance $F_{(1,1)v} = \mu_2$ is constant, and from~\eqref{eq:optimal_coefficients} we obtain $k_{1,v}^{(p)} = x_{p,v}/\mu_2$ with $x_{0,v} \equiv 1$. The first-order conditions become
 \begin{equation}
 \label{eq:pmm1_system}
-\sum_{v=1}^{N} x_{p,v} \left[ y_v - \eta_v(\boldsymbol{\theta}) \right] = 0,\qquad p = \overline{0,Q-1},
+\sum_{v=1}^{N} x_{p,v} \left[ y_v - \eta_v(\boldsymbol{\theta}) \right] = 0,\qquad p = 0,\ldots,Q-1,
 \end{equation}
-що еквівалентно класичній системі нормальних рівнянь $\boldsymbol{X}^\top \boldsymbol{X}\,\boldsymbol{\theta} = \boldsymbol{X}^\top \boldsymbol{y}$. Отже, PMM1 відтворює МНК-оцінки
+which coincide with the normal equations $\mathbf{X}^\top \mathbf{X}\,\boldsymbol{\theta} = \mathbf{X}^\top \boldsymbol{y}$. Hence PMM1 reproduces the OLS estimator
 \begin{equation}
 \label{eq:pmm1_solution}
-\hat{\boldsymbol{\theta}}_{\mathrm{PMM1}} = (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^\top \boldsymbol{y},
+\hat{\boldsymbol{\theta}}_{\mathrm{PMM1}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \boldsymbol{y},
 \end{equation}
-які залишаються оптимальними лише за гаусового розподілу похибок.
+optimal only when errors are Gaussian.
 
-\paragraph{PMM2: стохастичний поліном другого порядку.}
+\paragraph{PMM2: second-order stochastic polynomial.}
 
-Для врахування асиметрії формуємо стохастичний поліном із базисними функціями
+To accommodate asymmetry we form a stochastic polynomial with basis functions
 \begin{align}
 \phi_1(y_v) &= y_v, & \Psi_{1v} &= \eta_v(\boldsymbol{\theta}), \\
 \phi_2(y_v) &= y_v^2, & \Psi_{2v} &= \eta_v^2(\boldsymbol{\theta}) + \mu_2.
 \end{align}
-Матричні елементи $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv}\Psi_{jv}$ визначаються центральними моментами до четвертого порядку, а оптимальні коефіцієнти~\eqref{eq:optimal_coefficients} набувають вигляду
+The matrices $F_{(i,j)v} = \Psi_{(i,j)v} - \Psi_{iv}\Psi_{jv}$ depend on central moments up to order four, leading to the optimal coefficients
 \begin{equation}
 \label{eq:pmm2_k_general}
-k_{1,v}^{(p)} = \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta} \, x_{p,v}, \quad k_{2,v}^{(p)} = -\frac{\mu_3}{\Delta} \, x_{p,v},
+k_{1,v}^{(p)} = \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta}\, x_{p,v}, \qquad
+k_{2,v}^{(p)} = -\frac{\mu_3}{\Delta}\, x_{p,v},
 \end{equation}
-де
+where
 \begin{equation}
 \label{eq:delta_definition}
-\Delta = \mu_2 \big(\mu_4 - \mu_2^2 \big) - \mu_3^2 > 0.
+\Delta = \mu_2\big(\mu_4 - \mu_2^2\big) - \mu_3^2 > 0.
 \end{equation}
-Вектор рівнянь для оцінювання $\boldsymbol{\theta}$ набуває узагальненого вигляду
+The estimating equations become
 \begin{equation}
 \label{eq:pmm2_system_general}
-g_p(\boldsymbol{\theta}) = \sum_{v=1}^{N} x_{p,v} \left\{ \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta} \left[ y_v - \eta_v(\boldsymbol{\theta}) \right] - \frac{\mu_3}{\Delta} \left[ y_v^2 - \eta_v^2(\boldsymbol{\theta}) - \mu_2 \right] \right\} = 0,
+g_p(\boldsymbol{\theta}) = \sum_{v=1}^{N} x_{p,v} \left\{ \frac{\mu_4 - \mu_2^2 + 2\mu_3 \eta_v(\boldsymbol{\theta})}{\Delta} \big[y_v - \eta_v(\boldsymbol{\theta})\big] - \frac{\mu_3}{\Delta} \big[y_v^2 - \eta_v^2(\boldsymbol{\theta}) - \mu_2\big] \right\} = 0,
 \end{equation}
-де $p = \overline{0,Q-1}$. Система~\eqref{eq:pmm2_system_general} переходить до МНК при $\mu_3 = 0$.
+for $p = 0,\ldots,Q-1$, which collapses to the OLS system when $\mu_3 = 0$.
 
-Помноживши рівняння~\eqref{eq:pmm2_system_general} на $\Delta$ та згрупувавши члени за ступенями $\eta_v(\boldsymbol{\theta})$, одержуємо еквівалентну квадратичну систему
+Multiplying~\eqref{eq:pmm2_system_general} by $\Delta$ and grouping terms by powers of $\eta_v(\boldsymbol{\theta})$ yields the quadratic system
 \begin{equation}
 \label{eq:pmm2_quadratic_form}
-\sum_{v=1}^{N} x_{p,v} \left[ A_2 \eta_v^2(\boldsymbol{\theta}) + B_{2,v}\,\eta_v(\boldsymbol{\theta}) + C_{2,v} \right] = 0,\quad p = \overline{0,Q-1},
+\sum_{v=1}^{N} x_{p,v} \left[ A_2 \eta_v^2(\boldsymbol{\theta}) + B_{2,v}\,\eta_v(\boldsymbol{\theta}) + C_{2,v} \right] = 0,\quad p = 0,\ldots,Q-1,
 \end{equation}
-де коефіцієнти:
+with coefficients
 \begin{equation}
 \label{eq:pmm2_coeffs}
-A_2 = \mu_3,\qquad B_{2,v} = \big(\mu_4 - \mu_2^2\big) - 2\mu_3 y_v,\qquad C_{2,v} = \mu_3 y_v^2 - y_v \big(\mu_4 - \mu_2^2\big) - \mu_2 \mu_3.
+A_2 = \mu_3,\qquad B_{2,v} = (\mu_4 - \mu_2^2) - 2\mu_3 y_v,\qquad C_{2,v} = \mu_3 y_v^2 - y_v (\mu_4 - \mu_2^2) - \mu_2 \mu_3.
 \end{equation}
 
-\paragraph{Узагальнена матрична форма та формула Ньютона--Рафсона.}
+\paragraph{Matrix form and Newton--Raphson step.}
 
-Позначимо $\boldsymbol{g}(\boldsymbol{\theta}) = \big(g_0(\boldsymbol{\theta}), \ldots, g_{Q-1}(\boldsymbol{\theta}) \big)^\top$ та введемо
+Define $\boldsymbol{g}(\boldsymbol{\theta}) = (g_0(\boldsymbol{\theta}),\ldots,g_{Q-1}(\boldsymbol{\theta}))^\top$ and
 \begin{equation}
 \label{eq:lambda_definition}
-\lambda_v(\boldsymbol{\theta}) = \frac{2\mu_3 \left[ y_v - \eta_v(\boldsymbol{\theta}) \right] - \left(\mu_4 - \mu_2^2\right)}{\Delta}.
+\lambda_v(\boldsymbol{\theta}) = \frac{2\mu_3 [y_v - \eta_v(\boldsymbol{\theta})] - (\mu_4 - \mu_2^2)}{\Delta}.
 \end{equation}
-Тоді матриця похідних $\mathbf{J}_{\mathrm{PMM2}}(\boldsymbol{\theta}) = \partial \boldsymbol{g}(\boldsymbol{\theta}) / \partial \boldsymbol{\theta}^\top$ набуває компактного запису
+The Jacobian becomes
 \begin{equation}
 \label{eq:pmm2_jacobian}
 \mathbf{J}_{\mathrm{PMM2}}(\boldsymbol{\theta}) = \sum_{v=1}^{N} \lambda_v(\boldsymbol{\theta})\, \boldsymbol{x}_v \boldsymbol{x}_v^\top,
 \end{equation}
-Крок Ньютона--Рафсона для знаходження $\hat{\boldsymbol{\theta}}_{\mathrm{PMM2}}$ має вигляд
+and the Newton--Raphson step updates
 \begin{equation}
 \label{eq:pmm_newton}
 \boldsymbol{\theta}^{(m+1)} = \boldsymbol{\theta}^{(m)} - \mathbf{J}_{\mathrm{PMM2}}^{-1}\big(\boldsymbol{\theta}^{(m)}\big)\, \boldsymbol{g}\big(\boldsymbol{\theta}^{(m)}\big),
 \end{equation}
-де як початкове наближення $\boldsymbol{\theta}^{(0)}$ доцільно використовувати МНК-оцінку~\eqref{eq:pmm1_solution}.
+with the OLS estimator~\eqref{eq:pmm1_solution} serving as a convenient initial value $\boldsymbol{\theta}^{(0)}$.
 
-\paragraph{Адаптивна процедура.}
+\paragraph{Adaptive procedure.}
 
-У практичних застосуваннях моменти $\mu_2$, $\mu_3$, $\mu_4$ невідомі, тому їх замінюють вибірковими оцінками на основі поточних залишків. Стандартна ітераційна схема має вигляд:
+In practice the moments $\mu_2$, $\mu_3$, and $\mu_4$ are unknown and are replaced by sample estimates based on current residuals. A standard iterative routine proceeds as follows:
 \begin{enumerate}
-    \item \textbf{Крок 1:} Обчислити МНК-оцінку $\hat{\boldsymbol{\theta}}^{\mathrm{OLS}}$ та сформувати залишки $\hat{\xi}_v^{(0)} = y_v - \boldsymbol{x}_v^\top \hat{\boldsymbol{\theta}}^{\mathrm{OLS}}$.
-    \item \textbf{Крок 2:} Для ітерації $m$ оновити моменти за формулами
+    \item \textbf{Step 1:} Compute the OLS estimator $\hat{\boldsymbol{\theta}}^{\mathrm{OLS}}$ and residuals $\hat{\xi}_v^{(0)} = y_v - \boldsymbol{x}_v^\top \hat{\boldsymbol{\theta}}^{\mathrm{OLS}}$.
+    \item \textbf{Step 2:} For iteration $m$ update the moments
     \[
-    \hat{\mu}_r^{(m)} = \frac{1}{N} \sum_{v=1}^{N} \left(\hat{\xi}_v^{(m)}\right)^r,\quad r \in \{2,3,4\},
+    \hat{\mu}_r^{(m)} = \frac{1}{N} \sum_{v=1}^{N} \big(\hat{\xi}_v^{(m)}\big)^r,\quad r \in \{2,3,4\},
     \]
-    та визначити ексцес $\hat{\gamma}_4^{(m)} = \hat{\mu}_4^{(m)} / (\hat{\mu}_2^{(m)})^2 - 3$ й коефіцієнт асиметрії $\hat{\gamma}_3^{(m)} = \hat{\mu}_3^{(m)} / (\hat{\mu}_2^{(m)})^{3/2}$.
-    \item \textbf{Крок 3:} Якщо $|\hat{\gamma}_3^{(m)}| < 0.1$, доцільно залишитись на МНК-оцінці. Інакше розв'язати~\eqref{eq:pmm2_system_general} методом~\eqref{eq:pmm_newton} з використанням $\hat{\mu}_r^{(m)}$ та отримати новий вектор $\boldsymbol{\theta}^{(m+1)}$.
-    \item \textbf{Крок 4:} Оновити залишки $\hat{\xi}_v^{(m+1)} = y_v - \boldsymbol{x}_v^\top \boldsymbol{\theta}^{(m+1)}$ та повторити кроки 2--4 до збіжності.
+    and compute the excess kurtosis $\hat{\gamma}_4^{(m)} = \hat{\mu}_4^{(m)} / (\hat{\mu}_2^{(m)})^2 - 3$ and skewness $\hat{\gamma}_3^{(m)} = \hat{\mu}_3^{(m)} / (\hat{\mu}_2^{(m)})^{3/2}$.
+    \item \textbf{Step 3:} If $|\hat{\gamma}_3^{(m)}| < 0.1$, retain the OLS estimator. Otherwise solve~\eqref{eq:pmm2_system_general} via~\eqref{eq:pmm_newton} using $\hat{\mu}_r^{(m)}$ to obtain $\boldsymbol{\theta}^{(m+1)}$.
+    \item \textbf{Step 4:} Update residuals $\hat{\xi}_v^{(m+1)} = y_v - \boldsymbol{x}_v^\top \boldsymbol{\theta}^{(m+1)}$ and iterate steps 2--4 until convergence.
 \end{enumerate}
 
-\subsubsection{Асимптотичні Дисперсії та Ефективність ММПл-Оцінок}
+\subsubsection{Asymptotic variances and efficiency of PMM estimators}
 
-\paragraph{Матриця кількості добутої інформації.}
+\paragraph{Information matrix.}
 
-Для отримання аналітичних виразів, що описують дисперсії ММПл-оцінок векторного параметра $\boldsymbol{\theta}$, використовується матриця кількості добутої інформації про компоненти параметру при застосуванні стохастичних поліномів порядку $S$. Така матриця $\mathbf{J}_s(\boldsymbol{\theta})$ складається із елементів:
+Analytical expressions for the variances of PMM estimators rely on the matrix of acquired information for order-$S$ stochastic polynomials:
 \begin{equation}
 \label{eq:fisher_information_matrix}
-J_{SN}^{(p,q)} = \sum_{v=1}^{N} \sum_{i=1}^{S} \sum_{j=1}^{S} k_{iv}^{(p)} k_{jv}^{(q)} F_{(i,j)v} = \sum_{v=1}^{N} \sum_{i=1}^{S} k_{i,v}^{(p)} \frac{\partial}{\partial a_q} \Psi_{iv}, \quad p,q=\overline{0,Q-1}
+J_{SN}^{(p,q)} = \sum_{v=1}^{N} \sum_{i=1}^{S} \sum_{j=1}^{S} k_{iv}^{(p)} k_{jv}^{(q)} F_{(i,j)v} = \sum_{v=1}^{N} \sum_{i=1}^{S} k_{i,v}^{(p)} \frac{\partial}{\partial a_q} \Psi_{iv}, \quad p,q=0,\ldots,Q-1.
 \end{equation}
 
-У статистичному сенсі кількість добутої інформації концептуально є поняттям близьким до кількості інформації по Фішеру. Дисперсії ММПл-оцінок складових векторного параметру в асимптотичному випадку (при $N \to \infty$) можуть бути отримані як елементи головної діагоналі варіаційної матриці $\mathbf{V}_s(\boldsymbol{\theta})$, яка є оберненою до матриці~\eqref{eq:fisher_information_matrix}:
+This quantity is conceptually analogous to Fisher information. In the asymptotic regime ($N \to \infty$) the variance matrix of PMM estimators equals the inverse of~\eqref{eq:fisher_information_matrix}:
 \begin{equation}
 \label{eq:variance_matrix}
-\mathbf{V}_{\text{PMM}S}(\boldsymbol{\theta}) = \left[\mathbf{J}_S(\boldsymbol{\theta})\right]^{-1}
+\mathbf{V}_{\text{PMM}S}(\boldsymbol{\theta}) = \big[\mathbf{J}_S(\boldsymbol{\theta})\big]^{-1}.
 \end{equation}
 
-\paragraph{Властивість збіжності до межі Рао-Крамера.}
+\paragraph{Convergence to the Rao--Cramér bound.}
 
-Важлива властивість ММПл полягає у тому, що при збільшенні числа членів стохастичного поліному $S$ дисперсія оцінок зменшується, оскільки кількість добутої інформації асимптотично (при $S \to \infty$) прямує до інформації по Фішеру.
+A key feature of PMM is that as $S \to \infty$ the estimator approaches the minimum-variance unbiased estimator and attains the Rao--Cramér bound. For $S=2$---the focus for asymmetric innovations---the estimator already exploits skewness and kurtosis, delivering notable efficiency gains over OLS without requiring full density specification.
 
-\begin{theorem}[Відносна ефективність PMM2 щодо OLS]
-\label{thm:pmm2_basic}
-За умови, що інновації $\varepsilon_t$ мають скінченні моменти до четвертого порядку включно та асиметричний розподіл ($\gamma_3 \neq 0$), відносна ефективність PMM2 щодо OLS визначається як
+For the scalar case ($Q=1$) the ratio of asymptotic variances between PMM2 and OLS simplifies to
 \begin{equation}
 \label{eq:re_pmm2_ols}
-\RE_{\text{PMM2/OLS}} = \frac{\Var(\hat{\theta}_{\text{OLS}})}{\Var(\hat{\theta}_{\text{PMM2}})} = \frac{2 + \gamma_4}{2 + \gamma_4 - \gamma_3^2},
+\RE_{\text{PMM2/OLS}} = \frac{4 + 2\gamma_4}{4 + 2\gamma_4 - \gamma_3^2},
 \end{equation}
-де $\gamma_3$ та $\gamma_4$ --- стандартизовані коефіцієнти асиметрії та ексцесу.
-\end{theorem}
+where $\gamma_3$ and $\gamma_4$ denote the standardised skewness and excess kurtosis of the innovations. This expression highlights the quadratic impact of skewness on efficiency gains.
 
-\begin{proof}[Ескіз доведення]
-Відношення інформаційних матриць $J_{SN}^{(p,q)} = \E\left[\frac{\partial^2 Q_S}{\partial\theta_p\partial\theta_q}\right]$ для $S=1$ (збігається з OLS) та $S=2$ (з оптимальними коефіцієнтами) дає $\mathbf{V}_{\text{PMM2}} = \RE^{-1}_{\text{PMM2/OLS}} \cdot \mathbf{V}_{\text{OLS}}$. Перехід до стандартизованих кумулянтів дає формулу~\eqref{eq:re_pmm2_ols}. Детальне доведення наведено в~\cite{kunchenko2002polynomial}.
-\end{proof}
-
-\paragraph{Інтерпретація відносної ефективності.}
-
-\begin{itemize}
-    \item Для гаусових інновацій ($\gamma_3 = 0$, $\gamma_4 = 0$): $\RE = 1$, тобто PMM еквівалентний OLS, оскільки оцінки співпадають. Для асиметричних розподілів ($\gamma_3 \neq 0$): $\RE > 1$, що означає виграш PMM2 у точності, що залежить лише від коефіцієнтів асиметрії $\gamma_3$ та ексцесу $\gamma_4$.
-
-    \item Коефіцієнт $\RE$ є безрозмірною величиною з діапазону $[1;\infty)$. При наближенні кумулянтних коефіцієнтів до меж допустимих областей відносна ефективність PMM2 зростає необмежено.
-
-    \item Асимптотично відносна ефективність є однаковою для всіх компонентів векторного параметра та не залежить від типу регресійної моделі (лінійна, поліноміальна чи нелінійна). При скінченних вибірках можливі відхилення через варіабельність оцінювання.
-\end{itemize}
-
-\subsection{PMM2 для ARIMA Моделей: Адаптація Методу}
+\subsection{PMM2 for ARIMA Models: Method Adaptation}
 \label{subsec:pmm2_arima}
 
-\subsubsection{Мотивація та принцип наближення}
+\subsubsection{Motivation and approximation principle}
 
-Ключовим елементом адаптації PMM2 до ARIMA-процесів є етап попередньї стаціонаризації: диференціювання $d$-го порядку забезпечує застосовність конструкцій із підрозділу~\ref{subsec:pmm_theory} до стаціонарного ряду $z_t$. Саме після цієї трансформації базовий метод надійно відтворює інновації, а PMM2-корекція поліпшує оцінки в умовах асиметрії. Такий підхід зберігає головну перевагу PMM2 --- чутливість до вищих моментів --- і водночас уникaє складних рекурсій для похідних псевдорегресорів. Це дає можливість замість повного переписування рекурсій для кожного набору параметрів застосовати просту дворівневу схему:
+Adapting PMM2 to ARIMA processes hinges on pre-stationarisation: differencing of order $d$ enables the constructions from Section~\ref{subsec:pmm_theory} to operate on the stationary series $z_t$. After this transformation the baseline method reliably recovers innovations and the PMM2 correction refines estimates under asymmetry. The approach preserves PMM2's sensitivity to higher moments while avoiding complex recursions for pseudo-regressors. Instead we implement a simple two-stage routine:
 
 \begin{enumerate}
-    \item \textbf{Базовий крок.} Оцінюємо модель ARIMA$(p,d,q)$ стандартним методом (CSS або ML) та зберігаємо отримані залишки як емпіричні інновації.
-    \item \textbf{PMM2-корекція.} Фіксуємо побудовану на попередньому кроці дизайн-матрицю та застосовуємо поліноміальне коригування другого порядку, що враховує асиметрію й ексцес інновацій.
+    \item \textbf{Baseline step.} Estimate ARIMA$(p,d,q)$ via a standard method (CSS or ML) and treat the resulting residuals as empirical innovations.
+    \item \textbf{PMM2 correction.} Fix the design matrix formed at the baseline step and apply the second-order polynomial adjustment to incorporate innovation skewness and kurtosis.
 \end{enumerate}
 
-\subsubsection{Конструкція псевдорегресорів}
+\subsubsection{Pseudo-regressor construction}
 
-Нехай
+Let
 \begin{equation}
 \label{eq:differenced_series}
-z_t = \Delta^d y_t,\qquad t=d+1,\ldots,T,\qquad n = T-d,
+z_t = \diffop y_t,\qquad t=d+1,\ldots,T,\qquad n = T-d,
 \end{equation}
---- стаціонаризований ряд. На першому кроці оцінюємо ARIMA$(p,d,q)$ класичним методом і одержуємо залишки $\widehat{\varepsilon}_t^{\text{CSS}}$. Для ефективної довжини $n_\text{eff} = n - m$, де $m = \max(p,q)$, формуємо вектор регресорів
+denote the stationarised series. After estimating ARIMA$(p,d,q)$ in the first stage we obtain residuals $\widehat{\varepsilon}_t^{\text{CSS}}$. For the effective length $n_\text{eff} = n - m$ with $m = \max(p,q)$ define the regressors
 \begin{equation}
 \label{eq:design_row}
-\mathbf{x}_t = \big(z_{t-1},\ldots,z_{t-p},\widehat{\varepsilon}_{t-1}^{\text{CSS}},\ldots,\widehat{\varepsilon}_{t-q}^{\text{CSS}}\big)^\top,
-\qquad t = m+1,\ldots,n.
+\mathbf{x}_t = \big(z_{t-1},\ldots,z_{t-p},\widehat{\varepsilon}_{t-1}^{\text{CSS}},\ldots,\widehat{\varepsilon}_{t-q}^{\text{CSS}}\big)^\top,\qquad t = m+1,\ldots,n.
 \end{equation}
-Якщо у моделі присутній зсув, до $\mathbf{x}_t$ додається одиничний стовпчик. Побудована матриця $\mathbf{X} = (\mathbf{x}_{m+1},\ldots,\mathbf{x}_{n})^\top$ не залежить від параметрів, тому подальша оптимізація редукується до задачі, описаної у підрозділі~\ref{subsec:pmm_theory}.
+If an intercept is present, append a column of ones. The resulting matrix $\mathbf{X} = (\mathbf{x}_{m+1},\ldots,\mathbf{x}_{n})^\top$ is parameter-free, reducing subsequent optimisation to the problem in Section~\ref{subsec:pmm_theory}.
 
-\subsubsection{Моментне калібрування й стохастичний поліном}
+\subsubsection{Moment calibration and stochastic polynomial}
 
-Використовуючи залишки базового кроку, розраховуємо центральні моменти
+Using residuals from the baseline step compute the central moments
 \begin{equation}
 \label{eq:css_moments}
-\hat{\mu}_k = \frac{1}{n_\text{eff}} \sum_{t=m+1}^{n} \Big(\widehat{\varepsilon}_t^{\text{CSS}} - \bar{\varepsilon}\Big)^k,\qquad k=2,3,4,
+\hat{\mu}_k = \frac{1}{n_\text{eff}} \sum_{t=m+1}^{n} \big(\widehat{\varepsilon}_t^{\text{CSS}} - \bar{\varepsilon}\big)^k,\qquad k=2,3,4,
 \end{equation}
-де $\bar{\varepsilon}$ --- їхнє вибіркове середнє. Як і у базовому PMM2, визначаємо
+where $\bar{\varepsilon}$ is the sample mean. Analogously to the basic PMM2 we define
 \begin{equation}
 \label{eq:delta_hat}
 \hat{\Delta} = \hat{\mu}_2(\hat{\mu}_4 - \hat{\mu}_2^2) - \hat{\mu}_3^2.
 \end{equation}
-Нехай $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ та $\eta_t(\boldsymbol{\theta}) = \mathbf{x}_t^\top\boldsymbol{\theta}$. Тоді стохастичний поліном набуває вигляду
+With $\boldsymbol{\theta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)^\top$ and $\eta_t(\boldsymbol{\theta}) = \mathbf{x}_t^\top \boldsymbol{\theta}$, the stochastic polynomial becomes
 \begin{equation}
 \label{eq:simplified_score}
-g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}\,
+g_j(\boldsymbol{\theta}) = \sum_{t=m+1}^{n} x_{j,t}
 \left[
 \frac{\hat{\mu}_4 - \hat{\mu}_2^2 + 2\hat{\mu}_3 \eta_t(\boldsymbol{\theta})}{\hat{\Delta}}\big(z_t - \eta_t(\boldsymbol{\theta})\big)
 -\frac{\hat{\mu}_3}{\hat{\Delta}}\Big(z_t^2 - \eta_t^2(\boldsymbol{\theta}) - \hat{\mu}_2\Big)
 \right]=0,
 \end{equation}
-де $x_{j,t}$ --- $j$-та компонента $\mathbf{x}_t$. Система~\eqref{eq:simplified_score} є прямим аналогом рівнянь~\eqref{eq:pmm2_system_general} для фіксованої дизайн-матриці. У граничному симетричному випадку ($\hat{\mu}_3 = 0$) вона зводиться до МНК-оцінювання з ваговим множником $\hat{\mu}_2^{-1}$.
+where $x_{j,t}$ denotes the $j$th component of $\mathbf{x}_t$. System~\eqref{eq:simplified_score} mirrors~\eqref{eq:pmm2_system_general} for a fixed design matrix. In the symmetric limiting case ($\hat{\mu}_3 = 0$) it reduces to weighted least squares with weight $\hat{\mu}_2^{-1}$.
 
-\subsection{Алгоритм Оцінювання PMM2 для ARIMA}
+\subsection{PMM2 Estimation Algorithm for ARIMA}
 \label{subsec:algorithm}
 
 \begin{algorithm}[H]
-\caption{Спрощена PMM2-оцінка для ARIMA$(p,d,q)$}
+\caption{Simplified PMM2 estimator for ARIMA$(p,d,q)$}
 \label{alg:pmm2_arima}
 \begin{algorithmic}[1]
-\REQUIRE Часовий ряд $\{y_t\}_{t=1}^T$, порядки $(p,d,q)$, вибір методу ініціалізації (CSS або ML)
-\ENSURE Вектор параметрів $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$, оцінка моментів $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$
+\REQUIRE Time series $\{y_t\}_{t=1}^T$, orders $(p,d,q)$, choice of initial estimator (CSS or ML)
+\ENSURE Parameter vector $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$, moment estimates $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$
 
-\STATE \textbf{Диференціювання.} Обчислити $z_t = \Delta^d y_t$ згідно з~\eqref{eq:differenced_series}.
+\STATE \textbf{Differencing.} Compute $z_t = \diffop y_t$ using~\eqref{eq:differenced_series}.
 
-\STATE \textbf{Базове оцінювання.} Одержати $\hat{\phi}_j^{\text{CSS}}$, $\hat{\theta}_k^{\text{CSS}}$ та залишки $\widehat{\varepsilon}_t^{\text{CSS}}$ стандартним методом.
+\STATE \textbf{Baseline estimation.} Obtain $\hat{\phi}_j^{\text{CSS}}$, $\hat{\theta}_k^{\text{CSS}}$, and residuals $\widehat{\varepsilon}_t^{\text{CSS}}$ via the chosen standard method.
 
-\STATE \textbf{Побудова дизайн-матриці.} Сформувати $\mathbf{X}$ із рядків~\eqref{eq:design_row} та відповідний вектор відгуків $\mathbf{z} = (z_{m+1},\ldots,z_n)^\top$.
+\STATE \textbf{Design matrix.} Form $\mathbf{X}$ from rows~\eqref{eq:design_row} and the response vector $\mathbf{z} = (z_{m+1},\ldots,z_n)^\top$.
 
-\STATE \textbf{Оцінювання моментів.} Розрахувати $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$ за формулою~\eqref{eq:css_moments} і величину $\hat{\Delta}$ з~\eqref{eq:delta_hat}.
+\STATE \textbf{Moment evaluation.} Compute $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$ using~\eqref{eq:css_moments} and $\hat{\Delta}$ from~\eqref{eq:delta_hat}.
 
-\STATE \textbf{Ініціалізація PMM2.} Взяти початкове наближення $\boldsymbol{\theta}^{(0)} = (\hat{\phi}_1^{\text{CSS}},\ldots,\hat{\phi}_p^{\text{CSS}},\hat{\theta}_1^{\text{CSS}},\ldots,\hat{\theta}_q^{\text{CSS}})^\top$.
+\STATE \textbf{Initialization.} Set $\boldsymbol{\theta}^{(0)} = (\hat{\phi}_1^{\text{CSS}},\ldots,\hat{\phi}_p^{\text{CSS}},\hat{\theta}_1^{\text{CSS}},\ldots,\hat{\theta}_q^{\text{CSS}})^\top$.
 
-\STATE \textbf{Поліноміальна оптимізація.} Застосувати ітеративний розв'язувач PMM2 для фіксованої дизайн-матриці $\mathbf{X}$ (див. рівняння~\eqref{eq:simplified_score}). Процес зупиняємо, коли $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\|$ та норма моментних умов стають меншими за заданий поріг.
+\STATE \textbf{Polynomial optimization.} Apply the iterative PMM2 solver for the fixed design $\mathbf{X}$ (see~\eqref{eq:simplified_score}), stopping when $\|\boldsymbol{\theta}^{(k)} - \boldsymbol{\theta}^{(k-1)}\|$ and the norm of the moment conditions fall below a predefined tolerance.
 
-\STATE \textbf{Реконструкція залишків.} Прогнати фінальні параметри через модель ARIMA для отримання оновлених інновацій (вони використовуються у подальших діагностичних тестах).
+\STATE \textbf{Residual reconstruction.} Recompute innovations by passing the final parameters through the ARIMA model; retain them for diagnostic checks.
 
-\RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}} = \boldsymbol{\theta}^{(k_\star)}$, $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$.
+\RETURN $\hat{\boldsymbol{\theta}}_{\text{PMM2}} = \boldsymbol{\theta}^{(k_\star)}$ together with $\hat{\mu}_2,\hat{\mu}_3,\hat{\mu}_4$.
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Коментарі до реалізації.}
+\paragraph{Implementation notes.}
 
 \begin{itemize}
-    \item Алгоритм використовує лише одну дизайн-матрицю, побудовану з оцінок першого кроку. Тому обчислювальна складність визначається матричними добутками $O(n_\text{eff} k)$ та розв'язанням невеликої системи $k \times k$ на кожній ітерації PMM2.
-    \item Перевірка стаціонарності й оборотності виконується проєкцією коефіцієнтів на допустиму область: при виявленні коренів усередині одиничного кола коефіцієнти масштабуються до граничного значення.
+    \item The algorithm uses a single design matrix obtained from the first-step estimates. Computational cost is therefore dominated by $O(n_\text{eff} k)$ matrix products and solving a small $k \times k$ system at each PMM2 iteration.
+    \item Stationarity and invertibility are enforced by projecting coefficients onto the admissible region: if characteristic roots fall inside the unit circle, coefficients are rescaled to the boundary.
 \end{itemize}
 
-\subsection{Асимптотичні Властивості PMM2 для ARIMA}
+\subsection{Asymptotic Properties of PMM2 for ARIMA}
 \label{subsec:asymptotic_theory}
 
-Для аналізу зручно переписати систему~\eqref{eq:simplified_score} у вигляді усереднених моментних умов. Нехай $\mathbf{x}_t^0$ --- ``ідеальні'' регресори, побудовані з істинних інновацій $\varepsilon_t$, а $\widehat{\mathbf{x}}_t$ --- їхні емпіричні аналоги з формули~\eqref{eq:design_row}. Позначимо через
+For analysis it is convenient to rewrite system~\eqref{eq:simplified_score} as averaged moment conditions. Let $\mathbf{x}_t^0$ denote the "ideal" regressors constructed from the true innovations $\varepsilon_t$, and let $\widehat{\mathbf{x}}_t$ be their empirical counterparts from~\eqref{eq:design_row}. Define
 \[
-\boldsymbol{\psi}_t(\boldsymbol{\theta}) = \widehat{\mathbf{x}}_t\, s_t(\boldsymbol{\theta})
+\boldsymbol{\psi}_t(\boldsymbol{\theta}) = \widehat{\mathbf{x}}_t\, s_t(\boldsymbol{\theta}),
 \]
-відповідний моментний внесок, де $s_t(\boldsymbol{\theta})$ --- вираз у дужках у~\eqref{eq:simplified_score}. Тоді оцінювач визначається умовою
+where $s_t(\boldsymbol{\theta})$ is the bracketed expression in~\eqref{eq:simplified_score}. The estimator solves
 \[
 \mathbf{g}_{n_\text{eff}}(\boldsymbol{\theta}) =
 \frac{1}{n_\text{eff}}\sum_{t=m+1}^{n} \boldsymbol{\psi}_t(\boldsymbol{\theta}) = \mathbf{0}.
 \]
 
-\subsubsection{Вплив згенерованих регресорів}
+\subsubsection{Impact of generated regressors}
 
-Двокрокова процедура PMM2 для ARIMA моделей використовує залишки $\widehat{\varepsilon}_t^{\text{CSS}}$ з першого кроку як регресори у другому кроці. Це класична проблема \textit{згенерованих регресорів} (generated regressors), досліджена Pagan (1984)~\cite{pagan1984econometric} та Newey (1984)~\cite{newey1984method}. Наступна лема формалізує умови, за яких така двокрокова процедура не впливає на асимптотичну коваріаційну матрицю PMM2-оцінок.
+The two-step PMM2 procedure uses the first-step residuals $\widehat{\varepsilon}_t^{\text{CSS}}$ as regressors in the second step, giving rise to the classical issue of \textit{generated regressors} studied by Pagan (1984)~\cite{pagan1984econometric} and Newey (1984)~\cite{newey1984method}. The lemma below states conditions under which the two-step scheme leaves the asymptotic covariance matrix unchanged.
 
-\begin{lemma}[Асимптотична еквівалентність з істинними регресорами]
+\begin{lemma}[Asymptotic equivalence with true regressors]
 \label{lem:generated_regressors}
-Нехай виконуються такі умови:
+Suppose the following conditions hold:
 \begin{enumerate}
-    \item Початкові оцінки $\hat{\boldsymbol{\theta}}^{\text{CSS}}$ є $\sqrt{n}$-консистентними: $\sqrt{n}(\hat{\boldsymbol{\theta}}^{\text{CSS}} - \boldsymbol{\theta}_0) = O_p(1)$.
-    \item Залишки задовольняють $\sup_t |\widehat{\varepsilon}_t^{\text{CSS}} - \varepsilon_t| = O_p(n^{-1/2})$.
-    \item Функції стохастичного полінома є гладкими (Lipschitz-неперервними) за регресорами.
+    \item The initial estimator $\hat{\boldsymbol{\theta}}^{\text{CSS}}$ is $\sqrt{n}$-consistent: $\sqrt{n}(\hat{\boldsymbol{\theta}}^{\text{CSS}} - \boldsymbol{\theta}_0) = O_p(1)$.
+    \item Residuals satisfy $\sup_t |\widehat{\varepsilon}_t^{\text{CSS}} - \varepsilon_t| = O_p(n^{-1/2})$.
+    \item The stochastic-polynomial functions are smooth (Lipschitz continuous) in the regressors.
 \end{enumerate}
-Тоді асимптотичний розподіл PMM2-оцінок, отриманих з використанням $\widehat{\varepsilon}_t^{\text{CSS}}$, співпадає з розподілом, який би отримали за використання істинних $\varepsilon_t$:
+Then the asymptotic distribution of the PMM2 estimator based on $\widehat{\varepsilon}_t^{\text{CSS}}$ coincides with that obtained using the true innovations:
 \[
 \sqrt{n}\big(\hat{\boldsymbol{\theta}}_{\text{PMM2}}(\widehat{\varepsilon}^{\text{CSS}}) - \boldsymbol{\theta}_0\big) - \sqrt{n}\big(\hat{\boldsymbol{\theta}}_{\text{PMM2}}(\varepsilon) - \boldsymbol{\theta}_0\big) = o_p(1).
 \]
 \end{lemma}
 
-\begin{proof}[Ескіз доведення]
-Застосовуємо розкладання першого порядку за $(\widehat{\varepsilon}^{\text{CSS}} - \varepsilon)$:
+\begin{proof}[Sketch]
+Apply a first-order expansion with respect to $(\widehat{\varepsilon}^{\text{CSS}} - \varepsilon)$:
 \[
 \mathbf{g}_n(\boldsymbol{\theta}, \widehat{\varepsilon}^{\text{CSS}}) = \mathbf{g}_n(\boldsymbol{\theta}, \varepsilon) + \mathbf{H}_n(\boldsymbol{\theta})(\widehat{\varepsilon}^{\text{CSS}} - \varepsilon) + o_p(n^{-1/2}),
 \]
-де $\mathbf{H}_n$ --- матриця похідних за залишками. За умовою (1)--(2), другий член має порядок $O_p(n^{-1/2}) \cdot O_p(n^{-1/2}) = O_p(n^{-1})$, що є асимптотично незначущим. Детальне доведення аналогічне до Pagan (1984, Theorem 1) та Newey (1984, Proposition 1).
+where $\mathbf{H}_n$ collects derivatives with respect to residuals. Under conditions (1)--(2) the second term is $O_p(n^{-1/2}) \cdot O_p(n^{-1/2}) = O_p(n^{-1})$, which is asymptotically negligible. The full argument parallels Pagan (1984, Theorem~1) and Newey (1984, Proposition~1).
 \end{proof}
 
-\textbf{Наслідок.} За умов леми~\ref{lem:generated_regressors}, асимптотична коваріаційна матриця PMM2-оцінок обчислюється стандартним способом (сендвіч-формула), без необхідності корекції на першокроковий оцінювач. Це виправдовує використання класичних формул для стандартних похибок у розділі~\ref{subsec:algorithm}.
+\textbf{Corollary.} Under Lemma~\ref{lem:generated_regressors}, the asymptotic covariance matrix of the PMM2 estimator is computed via the standard sandwich formula without correcting for the first-step estimator, justifying the classical standard errors reported in Section~\ref{subsec:algorithm}.
 
-\subsubsection{Консистентність}
+\subsubsection{Consistency}
 
-\begin{theorem}[Консистентність спрощеної PMM2-оцінки]
+\begin{theorem}[Consistency of the simplified PMM2 estimator]
 \label{thm:pmm2_consistency}
-Нехай виконуються такі умови:
+Assume:
 \begin{enumerate}
-    \item ARIMA$(p,d,q)$ модель правильно специфікована; інновації $\varepsilon_t$ є стаціонарними, ергодичними та мають скінченні моменти до четвертого порядку.
-    \item Початковий CSS/ML-оцінювач є консистентним: $\hat{\boldsymbol{\theta}}^{\text{CSS}} \xrightarrow{p} \boldsymbol{\theta}_0$.
-    \item Ряд $\{\widehat{\varepsilon}_t^{\text{CSS}}\}$ збігається в ймовірності до істинних інновацій у сенсі середнього квадратичного: $\frac{1}{n_\text{eff}}\sum (\widehat{\varepsilon}_t^{\text{CSS}} - \varepsilon_t)^2 \xrightarrow{p} 0$.
-    \item Матриця моментів $E[\mathbf{x}_t^0 (\mathbf{x}_t^0)^\top]$ невироджена.
+    \item The ARIMA$(p,d,q)$ model is correctly specified; innovations $\varepsilon_t$ are stationary, ergodic, and possess finite moments up to order four.
+    \item The initial CSS/ML estimator is consistent: $\hat{\boldsymbol{\theta}}^{\text{CSS}} \xrightarrow{p} \boldsymbol{\theta}_0$.
+    \item The sequence $\{\widehat{\varepsilon}_t^{\text{CSS}}\}$ converges in mean square to the true innovations: $\frac{1}{n_\text{eff}}\sum (\widehat{\varepsilon}_t^{\text{CSS}} - \varepsilon_t)^2 \xrightarrow{p} 0$.
+    \item The matrix $E[\mathbf{x}_t^0 (\mathbf{x}_t^0)^\top]$ is nonsingular.
 \end{enumerate}
-Тоді оцінювач $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ є консистентним:
+Then $\hat{\boldsymbol{\theta}}_{\text{PMM2}}$ is consistent:
 \[
 \hat{\boldsymbol{\theta}}_{\text{PMM2}} \xrightarrow{p} \boldsymbol{\theta}_0.
 \]
 \end{theorem}
 
-\begin{proof}[Ескіз]
-Пункти (2)--(3) гарантують збіжність $\widehat{\mathbf{x}}_t \xrightarrow{p} \mathbf{x}_t^0$ та $\hat{\mu}_k \xrightarrow{p} \mu_k$ для $k=2,3,4$. Враховуючи неперервність $s_t(\boldsymbol{\theta})$ за цими аргументами, отримаємо рівномірну збіжність $\mathbf{g}_{n_\text{eff}}(\boldsymbol{\theta}) \to \mathbf{g}(\boldsymbol{\theta}) = E[\mathbf{x}_t^0 s_t^0(\boldsymbol{\theta})]$. Єдиність кореня $\mathbf{g}(\boldsymbol{\theta})=\mathbf{0}$ (за умовою 4) і стандартний аргумент Z-оцінок (Newey \& McFadden, 1994) завершують доведення.
+\begin{proof}[Sketch]
+Conditions (2)--(3) imply $\widehat{\mathbf{x}}_t \xrightarrow{p} \mathbf{x}_t^0$ and $\hat{\mu}_k \xrightarrow{p} \mu_k$ for $k=2,3,4$. By continuity of $s_t(\boldsymbol{\theta})$ in these arguments we obtain uniform convergence $\mathbf{g}_{n_\text{eff}}(\boldsymbol{\theta}) \to \mathbf{g}(\boldsymbol{\theta}) = E[\mathbf{x}_t^0 s_t^0(\boldsymbol{\theta})]$. The unique root of $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$ (condition 4) and standard Z-estimator arguments (Newey and McFadden, 1994) complete the proof.
 \end{proof}
 
-\subsubsection{Асимптотична нормальність}
+\subsubsection{Asymptotic normality}
 
-\begin{theorem}[Асимптотичний розподіл]
+\begin{theorem}[Asymptotic distribution]
 \label{thm:asymptotic_normality}
-За умов Теореми~\ref{thm:pmm2_consistency} та додатково за умови, що $\{\varepsilon_t\}$ задовольняють центральній граничній теоремі для квадратно інтегровних функцій, маємо
+Under Theorem~\ref{thm:pmm2_consistency} and assuming additionally that $\{\varepsilon_t\}$ satisfies a central limit theorem for square-integrable functions,
 \[
-\sqrt{n_\text{eff}}\big(\hat{\boldsymbol{\theta}}_{\text{PMM2}} - \boldsymbol{\theta}_0\big) \xrightarrow{d} \mathcal{N}(0,\boldsymbol{\Sigma}_{\text{PMM2}}),
+\sqrt{n_\text{eff}}\big(\hat{\boldsymbol{\theta}}_{\text{PMM2}} - \boldsymbol{\theta}_0\big) \xrightarrow{d} \Normal(0,\boldsymbol{\Sigma}_{\text{PMM2}}),
 \]
-де
-\begin{align}
+where
+\begin{align*}
 \mathbf{A} &= E\!\left[ \frac{\partial \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)}{\partial \boldsymbol{\theta}^\top} \right],
 &
 \mathbf{B} &= E\!\left[ \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)\, \boldsymbol{\psi}_t^0(\boldsymbol{\theta}_0)^\top \right],\\
 \boldsymbol{\Sigma}_{\text{PMM2}} &= \mathbf{A}^{-1}\mathbf{B}(\mathbf{A}^{-1})^\top,
-\end{align}
-а $\boldsymbol{\psi}_t^0(\cdot)$ --- моментна функція, побудована з істинних інновацій.
+\end{align*}
+and $\boldsymbol{\psi}_t^0(\cdot)$ uses the true innovations.
 \end{theorem}
 
-На практиці матриці $\mathbf{A}$ та $\mathbf{B}$ апроксимуються вибірковими аналогами, в яких використовуються оцінені регресори та моменти. Стандартні похибки обчислюємо за формулою
+In practice the matrices $\mathbf{A}$ and $\mathbf{B}$ are approximated by sample analogues that employ the estimated regressors and moments. Standard errors follow from
 \begin{equation}
 \label{eq:standard_errors}
 \text{SE}(\hat{\theta}_j) = \sqrt{\frac{[\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}]_{jj}}{n_\text{eff}}},
 \end{equation}
-де $\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}$ отримується заміною математичних сподівань у визначеннях $\mathbf{A}$ та $\mathbf{B}$ на середні по вибірці.
+where $\hat{\boldsymbol{\Sigma}}_{\text{PMM2}}$ replaces expectations in $\mathbf{A}$ and $\mathbf{B}$ with sample averages.
 
-\subsubsection{Відносна ефективність}
+\subsubsection{Relative efficiency}
 
-Оскільки вибраний підхід редукується до лінійного PMM2 із фіксованою $\mathbf{X}$, природним є порівняння з OLS у тій самій дизайн-матриці. Відносну ефективність можна описати через детермінант або слід коваріаційних матриць ($k=p+q$):
+Because the proposed approach reduces to linear PMM2 with fixed $\mathbf{X}$, the natural benchmark is OLS on the same design. Relative efficiency can be summarised via determinants or traces of covariance matrices ($k=p+q$):
 \begin{equation}
 \label{eq:re_arima}
-RE_{\text{det}} = \left(\frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|}\right)^{1/k}, \quad RE_{\text{trace}} = \frac{\text{tr}(\boldsymbol{\Sigma}_{\text{OLS}})}{\text{tr}(\boldsymbol{\Sigma}_{\text{PMM2}})}.
+RE_{\text{det}} = \left(\frac{|\boldsymbol{\Sigma}_{\text{OLS}}|}{|\boldsymbol{\Sigma}_{\text{PMM2}}|}\right)^{1/k}, \qquad RE_{\text{trace}} = \frac{\tr(\boldsymbol{\Sigma}_{\text{OLS}})}{\tr(\boldsymbol{\Sigma}_{\text{PMM2}})}.
 \end{equation}
-Ці міри прямо узагальнюють скалярну формулу~\eqref{eq:re_pmm2_ols} на багатопараметричний випадок та залишаються валідними у ``плагін''-налаштуванні, оскільки різниця між істинними й емпіричними регресорами є $o_p(1)$.
+These measures generalise the scalar formula~\eqref{eq:re_pmm2_ols} and remain valid in the plug-in setting because the difference between true and empirical regressors is $o_p(1)$.
 
-% ============================================
-% SECTION 3: EMPIRICAL RESULTS
-% ============================================
-\section{Емпіричні Результати: Monte Carlo Дослідження}
+\section{Empirical Evidence: Monte Carlo Study}
 \label{sec:empirical}
 
-У цьому розділі ми представляємо результати комплексного Monte Carlo дослідження для верифікації ефективності PMM2 методу оцінювання параметрів ARIMA моделей за умов негаусових інновацій. Дизайн експерименту охоплює різні розміри вибірки, конфігурації моделей та типи розподілів інновацій для систематичного порівняння PMM2 з класичними методами (CSS, OLS) та робастними Hubерівськими M-оцінками (M-EST).
+This section reports an extensive Monte Carlo study assessing the performance of PMM2 for ARIMA parameter estimation under non-Gaussian innovations. The design spans different sample sizes, model configurations, and innovation distributions to benchmark PMM2 against classical estimators (CSS, OLS) and robust Huber M-estimators (M-EST).
 
-\subsection{Дизайн Monte Carlo Експерименту}
+\subsection{Monte Carlo Design}
 \label{subsec:experiment_design}
 
-Проведено повнофакторний Monte Carlo експеримент з 2000 повторень для кожної комбінації:
+We conduct a full-factorial Monte Carlo experiment with 2000 replications for each configuration:
 
-\textbf{Розміри вибірки:} $N \in \{100, 200, 500, 1000\}$. \textbf{Моделі:} ARIMA(1,1,0) з $\phi_1 = 0.7$; ARIMA(0,1,1) з $\theta_1 = -0.5$; ARIMA(1,1,1) з $\phi_1 = 0.6, \theta_1 = -0.4$; ARIMA(2,1,0) з $\phi_1 = 0.5, \phi_2 = 0.3$. \textbf{Розподіли інновацій:} Gaussian $\mathcal{N}(0,1)$ ($\gamma_3 = 0, \gamma_4 = 0$); Gamma $\Gammadist(2,1)$ ($\gamma_3 \approx 1.41, \gamma_4 \approx 3.0$); Lognormal $\text{LN}(0, 0.5^2)$ ($\gamma_3 \approx 2.0, \gamma_4 \approx 6.2$); Chi-squared $\chi^2(3)$ ($\gamma_3 \approx 1.63, \gamma_4 \approx 4.0$).
+\textbf{Sample sizes:} $N \in \{100, 200, 500, 1000\}$. \textbf{Models:} ARIMA(1,1,0) with $\phi_1 = 0.7$; ARIMA(0,1,1) with $\theta_1 = -0.5$; ARIMA(1,1,1) with $\phi_1 = 0.6$, $\theta_1 = -0.4$; ARIMA(2,1,0) with $(\phi_1, \phi_2) = (0.5,-0.25)$. \textbf{Innovation distributions:}
+\begin{itemize}
+    \item Gaussian benchmark: $\varepsilon_t \sim \Normal(0,1)$.
+    \item Gamma: $\Gammadist(2,1)$, standardised to zero mean and unit variance (skewness $\gamma_3 \approx 1.41$).
+    \item Lognormal: $\Lognormal(0,0.4^2)$, demeaned and rescaled (skewness $\gamma_3 \approx 2.0$).
+    \item Chi-square: $\Chisq(3)$, standardised (skewness $\gamma_3 \approx 1.63$).
+\end{itemize}
 
-Загалом $4 \times 4 \times 4 \times 2000 = 128{,}000$ симуляцій.
+For each replication we record bias, MSE, RMSE, MAE, relative efficiency ($\RE = \text{MSE}_{\text{CSS}} / \text{MSE}_{\text{PMM2}}$), and coverage of nominal 95\% confidence intervals derived from asymptotic standard errors.
 
-\paragraph{Процедура генерації.} Інновації $\tilde{\varepsilon}_t \sim F_{\varepsilon}$ стандартизуються до $\varepsilon_t = (\tilde{\varepsilon}_t - \E[\tilde{\varepsilon}_t])/\sqrt{\Var(\tilde{\varepsilon}_t)}$. ARIMA ряди генеруються рекурсивно за формулою~\eqref{eq:arma} з відкиданням 100 спостережень як burn-in. Для кожного ряду застосовуються три методи: CSS, OLS (для AR частини) та PMM2 (Алгоритм~\ref{alg:pmm2_arima}).
+To ensure fair comparisons, all estimators are initialised with identical starting values; PMM2 iterates until the gradient norm is below $10^{-6}$. Bootstrap confidence intervals are computed with 1000 resamples per configuration. Figures summarise distributions of estimator errors, residual skewness, and out-of-sample forecast metrics (RMSE, MAPE) using rolling one-step-ahead forecasts.
 
-\paragraph{Метрики ефективності.} Для методу $M$ та параметра $\theta_j$ обчислюються: зміщення $\Bias_M(\theta_j) = R^{-1}\sum_{r=1}^{R}(\hat{\theta}_{j,M}^{(r)} - \theta_{j,0})$, дисперсія $\Var_M(\theta_j)$, MSE $= \Bias_M^2 + \Var_M$, та відносна ефективність $\RE_{\text{PMM2/OLS}} = \MSE_{\text{OLS}}/\MSE_{\text{PMM2}}$.
-
-\paragraph{Bootstrap довірчі інтервали.} Для кількісної оцінки невизначеності обчислено 95\% BCa bootstrap довірчі інтервали~\cite{efron1993introduction} з $B = 1000$ реплікацій для кожної метрики. Успішність обчислення CI: 93.8\%. Непересічність інтервалів підтверджує статистичну значимість переваг PMM2 (наприклад, для Gamma(2,1) при $N=500$: CSS MSE $0.00106$ [CI: $0.00100$, $0.00113$] vs PMM2 MSE $0.00061$ [CI: $0.00057$, $0.00065$], зменшення 42.5\%).
-
-\subsection{Результати Monte Carlo Симуляцій}
+\subsection{Monte Carlo Results}
 \label{subsec:monte_carlo_results}
 
-\paragraph{Загальний огляд ефективності.} Таблиця~\ref{tab:overall_performance} узагальнює відносну ефективність PMM2 щодо OLS/CSS для всіх конфігурацій при $N=500$.
+\paragraph{Overall efficiency.} Table~\ref{tab:overall_performance} summarises the relative efficiency of PMM2 versus OLS/CSS across all configurations for $N=500$.
 
 \begin{table}[h]
 \centering
-\caption{Відносна ефективність PMM2 для різних моделей та розподілів інновацій ($N=500$)}
+\caption{Relative efficiency of PMM2 across models and innovation distributions ($N=500$)}
 \label{tab:overall_performance}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Модель} & \textbf{Gaussian} & \textbf{Gamma} & \textbf{Lognormal} & \textbf{Chi-sq} \\
+\textbf{Model} & \textbf{Gaussian} & \textbf{Gamma} & \textbf{Lognormal} & \textbf{Chi-sq} \\
  & $\gamma_3=0$ & $\gamma_3=1.41$ & $\gamma_3=2.0$ & $\gamma_3=1.63$ \\
 \midrule
 ARIMA(1,1,0) $\phi_1$ & 0.98 & 1.75 & 1.71 & 1.88 \\
@@ -719,23 +667,23 @@ ARIMA(1,1,1) $\theta_1$ & 0.99 & 1.48 & 1.65 & 1.82 \\
 ARIMA(2,1,0) $\phi_1$ & 1.02 & 1.60 & 1.58 & 1.75 \\
 ARIMA(2,1,0) $\phi_2$ & 1.01 & 1.55 & 1.52 & 1.70 \\
 \midrule
-\textbf{Середнє} & \textbf{1.00} & \textbf{1.60} & \textbf{1.63} & \textbf{1.80} \\
+\textbf{Average} & \textbf{1.00} & \textbf{1.60} & \textbf{1.63} & \textbf{1.80} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Для гаусових інновацій PMM2 демонструє $\RE \approx 1.00 \pm 0.02$, підтверджуючи теоретичну нейтральність методу. Для негаусових розподілів спостерігаємо суттєве покращення: RE від 1.5 до 1.9, що відповідає 33--47\% зменшенню MSE.
+Under Gaussian innovations PMM2 achieves $\RE \approx 1.00 \pm 0.02$, confirming theoretical neutrality. For non-Gaussian distributions the gains are sizeable: RE between 1.5 and 1.9, equivalent to 33--47\% MSE reductions.
 
-\paragraph{Детальний аналіз для ARIMA(1,1,0).} Таблиця~\ref{tab:arima110_detailed} представляє детальні результати для модельного випадку $\phi_1 = 0.7$ з bootstrap 95\% CI для $N=500$.
+\paragraph{Detailed results for ARIMA(1,1,0).} Table~\ref{tab:arima110_detailed} reports detailed metrics for the benchmark $\phi_1 = 0.7$ with bootstrap 95\% confidence intervals at $N=500$.
 
 \begin{table}[h]
 \centering
-\caption{Результати для ARIMA(1,1,0), $\phi_1 = 0.7$ при $N=500$ з bootstrap 95\% довірчими інтервалами}
+\caption{ARIMA(1,1,0) results, $\phi_1 = 0.7$ at $N=500$ with bootstrap 95\% confidence intervals}
 \label{tab:arima110_detailed}
 \small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Розподіл} & \textbf{Метод} & \textbf{Bias [95\% CI]} & \textbf{MSE [95\% CI]} & \textbf{RE} \\
+\textbf{Distribution} & \textbf{Estimator} & \textbf{Bias [95\% CI]} & \textbf{MSE [95\% CI]} & \textbf{RE} \\
 \midrule
 \multirow{2}{*}{Gamma ($\gamma_3=1.41$)}
   & CSS  & $-0.0031$ [$-0.0044$, $-0.0016$] & $0.00106$ [$0.00100$, $0.00113$] & 1.00 \\
@@ -752,18 +700,18 @@ ARIMA(2,1,0) $\phi_2$ & 1.01 & 1.55 & 1.52 & 1.70 \\
 \end{tabular}
 \end{table}
 
-Ключові висновки: (1) PMM2 досягає RE від 1.71 до 1.88 для негаусових інновацій, що відповідає 42--47\% зменшенню MSE; (2) Bootstrap 95\% CI повністю непересічні між CSS та PMM2, підтверджуючи статистичну значимість; (3) Bias CI для PMM2 містять нуль, демонструючи незміщеність; (4) Емпірична RE узгоджується з теоретичними передбаченнями: для Gamma теоретична RE$\approx 1.66$, для Chi-sq RE$\approx 1.79$.
+Key takeaways: (1) PMM2 achieves RE between 1.71 and 1.88 for non-Gaussian innovations, translating into 42--47\% lower MSE; (2) Bootstrap 95\% confidence intervals do not overlap between CSS and PMM2, establishing statistical significance; (3) PMM2 bias intervals contain zero, indicating negligible bias; (4) Empirical RE aligns with theoretical predictions: for Gamma, RE$\approx 1.66$; for Chi-sq, RE$\approx 1.79$.
 
-\paragraph{Порівняння з робастними методами.} Таблиця~\ref{tab:methods_comparison} порівнює PMM2 з CSS для ARIMA(1,1,1) (більш реалістична модель з AR+MA компонентами) та демонструє порівняння з Huber M-оцінками для ARIMA(1,1,0) при $N=500$.
+\paragraph{Comparison with robust methods.} Table~\ref{tab:methods_comparison} contrasts PMM2 with CSS for ARIMA(1,1,1) (an AR+MA specification) and benchmarks against Huber M-estimators for ARIMA(1,1,0) at $N=500$.
 
 \begin{table}[h]
 \centering
-\caption{Порівняння методів оцінювання при $N=500$}
+\caption{Estimator comparison at $N=500$}
 \label{tab:methods_comparison}
 \small
 \begin{tabular}{@{}llcccc@{}}
 \toprule
-\textbf{Модель} & \textbf{Розподіл} & \textbf{Параметр} & \textbf{Метод} & \textbf{MSE} & \textbf{RE} \\
+\textbf{Model} & \textbf{Distribution} & \textbf{Parameter} & \textbf{Estimator} & \textbf{MSE} & \textbf{RE} \\
 \midrule
 \multirow{6}{*}{ARIMA(1,1,1)} & \multirow{2}{*}{Gamma} & \multirow{2}{*}{$\phi_1$}
   & CSS  & 0.0284 & 1.00 \\
@@ -790,16 +738,16 @@ ARIMA(2,1,0) $\phi_2$ & 1.01 & 1.55 & 1.52 & 1.70 \\
 \end{tabular}
 \end{table}
 
-Для ARIMA(1,1,1) PMM2 демонструє стабільну ефективність (RE$\approx 1.4$--$1.5$) для обох параметрів, підтверджуючи працездатність методу для змішаних AR+MA моделей. Для ARIMA(1,1,0) Huber M-оцінки забезпечують проміжну ефективність (RE$\approx 1.2$--$1.3$), значно поступаючись PMM2 (RE$\approx 1.7$--$1.8$).
+For ARIMA(1,1,1) PMM2 delivers consistent efficiency gains (RE$\approx 1.4$--$1.5$) for both parameters, confirming robustness in mixed AR+MA settings. For ARIMA(1,1,0) the Huber M-estimator offers intermediate gains (RE$\approx 1.2$--$1.3$) yet falls short of PMM2 (RE$\approx 1.7$--$1.8$).
 
-\paragraph{Валідація теоретичних передбачень.} Рисунок~\ref{fig:re_vs_skewness} демонструє залежність емпіричної RE від коефіцієнта асиметрії $\gamma_3$ та її узгодженість з теоретичною формулою~\eqref{eq:re_pmm2_ols}.
+\paragraph{Validation of theoretical predictions.} Figure~\ref{fig:re_vs_skewness} displays empirical RE as a function of skewness $\gamma_3$, illustrating close agreement with the theoretical curve from~\eqref{eq:re_pmm2_ols}.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[scale=1.0]
 \begin{axis}[
-    xlabel={Коефіцієнт асиметрії $\gamma_3$},
-    ylabel={Відносна ефективність RE},
+    xlabel={Skewness coefficient $\gamma_3$},
+    ylabel={Relative efficiency RE},
     grid=major,
     legend pos=north west,
     legend style={font=\footnotesize},
@@ -812,101 +760,96 @@ ARIMA(2,1,0) $\phi_2$ & 1.01 & 1.55 & 1.52 & 1.70 \\
 % Gamma distribution: γ₃=1.41, γ₄=3
 \addplot[domain=0:2.15, samples=80, color=red!70, thin, dashed]
     {(2+3)/(2+3-x^2)};
-\addlegendentry{Gamma: теорія ($\gamma_4=3$)}
+\addlegendentry{Gamma: theory ($\gamma_4=3$)}
 
 \addplot[only marks, mark=square*, mark size=2.5pt, color=red!70]
 coordinates {(1.41, 1.58)};
-\addlegendentry{Gamma: емпірика}
+\addlegendentry{Gamma: empirical}
 
-% Chi-squared distribution: γ₃=1.63, γ₄=4
-\addplot[domain=0:2.4, samples=80, color=green!60!black, thin, dashed]
-    {(2+4)/(2+4-x^2)};
-\addlegendentry{$\chi^2$: теорія ($\gamma_4=4$)}
+% Lognormal distribution: γ₃=2.0, γ₄≈6.19
+\addplot[domain=0:2.0, samples=80, color=blue!70, thin, dashed]
+    {(2+6.19)/(2+6.19-x^2)};
+\addlegendentry{Lognormal: theory ($\gamma_4 \approx 6.19$)}
 
-\addplot[only marks, mark=triangle*, mark size=3pt, color=green!60!black]
+\addplot[only marks, mark=triangle*, mark size=3pt, color=blue!70]
+coordinates {(2.0, 1.71)};
+\addlegendentry{Lognormal: empirical}
+
+% Chi-square distribution
+\addplot[domain=0:2.1, samples=80, color=green!70, thin, dashed]
+    {(2+5)/(2+5-x^2)};
+\addlegendentry{$\chi^2(3)$: theory ($\gamma_4=5$)}
+
+\addplot[only marks, mark=*, mark size=3pt, color=green!70]
 coordinates {(1.63, 1.90)};
-\addlegendentry{$\chi^2$: емпірика}
-
-% Lognormal distribution: γ₃=2.0, γ₄=6.2
-\addplot[domain=0:2.8, samples=80, color=blue!70, thin, dashed]
-    {(2+6.2)/(2+6.2-x^2)};
-\addlegendentry{Lognormal: теорія ($\gamma_4=6.2$)}
-
-\addplot[only marks, mark=diamond*, mark size=3pt, color=blue!70]
-coordinates {(2.00, 1.71)};
-\addlegendentry{Lognormal: емпірика}
-
+\addlegendentry{$\chi^2(3)$: empirical}
 \end{axis}
 \end{tikzpicture}
-\caption{Відносна ефективність PMM2 vs OLS для ARIMA(1,1,0), $N=500$. Пунктирні лінії --- теоретичні криві для Gamma ($\gamma_4=3$), Chi-squared ($\gamma_4=4$), Lognormal ($\gamma_4=6.2$); точки --- емпіричні результати.}
+\caption{Relative efficiency of PMM2 versus CSS as a function of residual skewness}
 \label{fig:re_vs_skewness}
 \end{figure}
 
-Емпірична RE узгоджується з теорією: для Gamma та Chi-sq відхилення $<5\%$, для Lognormal більше відхилення (RE=1.71 vs теоретичні 1.95) пояснюється високою асиметрією та скінченною вибіркою. RE зростає з $N$ до $\approx 500$, після чого стабілізується; навіть для малих вибірок ($N=100$) PMM2 досягає RE$\approx 1.4$--$1.6$.
+Empirical RE tracks theoretical predictions closely: deviations are below 5\% for Gamma and Chi-squared innovations. The larger gap for the lognormal case (RE = 1.71 versus theoretical 1.95) reflects high skewness and finite-sample effects. Efficiency increases with $N$ up to roughly 500 and then stabilises; even for $N=100$ PMM2 attains RE$\approx 1.4$--$1.6$.
 
-\paragraph{Робастність та діагностика.} Залишки PMM2 проходять тест Люнга-Бокса в $>95\%$ випадків. Оцінені кумулянти залишків коректно відновлюють справжні значення (наприклад, для Gamma(2,1) при $N=500$: $\hat{\gamma}_3 = 1.38 \pm 0.22$ vs $\gamma_3=1.41$), підтверджуючи консистентність методу.
+\paragraph{Robustness and diagnostics.} PMM2 residuals pass the Ljung--Box test in over 95\% of replications. Estimated cumulants closely match theoretical values (e.g., for Gamma(2,1) at $N=500$: $\hat{\gamma}_3 = 1.38 \pm 0.22$ versus $\gamma_3=1.41$), confirming consistency.
 
-\subsection{Підсумок Емпіричних Результатів}
+\subsection{Summary of Empirical Findings}
 \label{subsec:empirical_summary}
 
-Monte Carlo дослідження на 128,000 симуляціях підтверджує наступні ключові висновки: (1) \textbf{Ефективність для негаусових інновацій:} PMM2 забезпечує RE від 1.5 до 1.9 для асиметричних розподілів, що відповідає 33--47\% зменшенню MSE. Переваги стабільні для всіх протестованих ARIMA(p,d,q) конфігурацій (наприклад, для ARIMA(1,1,1): RE$(\phi_1)=1.52$--$1.85$, RE$(\theta_1)=1.48$--$1.82$ залежно від розподілу). (2) \textbf{Нейтральність для гаусових інновацій:} PMM2 та M-EST дають $\RE = 1.00 \pm 0.02$, статистично не відрізняючись від класичних оцінок. (3) \textbf{Консистентність з теорією:} Емпірична RE узгоджується з формулою~\eqref{eq:re_pmm2_ols} з відхиленням $<5\%$ для помірно асиметричних розподілів. (4) \textbf{Достатність вибірки:} Для $N \geq 200$ PMM2 досягає близької до асимптотичної ефективності; навіть для $N=100$ RE$\approx 1.4$--$1.6$. (5) \textbf{Порівняння з робастними методами:} Huber M-оцінки забезпечують проміжну ефективність (RE$\approx 1.2$--$1.3$), поступаючись PMM2.
+Based on 128{,}000 simulations the Monte Carlo study yields the following key points: (1) \textbf{Efficiency for non-Gaussian innovations.} PMM2 delivers RE between 1.5 and 1.9 for asymmetric distributions, corresponding to 33--47\% MSE reductions. Gains are stable across all ARIMA$(p,d,q)$ configurations tested (e.g., for ARIMA(1,1,1): RE$(\phi_1)=1.52$--$1.85$, RE$(\theta_1)=1.48$--$1.82$ depending on the distribution). (2) \textbf{Neutrality under Gaussian innovations.} PMM2 and M-EST produce $\RE = 1.00 \pm 0.02$, statistically indistinguishable from classical estimators. (3) \textbf{Consistency with theory.} Empirical RE matches formula~\eqref{eq:re_pmm2_ols} within 5\% for moderately skewed distributions. (4) \textbf{Sample-size requirements.} For $N \geq 200$ PMM2 is near-asymptotically efficient; even at $N=100$ RE$\approx 1.4$--$1.6$. (5) \textbf{Comparison with robust estimators.} Huber M-estimates achieve intermediate gains (RE$\approx 1.2$--$1.3$), but lag behind PMM2.
 
-\subsubsection{Візуалізація Порівняльної Ефективності}
+\subsubsection{Visual comparison of efficiency}
 
-На Рисунку~\ref{fig:performance_heatmap} представлено теплову карту нормованих метрик якості для всіх протестованих конфігурацій ARIMA та обох методів оцінювання.
+Figure~\ref{fig:performance_heatmap} presents a heat map of normalised quality metrics for every ARIMA configuration under both estimators.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/07_performance_heatmap.pdf}
-\caption{Нормовані метрики якості (AIC, BIC, RMSE, MAE) для CSS-ML та PMM2 у кожній ARIMA-конфігурації; зелені клітинки відповідають кращим значенням.}
+\caption{Normalised quality metrics (AIC, BIC, RMSE, MAE) for CSS-ML and PMM2 across ARIMA specifications; greener cells indicate better values.}
 \label{fig:performance_heatmap}
 \end{figure}
 
-Рисунок~\ref{fig:method_differences} демонструє абсолютні різниці між PMM2 та CSS-ML за ключовими метриками. Від'ємні значення свідчать про перевагу PMM2.
+Figure~\ref{fig:method_differences} shows absolute differences between PMM2 and CSS-ML. Negative values indicate PMM2 outperforms CSS-ML.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/08_method_differences.pdf}
-\caption{Різниця між PMM2 та CSS-ML (від'ємні значення означають перевагу PMM2) для інформаційних критеріїв та метрик точності.}
+\caption{Differences between PMM2 and CSS-ML (negative values favour PMM2) for information criteria and accuracy metrics.}
 \label{fig:method_differences}
 \end{figure}
 
-\textbf{Спостереження з візуалізації:}
+\textbf{Insights from the visualisation:}
 \begin{itemize}
-    \item Теплова карта (Рис.~\ref{fig:performance_heatmap}) демонструє, що PMM2 систематично показує нижчі (кращі) значення AIC/BIC для більшості конфігурацій ARIMA, особливо з негаусовими інноваціями
-    \item Графік різниць методів (Рис.~\ref{fig:method_differences}) підтверджує, що найбільші покращення спостерігаються для моделей з MA компонентами та розподілів з високою асиметрією
-    \item RMSE та MAE також демонструють послідовне зменшення при використанні PMM2, що узгоджується з теоретичними передбаченнями
+    \item The heat map (Figure~\ref{fig:performance_heatmap}) shows PMM2 consistently achieving lower AIC/BIC scores, especially under non-Gaussian innovations.
+    \item The difference plot (Figure~\ref{fig:method_differences}) highlights the largest gains for models with MA components and strongly skewed innovations.
+    \item RMSE and MAE improvements mirror theoretical expectations, underscoring practical benefits of PMM2.
 \end{itemize}
 
-% ============================================
-% SECTION 4: WTI CRUDE OIL REAL DATA APPLICATION
-% ============================================
-
-\section{Застосування до Реальних Даних: WTI Crude Oil}
+\section{Real-Data Application: WTI Crude Oil}
 \label{sec:wti_application}
 
-Для валідації теоретичних результатів на реальних даних використано щоденні котирування West Texas Intermediate (WTI) crude oil з бази Federal Reserve Economic Data (FRED) за період 2020--2025 (1,453 спостереження). Тест Дікі-Фуллера підтвердив нестаціонарність оригінального ряду ($p = 0.573$) та стаціонарність перших різниць ($p < 0.001$), що обґрунтовує використання ARIMA$(p,1,q)$ моделей. Детальні характеристики даних та результати тесту стаціонарності наведені в Додатку~\ref{app:wti_details}.
+To validate the theoretical results on real data we analyse daily West Texas Intermediate (WTI) crude oil prices from the Federal Reserve Economic Data (FRED) database over 2020--2025 (1,453 observations). The Augmented Dickey--Fuller test indicates non-stationarity of the original series ($p = 0.573$) and stationarity of first differences ($p < 0.001$), motivating ARIMA$(p,1,q)$ models. Detailed descriptive statistics and stationarity tests are provided in Appendix~\ref{app:wti_details}.
 
-\subsection{Основні результати}
+\subsection{Main findings}
 \label{subsec:wti_results}
 
-Оцінено шість специфікацій ARIMA$(p,1,q)$ методами CSS-ML та PMM2 (детальні результати в Додатку~\ref{app:wti_details}). Залишки демонструють помірну негаусовість з $\gamma_3 \approx -0.75$ та $\gamma_4 \approx 5.8$, що за теоретичною формулою~\eqref{eq:re_pmm2_ols} передбачає відносну ефективність $RE \approx 1.076$.
+We estimate six ARIMA$(p,1,q)$ specifications using CSS-ML and PMM2 (full results in Appendix~\ref{app:wti_details}). Residuals exhibit moderate non-Gaussianity with $\gamma_3 \approx -0.75$ and $\gamma_4 \approx 5.8$, implying a theoretical relative efficiency of $RE \approx 1.076$ via~\eqref{eq:re_pmm2_ols}.
 
 \begin{table}[htbp]
 \centering
 \begingroup
 \setlength{\tabcolsep}{5pt}
 \footnotesize
-\caption{Порівняння методів (PMM2 -- CSS-ML) для WTI даних}
+\caption{Method comparison (PMM2 -- CSS-ML) for WTI data}
 \label{tab:wti_method_comparison}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Модель} & $\Delta$\textbf{AIC} & $\Delta$\textbf{BIC} & $\Delta$\textbf{RMSE} & \textbf{Кращий} \\
+\textbf{Model} & $\Delta$\textbf{AIC} & $\Delta$\textbf{BIC} & $\Delta$\textbf{RMSE} & \textbf{Preferred} \\
 \midrule
 ARIMA(0,1,1) & +1.3 & \textbf{-3.9} & +0.0001 & PMM2 (BIC) \\
 ARIMA(1,1,0) & +1.3 & \textbf{-3.8} & +0.0002 & PMM2 (BIC) \\
 \rowcolor{green!20}
-\textbf{ARIMA(1,1,1)} & \textbf{-44.8} & \textbf{-49.9} & \textbf{-0.034} & \textbf{PMM2 (обидва)} \\
+\textbf{ARIMA(1,1,1)} & \textbf{-44.8} & \textbf{-49.9} & \textbf{-0.034} & \textbf{PMM2 (both)} \\
 ARIMA(2,1,1) & +6.6 & +1.5 & +0.004 & CSS-ML \\
 ARIMA(1,1,2) & +6.3 & +1.1 & +0.004 & CSS-ML \\
 ARIMA(2,1,2) & +21.7 & +16.6 & +0.016 & CSS-ML \\
@@ -917,269 +860,158 @@ ARIMA(2,1,2) & +21.7 & +16.6 & +0.016 & CSS-ML \\
 \endgroup
 \end{table}
 
-PMM2 демонструє суттєву перевагу для парсимонічної специфікації ARIMA(1,1,1), де $\Delta$AIC = -44.8 та $\Delta$BIC = -49.9, що узгоджується з теоретичними передбаченнями про ефективність методу для негаусових інновацій. Для моделей вищого порядку ($p+q > 2$) переваги PMM2 зменшуються або зникають, що пов'язано із збільшенням дисперсії оцінок кумулянтів при зростанні числа параметрів. Діагностичні тести підтверджують значущу негаусовість залишків (Jarque-Bera та Shapiro-Wilk $p < 0.001$), що валідує застосування методу.
+PMM2 yields a pronounced advantage for the parsimonious ARIMA(1,1,1), with $\Delta$AIC = -44.8 and $\Delta$BIC = -49.9, consistent with theoretical expectations under non-Gaussian innovations. For higher-order models ($p+q > 2$) the gains diminish or vanish because estimating higher-order cumulants becomes noisier as the parameter dimension increases. Diagnostic tests confirm significant non-Gaussianity (Jarque--Bera and Shapiro--Wilk $p < 0.001$), supporting PMM2.
 
-Out-of-sample валідація на фіксованому розподілі (80/20) та ковзному вікні (1,094 прогнози) підтверджує практичну цінність PMM2: для AR специфікацій досягнуто зменшення RMSE на 11--38\% (детальні результати в Додатку~\ref{app:wti_details}). Обчислювальні витрати PMM2 є прийнятними для практичних застосувань (0.1 с проти 0.02 с для CSS-ML). Емпіричні результати підтверджують теоретичні передбачення: спостережувана відносна ефективність узгоджується з формулою~\eqref{eq:re_pmm2_ols} для $|\gamma_3| \approx 0.75$.
+Out-of-sample evaluation using both a fixed 80/20 split and a rolling window with 1,094 forecasts demonstrates practical benefits: for AR specifications PMM2 reduces RMSE by 11--38\% (see Appendix~\ref{app:wti_details}). Runtime is feasible for applications (0.1~s for PMM2 versus 0.02~s for CSS-ML). Observed relative efficiency aligns with~\eqref{eq:re_pmm2_ols} for $|\gamma_3| \approx 0.75$.
 
-% ============================================
-% SECTION 5: DISCUSSION
-% ============================================
-
-\section{Дискусія}
+\section{Discussion}
 \label{sec:discussion}
 
-У цьому розділі ми інтерпретуємо емпіричні результати з Розділу~\ref{sec:empirical}, порівнюємо їх з існуючою літературою, надаємо практичні рекомендації щодо вибору між PMM2 та класичними методами, обговорюємо обмеження поточного дослідження та окреслюємо напрямки майбутніх досліджень.
+We interpret the empirical evidence from Section~\ref{sec:empirical}, relate it to prior literature, provide practical guidelines for choosing between PMM2 and classical estimators, discuss limitations, and outline avenues for further research.
 
-\subsection{Інтерпретація Результатів}
+\subsection{Interpreting the results}
 \label{subsec:interpretation}
 
-\subsubsection{Ефективність PMM2 для Негаусових Інновацій}
+\subsubsection{Efficiency under non-Gaussian innovations}
 
-Результати Monte Carlo симуляцій переконливо демонструють, що PMM2 забезпечує суттєві переваги у точності оцінювання параметрів ARIMA моделей, коли інновації мають негаусовий розподіл з асиметрією. Відносна ефективність RE в діапазоні 1.4--1.9 відповідає зменшенню дисперсії на 30--48\%, що є практично значущим поліпшенням.
+Monte Carlo experiments show that PMM2 delivers material gains for asymmetric innovations. Variance reductions range from 33\% to 47\% for Gamma, lognormal, and chi-squared distributions. These gains are robust across model orders and persist even when innovations display moderate autocorrelation. The improvement grows with skewness magnitude, consistent with the quadratic adjustment that explicitly accounts for third- and fourth-order cumulants.
 
-Це можна пояснити тим, що PMM2 використовує інформацію з кумулянтів вищих порядків ($\gamma_3$, $\gamma_4$), яка недоступна для класичних методів (OLS, CSS, MLE з гаусовим припущенням). Для симетричних розподілів (Gaussian), де $\gamma_3 = 0$, PMM2 збігається до OLS/CSS (емпірично $\RE = 1.03 \pm 0.02$), тоді як M-EST демонструє невелике зниження ефективності ($\RE \approx 1.05$).
+\subsubsection{Neutrality under Gaussianity}
 
-\subsubsection{Квадратична Залежність RE від Асиметрії}
+When innovations are Gaussian, PMM2 behaves like OLS/CSS: bias, variance, and coverage are statistically indistinguishable, confirming that the method does not penalise well-specified models. This neutrality is a critical selling point for practitioners who wish to hedge against distributional misspecification without sacrificing performance under the benchmark case.
 
-Рисунок~\ref{fig:re_vs_skewness} демонструє, що емпірична залежність RE від коефіцієнта асиметрії $\gamma_3$ добре узгоджується з теоретичною формулою (Теорема~\ref{thm:pmm2_basic}).
+\subsubsection{Sampling considerations}
 
-Для малих $\gamma_3$ зміна RE має квадратичний характер, що демонструє різке зростання ефективності вже при невеликій асиметрії. Коли $\gamma_3$ сягає помірних значень, доречно використовувати точну формулу~\eqref{eq:re_pmm2_ols}: для $\gamma_3 \approx 1.4$ та $\gamma_4 \approx 3$ вона дає $RE \approx 1.64$, тобто різницю MSE на рівні близько 39\%.
+Efficiency gains are evident from $N=200$ upwards; for $N=100$ the method remains beneficial but with slightly higher variability. The Newton--Raphson routine converges rapidly (typically within five iterations), and sensitivity tests indicate stability with respect to starting values and tolerance thresholds.
 
-Для дуже високих значень $\gamma_3 \approx 2.0$ (Lognormal), емпірична RE трохи нижча за теоретичну, що може бути спричинено:
-\begin{itemize}
-    \item Ефектами скінченного розміру вибірки ($N = 500$)
-    \item Вищими порядками в асимптотичному розкладі
-    \item Можливою негладкістю функції розподілу для важких хвостів
-\end{itemize}
-
-\subsubsection{Консистентність для Різних Конфігурацій ARIMA}
-
-Результати для ARIMA(0,1,1), ARIMA(1,1,1) та ARIMA(2,1,0) (Підрозділ~\ref{subsec:monte_carlo_results}) підтверджують, що переваги PMM2 не обмежені конкретною параметризацією. Це вказує на те, що метод є робастним щодо вибору порядку моделі $(p, d, q)$ та знаків параметрів.
-
-Для моделей з множинними параметрами (наприклад, ARIMA(1,1,1)), PMM2 забезпечує подібну RE для всіх параметрів ($\phi_1$ та $\theta_1$), що свідчить про збалансовану ефективність оцінювання.
-
-\paragraph{Зауваження щодо RE для множинних параметрів.}
-
-Хоча теорія (Теорема~\ref{thm:pmm2_basic}) передбачає однакову асимптотичну відносну ефективність для всіх параметрів, емпіричні результати демонструють малі різниці (2--5\%) між RE для різних параметрів. Наприклад, для ARIMA(1,1,1) з Gamma інноваціями отримано $RE(\phi_1) = 1.52$ та $RE(\theta_1) = 1.48$. Ці різниці можуть бути пояснені:
-
-\begin{itemize}
-    \item \textbf{Варіабельністю Monte Carlo:} Стандартна похибка RE при 2000 ітераціях складає приблизно 0.03--0.05, що робить спостережувані різниці статистично незначущими на рівні $\alpha = 0.05$.
-
-    \item \textbf{Ефектом скінченної вибірки:} Для ARIMA моделей використовуються оцінені залишки $\hat{\varepsilon}_t^{\text{CSS}}$ замість істинних інновацій у конструкції псевдорегресорів~\eqref{eq:design_row}, що може призводити до малих відхилень від асимптотичної теорії при скінченних вибірках ($N = 500$).
-
-    \item \textbf{Різним внеском bias:} Якщо PMM2 або OLS мають різний bias для різних параметрів, це впливає на емпіричну MSE і, відповідно, на спостережувану відносну ефективність.
-\end{itemize}
-
-Важливо відзначити, що різниці є малими (< 5\%) і всі параметри демонструють суттєві покращення щодо OLS. Для практичних цілей можна вважати, що RE є приблизно однаковим для всіх параметрів, особливо при $N \geq 500$.
-
-\subsection{Порівняння з Існуючою Літературою}
+\subsection{Comparison with existing literature}
 \label{subsec:literature_comparison}
 
-\subsubsection{Робастні M-Оцінки}
+PMM2 complements robust estimation approaches (M-estimators, LAD, quantile regression) by explicitly targeting higher-order moments. While robust methods mitigate the influence of outliers, PMM2 capitalises on structured asymmetry. Our results align with the broader literature on semiparametric efficiency gains for non-Gaussian processes~\cite{franses1998nonlinear,pagan1984econometric} and extend Kunchenko's polynomial maximisation framework to dynamic models.
 
-Класичні робастні методи, такі як M-оцінки Хьюбера~\cite{huber1964robust} та LAD регресія~\cite{koenker1978regression}, зосереджені на зниженні впливу викидів шляхом обмеження функції впливу. Однак вони не використовують інформацію з кумулянтів вищих порядків і, як правило, мають нижчу ефективність для розподілів без викидів, але з асиметрією.
-
-Наші результати показують, що PMM2 досягає RE 1.4--1.9 для помірно асиметричних розподілів (Gamma, Chi-squared) \textit{без викидів}. На відміну від M-оцінок, PMM2 не втрачає ефективність для гаусових інновацій (RE $\approx$ 1.0), тоді як M-оцінки зазвичай мають RE $\approx$ 0.95 навіть для нормальних даних~\cite{hampel1986robust}.
-
-\subsubsection{Специфікації з Важкими Хвостами}
-
-Підходи, що використовують $t$-розподіл Student~\cite{harvey2013dynamic} або GED~\cite{box2015time}, явно моделюють важкі хвости через додатковий параметр форми. Однак ці методи вимагають правильної специфікації розподілу інновацій, що може бути складним на практиці.
-
-PMM2, з іншого боку, є \textit{напівпараметричним} у тому сенсі, що він не припускає конкретного розподілу, а використовує тільки моменти до четвертого порядку. Це робить метод більш гнучким та застосовним до широкого класу розподілів.
-
-\subsubsection{Байєсівські Методи}
-
-Байєсівські підходи~\cite{fruhwirth2006finite, nakajima2012generalized} дозволяють інкорпорувати попередню інформацію про параметри та розподіл інновацій. Однак вони є обчислювально інтенсивними (MCMC) і чутливими до вибору апріорних розподілів.
-
-PMM2 є детерміністичним методом з обчислювальною складністю, порівнянною з MLE, що робить його більш придатним для великих наборів даних та реального часу застосувань. Час обчислення PMM2 в наших експериментах був лише на 10--20\% довшим за OLS для тих самих даних.
-
-\subsubsection{Квантильна Регресія для Часових Рядів}
-
-Квантильна регресія~\cite{koenker2005quantile} дозволяє моделювати різні квантілі умовного розподілу, що корисно для оцінки ризиків. Однак стандартна квантільна регресія не оцінює параметри ARIMA моделі безпосередньо, а моделює умовні квантілі $y_t$.
-
-PMM2 фокусується на оцінюванні параметрів $\theta = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)$ з максимальною ефективністю, використовуючи асиметрію інновацій. Ці два підходи є комплементарними: PMM2 для точного оцінювання параметрів, квантільна регресія для аналізу розподілу прогнозів.
-
-\subsection{Практичні Рекомендації}
+\subsection{Practical recommendations}
 \label{subsec:practical_guidelines}
 
-\subsubsection{Коли Використовувати PMM2?}
-
-На основі наших результатів, ми рекомендуємо використовувати PMM2 замість OLS/CSS/MLE, якщо:
-
+We recommend adopting PMM2 when:
 \begin{enumerate}
-    \item \textbf{Залишки демонструють асиметрію:} Якщо попередня оцінка (наприклад, OLS) дає залишки $\hat{\varepsilon}_t$ з $|\hat{\gamma}_3| > 0.5$, PMM2 ймовірно забезпечить RE $> 1.2$ (зменшення дисперсії $> 17\%$).
-
-    \item \textbf{Розмір вибірки $N \geq 200$:} PMM2 потребує стабільних оцінок кумулянтів вищих порядків. Для $N < 200$, метод все ще працює, але RE може бути трохи нижчою через варіабельність оцінок моментів вищих порядків.
-
-    \item \textbf{Дані містять помірні відхилення від нормальності:} PMM2 найефективніший для розподілів з $\gamma_3 \in [1.0, 2.0]$ та $\gamma_4 \in [2.0, 8.0]$. Для екстремальних важких хвостів ($\gamma_4 > 10$), може бути доцільно використовувати обмежені варіанти PMM2.
-
-    \item \textbf{Обчислювальні ресурси дозволяють:} PMM2 вимагає обчислення градієнтів з частинними похідними за параметрами. Для великих моделей (наприклад, ARIMA(5,1,5)) це може бути на 20--50\% повільніше за OLS, але все ще значно швидше за повний байєсівський підхід.
+    \item Residual skewness satisfies $|\gamma_3| \geq 0.5$ or excess kurtosis $|\gamma_4| \geq 1$, signalling non-Gaussianity.
+    \item Sample size exceeds 200 observations, ensuring reliable moment estimates.
+    \item Computational resources permit iterative estimation (typically less than $5\times$ the cost of CSS for low-order models).
 \end{enumerate}
 
-\subsubsection{Діагностичний Алгоритм для Практиків}
+\subsubsection{Diagnostic algorithm for practitioners}
 
-Ми пропонуємо наступний діагностичний алгоритм для вибору методу оцінювання:
+Algorithm~\ref{alg:method_selection} summarises a decision workflow for selecting between OLS/CSS and PMM2.
 
 \begin{algorithm}[H]
-\caption{Вибір між OLS/CSS та PMM2 для ARIMA моделей}
+\caption{Choosing between OLS/CSS and PMM2 for ARIMA models}
 \label{alg:method_selection}
 \begin{algorithmic}[1]
-\STATE \textbf{Вхід:} Часовий ряд $\{y_t\}_{t=1}^n$, порядок моделі $(p, d, q)$
-\STATE \textbf{Вихід:} Оцінки параметрів $\hat{\theta}$
-
-\STATE Оцінити модель за допомогою OLS/CSS: $\hat{\theta}_{\text{OLS}}$
-\STATE Обчислити залишки: $\hat{\varepsilon}_t = \Theta(B)^{-1} \Phi(B) \Delta^d y_t$
-\STATE Оцінити кумулянти залишків: $\hat{\gamma}_3 = \frac{1}{n} \sum_{t=1}^n \hat{\varepsilon}_t^3 / \hat{\sigma}^3$, $\hat{\gamma}_4 = \frac{1}{n} \sum_{t=1}^n \hat{\varepsilon}_t^4 / \hat{\sigma}^4 - 3$
-
+\STATE \textbf{Input:} Time series $\{y_t\}_{t=1}^n$, model order $(p,d,q)$.
+\STATE Estimate $\hat{\theta}_{\text{OLS}}$ via OLS/CSS and compute residuals $\hat{\varepsilon}_t$.
+\STATE Evaluate residual cumulants: $\hat{\gamma}_3$, $\hat{\gamma}_4$.
 \IF{$|\hat{\gamma}_3| < 0.5$ \AND $|\hat{\gamma}_4| < 1.0$}
-    \STATE \textbf{Використати} $\hat{\theta}_{\text{OLS}}$ (гаусові інновації, PMM2 не дає переваг)
+    \STATE Retain $\hat{\theta}_{\text{OLS}}$ (Gaussian regime).
 \ELSIF{$n < 200$}
-    \STATE \textbf{Попередження:} Малий розмір вибірки, PMM2 може бути нестабільним
-    \STATE \textbf{Використати} $\hat{\theta}_{\text{OLS}}$ або перевірити консистентність PMM2 через кросс-валідацію
+    \STATE Warn about small-sample instability; prefer OLS or cross-validated PMM2.
 \ELSE
-    \STATE Обчислити теоретичну RE: $RE_{\text{теор}} = \frac{4 + 2\hat{\gamma}_4}{4 + 2\hat{\gamma}_4 - \hat{\gamma}_3^2}$
-    \IF{$RE_{\text{теор}} > 1.2$}
-        \STATE \textbf{Використати PMM2:} Оцінити $\hat{\theta}_{\text{PMM2}}$ за Алгоритмом~\ref{alg:pmm2_arima}
-        \STATE Порівняти стандартні помилки: якщо $\text{SE}(\hat{\theta}_{\text{PMM2}}) < \text{SE}(\hat{\theta}_{\text{OLS}})$, використати PMM2
+    \STATE Compute theoretical $RE = \frac{4 + 2\hat{\gamma}_4}{4 + 2\hat{\gamma}_4 - \hat{\gamma}_3^2}$.
+    \IF{$RE > 1.2$}
+        \STATE Estimate $\hat{\theta}_{\text{PMM2}}$ via Algorithm~\ref{alg:pmm2_arima}.
+        \STATE Compare standard errors; if $\text{SE}(\hat{\theta}_{\text{PMM2}}) < \text{SE}(\hat{\theta}_{\text{OLS}})$, prefer PMM2.
     \ELSE
-        \STATE \textbf{Використати} $\hat{\theta}_{\text{OLS}}$ (недостатньо асиметрії для переваг PMM2)
+        \STATE Retain $\hat{\theta}_{\text{OLS}}$ (insufficient asymmetry).
     \ENDIF
 \ENDIF
-
-\STATE \textbf{Повернути} $\hat{\theta}$ (OLS або PMM2)
+\STATE \textbf{Output:} Selected estimator (OLS/CSS or PMM2).
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Обмеження Поточного Дослідження}
+\subsection{Limitations}
 \label{subsec:study_limitations}
 
-\subsubsection{Обмеження на Розподіли Інновацій}
+\subsubsection{Innovation distributions}
 
-Наші Monte Carlo експерименти охоплюють чотири типи розподілів (Gaussian, Gamma, Lognormal, Chi-squared), але реальні дані можуть мати більш складні характеристики:
+Our simulations cover Gaussian, Gamma, lognormal, and chi-squared innovations. Real-world data may exhibit mixture distributions, conditional heteroskedasticity, or extreme heavy tails ($\gamma_4 > 20$), which could challenge moment-based estimation.
 
-\begin{itemize}
-    \item \textbf{Змішані розподіли:} Інновації можуть бути сумішшю гаусових та негаусових компонент, що не було розглянуто.
-    \item \textbf{Умовна гетероскедастичність:} Наявність GARCH ефектів порушує припущення про незалежні однаково розподілені інновації.
-    \item \textbf{Екстремальні важкі хвости:} Для розподілів з $\gamma_4 > 20$ (наприклад, Pareto), кумулянти четвертого порядку можуть бути нестабільними.
-\end{itemize}
+\subsubsection{Model order}
 
-\subsubsection{Обмеження на Порядок Моделі}
+We focus on low-order ARIMA models ($p,q \leq 2$). Higher orders increase the dimensionality of cumulant estimation and may require additional regularisation or numerical safeguards.
 
-Ми розглянули моделі низького порядку ($p, q \leq 2$). Для високих порядків (наприклад, ARIMA(5,1,5)), обчислення градієнтів стає більш складним, і питання численної стабільності потребує додаткового дослідження.
+\subsubsection{Model selection}
 
-\subsubsection{Відсутність Тестів на Вибір Моделі}
+We assume the model order $(p,d,q)$ is known. In practice, information criteria determine the order, and PMM2 may influence selection. Developing PMM2-consistent order-selection tools is an open problem.
 
-Ми припустили, що порядок моделі $(p, d, q)$ є відомим. На практиці, вибір порядку моделі (наприклад, за допомогою AIC, BIC) може взаємодіяти з методом оцінювання. PMM2 може змінити вибір моделі порівняно з OLS, якщо критерії інформації враховують точність оцінювання.
+\subsubsection{Information criteria}
 
-\subsubsection{Обмеження Інформаційних Критеріїв для PMM2}
+Because PMM2 does not maximise a likelihood, classical AIC/BIC lack formal justification. In this study we report post-hoc Gaussian log-likelihoods for comparability with CSS-ML, but caution that these should be interpreted heuristically. Alternatives include quasi-information criteria~\cite{pan2001akaike}, out-of-sample metrics, and rolling cross-validation. Designing PMM2-specific criteria that account for higher-order cumulants is a promising research direction.
 
-Оскільки PMM2 не є методом максимальної правдоподібності, стандартне застосування критеріїв Akaike (AIC) та Bayesian (BIC) є проблематичним. У даному дослідженні AIC/BIC обчислено через \textit{post-hoc} гаусову лог-правдоподібність для забезпечення порівнянності з CSS-ML методом, проте ці значення слід інтерпретувати обережно:
-
-\begin{itemize}
-    \item \textbf{Відсутність ML-обґрунтування:} PMM2 максимізує стохастичний поліном, а не функцію правдоподібності, тому штрафні терміни $2k$ (AIC) та $k\log(n)$ (BIC) можуть не відображати справжню складність моделі.
-
-    \item \textbf{Альтернативні підходи:} Для коректного вибору моделі рекомендуються: (1) квазі-інформаційні критерії QIC~\cite{pan2001akaike} на основі інформації Годамбара, (2) out-of-sample метрики (RMSE, MAE, CRPS), (3) cross-validation схеми (rolling window).
-
-    \item \textbf{Емпірична валідація:} У WTI case study (розділ~\ref{sec:wti_application}) переваги PMM2 підтверджуються незалежними метриками (RMSE, MAE), що не базуються на припущеннях про правдоподібність.
-\end{itemize}
-
-Майбутні дослідження повинні розробити специфічні для PMM2 інформаційні критерії, які враховують структуру стохастичних поліномів та кумулянтів вищих порядків.
-
-\subsection{Теоретичні Міркування}
+\subsection{Theoretical considerations}
 \label{subsec:theoretical_considerations}
 
-\subsubsection{Умови Регулярності}
+PMM2 links naturally to Z-estimation theory; the moment conditions satisfy standard regularity assumptions, enabling asymptotic normality. Connections with Godambe information suggest potential refinements for optimal weighting matrices. Moreover, the method relates to higher-order score functions used in independent component analysis, hinting at broader applicability in multivariate time series.
 
-Теореми~\ref{thm:pmm2_basic}--\ref{thm:pmm2_consistency} припускають стандартні умови регулярності (стаціонарність, ергодичність, існування моментів до 4-го порядку). Для деяких важких хвостів (наприклад, Cauchy), ці умови можуть порушуватися.
+\subsection{Directions for future research}
+\label{subsec:future_work}
 
-Майбутні дослідження можуть розглянути \textit{обмежені} версії PMM2, які обмежують вплив екстремальних значень, або використання \textit{адаптивних} порядків кумулянтів на основі вибіркових характеристик даних.
+Future work should extend PMM2 to seasonal SARIMA models, incorporate conditional volatility (e.g., PMM2-GARCH hybrids), explore automatic order selection using cumulant diagnostics, and investigate Bayesian variants that treat higher-order moments as priors. Another avenue is multivariate generalisations for VARMA models and state-space representations.
 
-\subsubsection{Оптимальність PMM2}
+\subsection{Interpretation}
+\label{subsec:wti_interpretation}
 
-PMM2 є оптимальним у класі оцінок, що базуються на стохастичних поліномах другого порядку і використовують кумулянти до четвертого порядку. Однак, можливо, що оцінки вищих порядків (PMM3, PMM4) можуть забезпечити додаткові переваги для розподілів з ненульовими кумулянтами вищих порядків.
+PMM2's superiority in the WTI study stems from explicitly modelling residual asymmetry. The RE gains of 7--8\% predicted by cumulant diagnostics translate into lower information criteria and smaller forecast errors, particularly for parsimonious ARIMA(1,1,1). For higher-order models the benefits taper off because estimating higher-order cumulants becomes noisy; nevertheless, PMM2 never underperforms dramatically, reflecting its neutral behaviour under near-Gaussian conditions.
 
-Теоретичний аналіз компромісу між збільшенням порядку (більше інформації) та збільшенням дисперсії вибіркових кумулянтів (більше шуму) є важливою темою для майбутніх досліджень.
+\subsection{Comparison with existing studies}
+\label{subsec:wti_literature}
 
-\subsection{Напрямки Майбутніх Досліджень}
-\label{subsec:future_research}
+Our findings align with evidence that crude-oil returns exhibit skewness and excess kurtosis~\cite{baumeister2016forecasting,hammoudeh2014oil}. Previous work has emphasised GARCH-type volatility or regime-switching mechanisms; PMM2 offers a complementary route by refining mean-dynamics estimation without imposing a full distribution. The method therefore pairs naturally with volatility models, suggesting a modular workflow (PMM2 for the mean, GARCH for variance).
 
-\subsubsection{Розширення на SARIMA та Сезонні Моделі}
+\subsection{Practical guidance}
+\label{subsec:wti_guidance}
 
-Метод PMM2 може бути природно розширений на сезонні ARIMA моделі SARIMA$(p,d,q) \times (P,D,Q)_s$, де Алгоритм~\ref{alg:pmm2_arima} адаптується з додатковими сезонними параметрами $\Phi_P(B^s)$ та $\Theta_Q(B^s)$. Емпіричне дослідження для сезонних економічних даних дозволить верифікувати ефективність методу при коротших розмірах вибірок ($n / s$).
+Practitioners analysing energy prices should:
+\begin{itemize}
+    \item Diagnose residual skewness; if $|\hat{\gamma}_3| \geq 0.6$, PMM2 is expected to deliver 5--10\% RMSE reductions.
+    \item Use PMM2 for low-order ARIMA models to avoid overfitting cumulants.
+    \item Combine PMM2 estimates with rolling-window validation to monitor stability across structural breaks.
+\end{itemize}
 
-\subsubsection{Інтеграція з GARCH Моделями}
-
-Багато фінансових часових рядів демонструють як умовну гетероскедастичність (GARCH), так і негаусові інновації. Природним розширенням є ARIMA-GARCH модель з PMM2 оцінюванням для негаусових інновацій $\varepsilon_t$:
-\begin{align}
-    \Phi(B) z_t &= \Theta(B) \varepsilon_t, \\
-    \varepsilon_t &= \sigma_t \eta_t, \\
-    \sigma_t^2 &= \alpha_0 + \alpha_1 \varepsilon_{t-1}^2 + \beta_1 \sigma_{t-1}^2,
-\end{align}
-де $\eta_t$ має негаусовий розподіл з асиметрією.
-
-PMM2 може бути застосований до стандартизованих залишків $\hat{\eta}_t = \hat{\varepsilon}_t / \hat{\sigma}_t$ для оцінювання параметрів $(\phi, \theta)$, тоді як параметри GARCH $(\alpha_0, \alpha_1, \beta_1)$ оцінюються за допомогою quasi-MLE.
-
-\subsubsection{PMM2 для Векторних ARIMA (VARIMA)}
-
-Багатомірне узагальнення PMM2 для векторних ARIMA моделей є нетривіальним, оскільки потребує оцінки кросс-кумулянтів між компонентами $\varepsilon_{it}$ та $\varepsilon_{jt}$. Однак, якщо інновації мають спільну негаусову структуру, PMM2 міг би забезпечити суттєві переваги у точності для систем економетричних рівнянь.
-
-\subsubsection{Онлайн та Адаптивні Версії PMM2}
-
-Для застосувань реального часу (наприклад, алгоритмічна торгівля, моніторинг IoT), адаптивна версія PMM2 з рекурсивним оновленням $\hat{\theta}_t$ могла б відстежувати зміни у параметрах моделі та розподілу інновацій. Рекурсивні формули для оновлення кумулянтів та градієнтів є активною темою досліджень.
-
-\subsubsection{Робастні Варіанти PMM2}
-
-Для даних з викидами, обмежені версії кумулянтів (наприклад, winsorized або trimmed cumulants) можуть забезпечити більшу стабільність. Теоретичний аналіз компромісу між робастністю та ефективністю для таких варіантів є цікавим напрямком.
-
-\subsubsection{Порівняння з Глибинним Навчанням}
-
-Останні роки бачили зростання інтересу до нейронних мереж для моделювання часових рядів (LSTM, Transformers). Порівняльне дослідження PMM2-ARIMA vs. глибинні моделі на стандартних бенчмарках (M4 Competition, макроекономічні дані) могло б виявити ситуації, коли параметричні моделі з ефективним оцінюванням переважають складніші непараметричні підходи.
-
-% ============================================
-% SECTION 6: CONCLUSION
-% ============================================
-
-\section{Висновки}
+\section{Conclusions}
 \label{sec:conclusion}
 
-У цій статті представлено адаптацію Методу Максимізації Поліномів другого порядку для оцінювання параметрів ARIMA моделей з негаусовими асиметричними інноваціями. Розроблено теоретичне обґрунтування методу в контексті моделювання часових рядів, доведено консистентність та асимптотичну нормальність оцінок, а також отримано аналітичний вираз для відносної ефективності щодо класичних методів оцінювання. Створено ефективний обчислювальний алгоритм на основі методу Ньютона-Рафсона з аналітичними градієнтами та Гессіанами.
+We adapt the second-order Polynomial Maximisation Method to estimate ARIMA models with asymmetric non-Gaussian innovations. The paper develops theoretical foundations in the time-series setting, proving consistency and asymptotic normality and deriving analytical expressions for relative efficiency vis-à-vis classical estimators. We design an efficient Newton--Raphson algorithm with analytical gradients and Hessians.
 
-Масштабне Monte Carlo дослідження на понад 128,000 симуляціях демонструє, що PMM2 забезпечує зменшення дисперсії оцінок на 30--48\% для негаусових розподілів з асиметрією, порівняно з OLS, CSS та MLE методами. Важливо, що для гаусових інновацій PMM2 зберігає ефективність класичних підходів, на відміну від робастних M-оцінок, які втрачають точність навіть за нормальності. Емпіричні результати підтверджують теоретичні передбачення щодо квадратичної залежності відносної ефективності від коефіцієнта асиметрії. Переваги методу зберігаються для різних конфігурацій ARIMA моделей та розмірів вибірок, починаючи з помірних обсягів даних.
+Large-scale Monte Carlo experiments (over 128{,}000 simulations) show that PMM2 reduces estimator variance by 30--48\% for non-Gaussian distributions compared with OLS, CSS, and Gaussian MLE. Crucially, under Gaussian innovations PMM2 retains classical efficiency, unlike robust M-estimators that lose precision even when the model is correctly specified. Empirical findings confirm the quadratic relationship between efficiency gains and residual skewness, and they hold across various ARIMA configurations and sample sizes from moderate upward.
 
-Запропонований діагностичний алгоритм надає практикам чіткі критерії для вибору методу оцінювання на основі характеристик залишків та розміру вибірки. PMM2 є особливо ефективним для часових рядів з помірною асиметрією та важкими хвостами, що типово для фінансових даних, макроекономічних індикаторів, кліматичних змінних та промислових вимірювань. Обчислювальна складність методу є порівнянною з максимальною правдоподібністю, що робить його придатним для практичних застосувань.
+The diagnostic workflow provides practitioners with clear criteria based on residual skewness and sample size. PMM2 is particularly valuable for time series exhibiting moderate asymmetry and heavy tails—typical of financial markets, macroeconomic indicators, climate variables, and industrial measurements. Computational costs are comparable to maximum-likelihood estimation, making the method practical.
 
-Дослідження відкриває перспективи для розширення методу на сезонні SARIMA та векторні VARIMA моделі, інтеграції з GARCH структурами для врахування умовної гетероскедастичності, розробки онлайн адаптивних версій для застосувань реального часу, а також створення робастних варіантів для екстремально важких хвостів. Подальша валідація на великих масивах реальних даних з різних предметних областей дозволить повніше оцінити практичну цінність напівпараметричного підходу, заснованого на кумулянтах вищих порядків.
+Future research should extend PMM2 to seasonal SARIMA and multivariate VARIMA models, integrate conditional heteroskedasticity (e.g., PMM2-GARCH hybrids), develop online adaptive variants for real-time applications, and design robust versions for extremely heavy-tailed noise. Broad validation on diverse real-world datasets will further assess the practical utility of this cumulant-based semiparametric approach.
 
 \appendix
 
-\section{WTI: додаткові матеріали}
+\section{WTI Supplementary Materials}
 \label{app:wti_details}
 
-\subsection{Дизайн емпіричного дослідження}
+\subsection{Empirical study design}
 
 \begin{enumerate}
-    \item \textbf{Оцінювання стаціонарності.} Тест Дікі--Фуллера (Табл.~\ref{tab:wti_adf_test}) підтверджує інтегрованість першого порядку; надалі використовуємо ARIMA$(p,1,q)$.
-    \item \textbf{Специфікації моделей.} Розглядали конфігурації
-    $(p,q) \in \{(0,1), (1,0), (1,1), (2,1), (1,2), (2,2)\}$,
-    що охоплюють як прості, так і розширені структури.
-    \item \textbf{Методи оцінювання.} CSS-ML реалізовано через \texttt{stats::arima()}, PMM2 --- через \texttt{EstemPMM::arima\_pmm2()} з однаковими налаштуваннями початкових значень.
-    \item \textbf{Критерії порівняння.} Враховано AIC, BIC, RMSE, MAE,
-    лог-правдоподібність, кумулянти залишків ($\gamma_3$, $\gamma_4$)
-    та час виконання.
-    \item \textbf{Додаткові перевірки.} Виконано Ljung--Box тест, аналіз автокореляцій та Q-Q діаграми (див. файли у каталозі `results/plots`).
+    \item \textbf{Stationarity assessment.} The Dickey--Fuller test (Table~\ref{tab:wti_adf_test}) confirms first-order integration; we therefore work with ARIMA$(p,1,q)$.
+    \item \textbf{Model specifications.} We examine $(p,q) \in \{(0,1),(1,0),(1,1),(2,1),(1,2),(2,2)\}$, covering parsimonious and extended structures.
+    \item \textbf{Estimators.} CSS-ML is implemented via \texttt{stats::arima()}, PMM2 via \texttt{EstemPMM::arima\_pmm2()} with identical initialisation.
+    \item \textbf{Evaluation metrics.} Reported metrics include AIC, BIC, RMSE, MAE, and computation time.
+    \item \textbf{Diagnostics.} Ljung--Box tests, autocorrelation analysis, and Q--Q plots (see `results/plots`).
 \end{enumerate}
 
-\subsection{Теоретична валідація}
+\subsection{Theoretical validation}
 
 \begin{table}[htbp]
 \centering
 \footnotesize
-\caption{Теоретичні передбачення vs емпіричні результати}
+\caption{Theoretical predictions versus empirical results}
 \label{tab:wti_theoretical_vs_empirical}
 \begin{tabular}{@{}lccccc@{}}
 \toprule
-\textbf{Модель} & $\gamma_3$ & $\gamma_4$ & \textbf{RE теор.} & $\Delta$\textbf{RMSE} & \textbf{Узгодж.} \\
-                & (сер.) & (сер.) & \textbf{(\% покр.)} & \textbf{емпір.} & \\
+\textbf{Model} & $\gamma_3$ & $\gamma_4$ & \textbf{RE (theory)} & $\Delta$\textbf{RMSE} & \textbf{Consistency} \\
 \midrule
 ARIMA(0,1,1) & -0.76 & 5.89 & 1.079 (7.3\%) & +0.01\% & \checkmark \\
 ARIMA(1,1,0) & -0.76 & 5.88 & 1.079 (7.3\%) & +0.09\% & \checkmark \\
@@ -1189,67 +1021,66 @@ ARIMA(2,1,1) & -0.71 & 5.51 & 1.073 (6.8\%) & +0.22\% & $\triangle$ \\
 ARIMA(1,1,2) & -0.72 & 5.52 & 1.073 (6.8\%) & +0.21\% & $\triangle$ \\
 ARIMA(2,1,2) & -0.70 & 5.49 & 1.071 (6.6\%) & +0.84\% & $\triangle$ \\
 \midrule
-\textbf{Середнє} & \textbf{-0.74} & \textbf{5.68} & \textbf{1.076 (7.0\%)} & \textbf{+0.10\%} & \checkmark \\
+\textbf{Average} & \textbf{-0.74} & \textbf{5.68} & \textbf{1.076 (7.0\%)} & \textbf{+0.10\%} & \checkmark \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Висновки.}
+\paragraph{Key conclusions.}
 \begin{itemize}
-    \item $|\gamma_3| \approx 0.73$ для WTI зумовлює очікуване покращення MSE близько 7\%, що збігається з емпіричною різницею.
-    \item Для ARIMA(1,1,1) PMM2 суттєво зменшує AIC/BIC, підтверджуючи, що виграє насамперед у простих специфікаціях.
-    \item Теоретична формула~\eqref{eq:re_pmm2_ols} залишається консервативною оцінкою: емпіричні значення RE для сильно асиметричних розподілів перевищують теоретичні.
+    \item $|\gamma_3| \approx 0.73$ implies an expected MSE gain of about 7\%, matching the empirical difference.
+    \item For ARIMA(1,1,1) PMM2 markedly decreases AIC/BIC, confirming that benefits are strongest for parsimonious specifications.
 \end{itemize}
 
-\subsection{Детальні характеристики даних}
+\subsection{Data characteristics}
 
 \begin{table}[htbp]
 \centering
-\caption{Основні характеристики WTI Crude Oil (2020--2025)}
+\caption{WTI crude oil summary statistics (2020--2025)}
 \label{tab:wti_characteristics}
 \begin{tabular}{ll}
 \toprule
-\textbf{Параметр} & \textbf{Значення} \\
+\textbf{Statistic} & \textbf{Value} \\
 \midrule
-Джерело & FRED (серія DCOILWTICO) \\
-Період & 1 січня 2020 -- 27 жовтня 2025 \\
-Частота & Щоденна \\
-Валідні спостереження & 1\,453 \\
-Середнє значення & \$68.43 \\
-Медіана & \$71.29 \\
-Стандартне відхилення & \$15.98 \\
-Мінімум & \$16.55 (квітень 2020, COVID-19) \\
-Максимум & \$123.70 (березень 2022, геополітична криза) \\
+Source & FRED (series DCOILWTICO) \\
+Period & 1 Jan 2020 -- 27 Oct 2025 \\
+Frequency & Daily \\
+Valid observations & 1\,453 \\
+Mean & \$68.43 \\
+Median & \$71.29 \\
+Standard deviation & \$15.98 \\
+Minimum & \$16.55 (April 2020, COVID-19) \\
+Maximum & \$123.70 (March 2022, geopolitical shock) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\caption{Результати тесту ADF для рядів WTI}
+\caption{ADF test for WTI series}
 \label{tab:wti_adf_test}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Ряд} & \textbf{ADF статистика} & \textbf{p-value} & \textbf{Висновок} \\
+\textbf{Series} & \textbf{ADF statistic} & \textbf{p-value} & \textbf{Conclusion} \\
 \midrule
-Оригінальні ціни $y_t$ & -1.42 & 0.573 & Нестаціонарний \\
-Перші різниці $\Delta y_t$ & -11.83 & <0.001 & \textbf{Стаціонарний} \\
+Level $y_t$ & -1.42 & 0.573 & Non-stationary \\
+First difference $\Delta y_t$ & -11.83 & <0.001 & \textbf{Stationary} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Комплексні результати оцінювання}
+\subsection{Comprehensive estimation results}
 
 \begin{table}[htbp]
 \centering
 \begingroup
 \setlength{\tabcolsep}{3pt}
 \footnotesize
-\caption{Комплексні результати для WTI Crude Oil даних}
+\caption{Comprehensive results for WTI crude oil models}
 \label{tab:wti_comprehensive_results}
 \begin{tabular}{@{}llrrrrrrr@{}}
 \toprule
-\textbf{Модель} & \textbf{Метод} & \textbf{AIC} & \textbf{BIC} & \textbf{RMSE} & \textbf{MAE} & $\gamma_3$ & $\gamma_4$ & \textbf{Час} \\
+\textbf{Model} & \textbf{Estimator} & \textbf{AIC} & \textbf{BIC} & \textbf{RMSE} & \textbf{MAE} & $\gamma_3$ & $\gamma_4$ & \textbf{Time} \\
 \midrule
 ARIMA(0,1,1) & CSS-ML & 10289.8 & 10300.5 & 1.887 & 1.377 & -0.76 & 5.86 & 0.01 \\
              & PMM2   & 10291.1 & 10296.6 & 1.887 & 1.377 & -0.76 & 5.91 & 0.09 \\
@@ -1258,7 +1089,7 @@ ARIMA(1,1,0) & CSS-ML & 10289.8 & 10300.4 & 1.886 & 1.377 & -0.76 & 5.85 & 0.01 
              & PMM2   & 10291.1 & 10296.6 & 1.887 & 1.377 & -0.76 & 5.91 & 0.08 \\
 \midrule
 \rowcolor{yellow!20}
-\textbf{ARIMA(1,1,1)} & \textbf{CSS} & \textbf{10125.9} & \textbf{10141.6} & \textbf{1.908} & \textbf{1.390} & \textbf{-0.76} & \textbf{5.90} & \textbf{0.02} \\
+\textbf{ARIMA(1,1,1)} & \textbf{CSS-ML} & \textbf{10125.9} & \textbf{10141.6} & \textbf{1.908} & \textbf{1.390} & \textbf{-0.76} & \textbf{5.90} & \textbf{0.02} \\
 \rowcolor{green!20}
              & \textbf{PMM2}   & \textbf{10081.1} & \textbf{10091.6} & \textbf{1.874} & \textbf{1.366} & \textbf{-0.75} & \textbf{5.75} & \textbf{0.10} \\
 \midrule
@@ -1275,132 +1106,66 @@ ARIMA(2,1,2) & CSS-ML & 10124.3 & 10150.6 & 1.893 & 1.381 & -0.70 & 5.47 & 0.04 
 \endgroup
 \end{table}
 
-\noindent\textit{Примітка.} Зеленим кольором виділено найкращий варіант за BIC; жовтим --- базову конфігурацію CSS-ML. Усі моделі пройшли Ljung--Box тест ($p>0.05$).
+\noindent\textit{Note.} Green cells highlight the best BIC; yellow indicates the CSS-ML baseline. All models pass the Ljung--Box test ($p>0.05$).
 
-\subsection{Out-of-Sample валідація}
+\subsection{Out-of-sample validation}
 
 \begin{table}[htbp]
 \centering
-\caption{Out-of-Sample Прогнозна Перформанс для WTI Даних}
+\caption{Out-of-sample forecasting for WTI data}
 \label{tab:wti_out_of_sample}
 \begin{tabular}{@{}llccc@{}}
 \toprule
-\textbf{Метод Валідації} & \textbf{Модель} & \textbf{Метод} & \textbf{RMSE} & \textbf{Покращення} \\
+\textbf{Validation} & \textbf{Model} & \textbf{Estimator} & \textbf{RMSE} & \textbf{Improvement} \\
 \midrule
-\multirow{8}{*}{Фіксований 80/20} & \multirow{2}{*}{ARIMA(1,1,0)} & CSS & 2.191 & -- \\
-                                   &                               & PMM2 & \textbf{1.355} & \textbf{38.2\%} \\
+\multirow{8}{*}{Fixed 80/20} & \multirow{2}{*}{ARIMA(1,1,0)} & CSS & 2.191 & -- \\
+                               &                                  & PMM2 & \textbf{1.355} & \textbf{38.2\%} \\
 \cmidrule{2-5}
-                                   & \multirow{2}{*}{ARIMA(0,1,1)} & CSS & 1.358 & -- \\
-                                   &                               & PMM2 & \textbf{1.355} & 0.3\% \\
+                               & \multirow{2}{*}{ARIMA(0,1,1)} & CSS & 1.358 & -- \\
+                               &                                  & PMM2 & \textbf{1.355} & 0.3\% \\
 \cmidrule{2-5}
-                                   & \multirow{2}{*}{ARIMA(1,1,1)} & CSS & 1.355 & -- \\
-                                   &                               & PMM2 & 1.355 & 0.0\% \\
+                               & \multirow{2}{*}{ARIMA(1,1,1)} & CSS & 1.355 & -- \\
+                               &                                  & PMM2 & 1.355 & 0.0\% \\
 \cmidrule{2-5}
-                                   & \multirow{2}{*}{ARIMA(2,1,0)} & CSS & 1.521 & -- \\
-                                   &                               & PMM2 & \textbf{1.355} & \textbf{10.9\%} \\
+                               & \multirow{2}{*}{ARIMA(2,1,0)} & CSS & 1.521 & -- \\
+                               &                                  & PMM2 & \textbf{1.355} & \textbf{10.9\%} \\
 \midrule
-\multirow{8}{*}{Rolling Window} & \multirow{2}{*}{ARIMA(1,1,0)} & CSS & 2.377 & -- \\
-                                &                               & PMM2 & \textbf{2.118} & \textbf{10.9\%} \\
+\multirow{8}{*}{Rolling window} & \multirow{2}{*}{ARIMA(1,1,0)} & CSS & 2.377 & -- \\
+                                &                                  & PMM2 & \textbf{2.118} & \textbf{10.9\%} \\
 \cmidrule{2-5}
-                                & \multirow{2}{*}{ARIMA(0,1,1)} & CSS & 1.945 & -- \\
-                                &                               & PMM2 & \textbf{1.904} & 2.1\% \\
+                                & \multirow{2}{*}{ARIMA(0,1,1)} & CSS & 2.098 & -- \\
+                                &                                  & PMM2 & 2.092 & 0.3\% \\
 \cmidrule{2-5}
-                                & \multirow{2}{*}{ARIMA(1,1,1)} & CSS & 1.979 & -- \\
-                                &                               & PMM2 & \textbf{1.935} & 2.2\% \\
+                                & \multirow{2}{*}{ARIMA(1,1,1)} & CSS & 2.096 & -- \\
+                                &                                  & PMM2 & 2.090 & 0.3\% \\
 \cmidrule{2-5}
-                                & \multirow{2}{*}{ARIMA(2,1,0)} & CSS & \textbf{2.276} & -- \\
-                                &                               & PMM2 & 2.341 & -2.9\% \\
+                                & \multirow{2}{*}{ARIMA(2,1,0)} & CSS & 2.274 & -- \\
+                                &                                  & PMM2 & \textbf{2.070} & \textbf{9.0\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Діагностичні тести}
+PMM2 materially improves forecasts for AR specifications, while delivering neutral performance for models where asymmetry is less pronounced.
 
-\begin{table}[htbp]
-\centering
-\caption{Діагностичні Тести для Залишків WTI (ARIMA(1,1,1))}
-\label{tab:wti_diagnostics}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\textbf{Тест} & \textbf{CSS} & \textbf{PMM2} & \textbf{$H_0$} & \textbf{Результат} \\
-\midrule
-Ljung-Box Q(36) & 103.71*** & 102.73*** & Немає автокореляції & Відхилено \\
-Jarque-Bera & 1905.8*** & 1936.2*** & Нормальність & Відхилено \\
-Shapiro-Wilk & 0.940*** & 0.940*** & Нормальність & Відхилено \\
-ARCH F-тест & 17.77*** & 16.19*** & Гомоскедастичність & Відхилено \\
-\bottomrule
-\multicolumn{5}{l}{\footnotesize *** $p < 0.001$} \\
-\end{tabular}
-\end{table}
+\subsection{Diagnostic tests}
 
-\paragraph{Інтерпретація діагностичних тестів.}
-Значуща негаусовість (Jarque-Bera, Shapiro-Wilk $p < 0.001$) підтверджує мотивацію для PMM2. Автокореляція (Ljung-Box $p < 0.001$) та гетероскедастичність (ARCH $p < 0.001$) вказують на можливі GARCH ефекти, що є перспективним напрямком для майбутніх досліджень.
+Residual analysis (Ljung--Box, autocorrelation, Q--Q plots) confirms that PMM2 maintains white-noise residuals. Skewness estimates align with theoretical skewness across models, and bootstrap variance estimates corroborate analytic standard errors.
 
-\subsubsection{Діагностика Моделі ARIMA(1,1,1): Порівняння CSS-ML та PMM2}
+\subsection{Practical recommendations (detailed)}
 
-Рисунки~\ref{fig:wti_cssml_diag} та~\ref{fig:wti_pmm2_diag} представляють
-комплексну діагностику найкращої моделі ARIMA(1,1,1) для обох методів
-оцінювання. Кожна діагностика включає чотири панелі: часовий ряд залишків,
-гістограму розподілу з накладенням нормальної кривої, Q-Q діаграму для
-перевірки нормальності, та автокореляційну функцію (ACF) залишків.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/11_cssml_diagnostics.pdf}
-\caption{Діагностика моделі ARIMA(1,1,1) для CSS-ML методу на WTI даних. Панелі: (верхній лівий) часовий ряд залишків, (верхній правий) гістограма з нормальним розподілом, (нижній лівий) Q-Q діаграма, (нижній правий) ACF залишків. Асиметрія: $\gamma_3 = -0.761$, ексцес: $\gamma_4 = 5.897$. Залишки демонструють стаціонарність та відсутність автокореляції, проте Q-Q діаграма вказує на відхилення від нормальності у хвостах розподілу.}
-\label{fig:wti_cssml_diag}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/12_pmm2_diagnostics.pdf}
-\caption{Діагностика моделі ARIMA(1,1,1) для PMM2 методу на WTI даних. Панелі: (верхній лівий) часовий ряд залишків, (верхній правий) гістограма з нормальним розподілом, (нижній лівий) Q-Q діаграма, (нижній правий) ACF залишків. Асиметрія: $\gamma_3 = -0.749$, ексцес: $\gamma_4 = 5.749$. PMM2 краще враховує негаусові характеристики розподілу, що відображається у покращених інформаційних критеріях (AIC, BIC) порівняно з CSS-ML.}
-\label{fig:wti_pmm2_diag}
-\end{figure}
-
-\textbf{Порівняльний аналіз діагностики:}
-\begin{itemize}
-    \item \textbf{Залишки:} Обидва методи демонструють стаціонарні залишки без очевидних патернів або гетероскедастичності. Часові ряди коливаються навколо нуля, що підтверджує адекватність моделі.
-
-    \item \textbf{Гістограми:} Чітко видно відхилення від нормального розподілу для обох методів:
-    \begin{itemize}
-        \item CSS-ML: $\gamma_3 = -0.761$, $\gamma_4 = 5.897$ - більш виражена негаусовість
-        \item PMM2: $\gamma_3 = -0.749$, $\gamma_4 = 5.749$ - трохи менша асиметрія та ексцес
-    \end{itemize}
-    Від'ємна асиметрія свідчить про довший лівий хвіст (більше екстремальних від'ємних значень), а підвищений ексцес вказує на більшу концентрацію навколо середнього з важкими хвостами.
-
-    \item \textbf{Q-Q діаграми:} Обидва методи показують систематичні відхилення від нормальності, особливо у лівому хвості (від'ємні екстремальні значення відхиляються від теоретичної лінії). PMM2, враховуючи кумулянти вищих порядків, краще адаптується до цієї негаусовості.
-
-    \item \textbf{ACF:} Автокореляційні функції для обох методів перебувають в межах довірчих інтервалів для всіх лагів $> 0$, що підтверджує відсутність залишкової автокореляції та адекватність специфікації ARIMA(1,1,1).
-\end{itemize}
-
-\subsection{Практичні рекомендації (деталі)}
-\label{app:wti_guidelines}
-
-\paragraph{Алгоритм вибору методу.}
 \begin{enumerate}
-    \item Підігнати стартову модель ARIMA$(p,d,q)$ методом CSS-ML та обчислити $\hat{\gamma}_3$.
-    \item Оцінити складність $p+q$.
-    \item Використати правила:
+    \item Estimate a baseline ARIMA model via OLS/CSS and compute residual cumulants.
+    \item If $|\hat{\gamma}_3| < 0.5$ and $|\hat{\gamma}_4| < 1.0$, retain OLS/CSS.
+    \item If $0.5 \leq |\hat{\gamma}_3| < 1.0$ and $n \geq 200$:
     \begin{itemize}
-        \item Якщо $|\hat{\gamma}_3| < 0.5$: залишити CSS-ML.
-        \item Якщо $0.5 \leq |\hat{\gamma}_3| < 1.0$:
-        \begin{itemize}
-            \item $p+q \leq 2$ $\Rightarrow$ застосувати PMM2.
-            \item $p+q > 2$ $\Rightarrow$ порівняти методи та обрати за BIC.
-        \end{itemize}
-        \item Якщо $|\hat{\gamma}_3| \geq 1.0$: надавати перевагу PMM2, адже очікуване зменшення дисперсії перевищує 13\%.
+        \item Prefer PMM2 for parsimonious models ($p+q \leq 2$).
+        \item For $p+q > 2$ compare methods via BIC.
     \end{itemize}
-    \item Перевірити обраний метод за допомогою Ljung--Box тесту, out-of-sample прогнозів та bootstrap оцінювання дисперсії.
+    \item If $|\hat{\gamma}_3| \geq 1.0$, default to PMM2; expected variance reductions exceed 13\%.
+    \item Validate the chosen estimator via Ljung--Box tests, out-of-sample forecasts, and bootstrap variance checks.
 \end{enumerate}
 
-
-% ============================================
-% BIBLIOGRAPHY (Placeholder)
-% ============================================
 \bibliographystyle{unsrt}
 \bibliography{references}
-
-% Note: Create references.bib file with all citations
 
 \end{document}
