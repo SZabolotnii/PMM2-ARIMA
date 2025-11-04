@@ -28,3 +28,6 @@ Rplots.pdf
 *.toc
 *.nav
 *.snm
+
+# internal files
+data-search/

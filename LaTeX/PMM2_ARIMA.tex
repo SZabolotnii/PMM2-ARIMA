@@ -203,6 +203,32 @@ When the Gaussian assumption fails, classical estimators for ARIMA parameters fa
 
 \paragraph{Misleading confidence intervals.} Ledolter (1989) demonstrates that ignoring outliers inflates mean-squared forecast error and biases parameter estimates in stock-price applications~\cite{ledolter1989inference}. Consequently, uncertainty bands become understated or overstated, undermining decision making.
 
+\subsection{Existing Approaches: Brief Overview}
+\label{subsec:existing_approaches}
+
+In response to non-Gaussianity in time series, several alternative approaches have been developed by the research community:
+
+\paragraph{Robust estimation methods (M-estimators).} Initiated by the classic work of Huber (1964)~\cite{huber1964robust}, M-estimators minimise robust loss functions that are less sensitive to outliers and heavy tails. Muler et al. (2009) introduced BIP-ARMA models with MM-estimates that avoid outlier propagation through bounded residuals, achieving consistency and asymptotic normality with efficiency comparable to MLE under normality~\cite{muler2009robust}. Reisen et al. (2024) proposed an M-Whittle estimator with established consistency property that performs well with outliers and heavy-tailed noise~\cite{reisen2024robust}.
+
+\paragraph{Quantile regression and LAD methods.} Katsouris (2023) provided a comprehensive review of quantile regression models for time series, covering stationary and non-stationary cases, with Bahadur representations for quantile processes and uniform inference in quantile threshold regression~\cite{katsouris2023quantile}. For ARMA models with infinite variance, Peng \& Yao (2003), Ling (2005), and Zhu \& Ling (2015) proposed weighted least absolute deviation estimation (WLADE) that is asymptotically normal and unbiased with standard root-n convergence rate even in the absence of finite variance~\cite{peng2003least,ling2005self,zhu2015model}.
+
+\paragraph{Heavy-tailed specifications.} Modifying classical ARIMA models by replacing Gaussian innovations with heavy-tailed distributions (Student-t, Generalized Error Distribution, $\alpha$-stable distributions) allows better modelling of extreme events. Wong et al. (2009) developed a Student-t mixture autoregressive model with higher flexibility compared to Gaussian MAR, where degrees of freedom are random variables, using an EM algorithm for parameter estimation in a Bayesian framework~\cite{wong2009student}. A recent 2024 study found that skewed GED is most effective for financial time series compared to normal, Student-t, GED, and Skewed Student-t distributions based on goodness-of-fit metrics~\cite{ampadu2024comparative}.
+
+\paragraph{Bayesian approaches.} Graves et al. (2015) proposed a systematic approach to Bayesian inference for ARFIMA models with a novel approximate likelihood for efficient inference of parameters in long-memory processes, allowing innovations from a broad class including $\alpha$-stable and t-distributions~\cite{graves2015efficient}. Bayesian methods also integrate uncertainty across all parameters, providing full posterior inference instead of point estimates.
+
+\paragraph{Transformer-based architectures.} Recent research shows that Transformer architectures adapted for time series can implicitly model non-Gaussian characteristics through the attention mechanism~\cite{zhou2024comprehensive}. Hybrid models combining traditional ARIMA with attention-based neural networks demonstrate improved forecasting accuracy for financial time series~\cite{liu2024arima}. Foundation models such as TimeGPT-1 and Chronos represent a new direction for generalised forecasting across diverse datasets without specific training~\cite{godfried2024advances}. However, these models are:
+\begin{itemize}
+    \item \textbf{Data-hungry}: require thousands of observations for stable training, whereas classical ARIMA works with $N \geq 100$
+    \item \textbf{Black-box}: lack of interpretable parameters complicates econometric inference
+    \item \textbf{Computationally intensive}: training requires GPUs and takes hours, compared to classical models.
+\end{itemize}
+
+It is important to note that deep models are optimised for minimising prediction error, not for efficient \textit{parameter estimation} of the underlying data-generating process.
+
+\paragraph{Comparative analysis of approaches.} Each of the described methods has specific advantages and limitations. Robust methods (M-estimators) provide resilience to outliers and retain asymptotic efficiency under normality, but may lose accuracy under moderate deviations from Gaussianity without extreme outliers. Quantile regression and LAD methods provide a complete picture of the distribution and work without assuming finite variance, but are not optimised for central parameter estimates and mean forecasts. Heavy-tailed specifications explicitly model extreme events and provide interpretable distribution-shape parameters, but require a priori choice of distributional family, which may lead to model misspecification. Bayesian methods integrate parameter uncertainty and allow flexible innovation specifications, but are computationally intensive and require choice of prior distributions. Finally, Transformer-based models achieve high forecasting accuracy and adapt to complex patterns, but do not provide interpretable parametrisation of the data-generating process.
+
+Thus, there is a need for an approach that combines the statistical efficiency of classical methods, interpretability of parameters, and robustness to deviations from normality without requiring specification of a particular distributional family.
+
 \subsection{Polynomial Maximization Method: An Alternative Paradigm}
 \label{subsec:pmm_intro}
 
@@ -222,7 +248,7 @@ PMM has been successfully applied to diverse estimation problems:
     \item \textbf{Metrological measurements.} Warsza and Zabolotnii (2017, 2018) use PMM to estimate measurement parameters with non-Gaussian symmetric and asymmetric data, designing the PMM3 procedure for symmetric distributions~\cite{warsza2017polynomial,zabolotnii2020estimation}.
 \end{itemize}
 
-PMM is positioned between the classical method of moments and maximum likelihood. Unlike Hansen's (1982) generalised method of moments (GMM)~\cite{hansen1982gmm}, which minimises a weighted sum of squared deviations between sample and population moments, PMM maximises a stochastic polynomial constructed from higher-order moments or cumulants.
+It is worth noting that the PMM method is positioned between the classical method of moments and maximum likelihood. Unlike Hansen's (1982) generalised method of moments (GMM)~\cite{hansen1982gmm}, which minimises a weighted sum of squared deviations between sample and population moments, PMM maximises a stochastic polynomial constructed from higher-order moments or cumulants.
 
 \subsection{Research Gap and Contribution}
 \label{subsec:research_gap}
@@ -884,19 +910,81 @@ When innovations are Gaussian, PMM2 behaves like OLS/CSS: bias, variance, and co
 
 Efficiency gains are evident from $N=200$ upwards; for $N=100$ the method remains beneficial but with slightly higher variability. The Newton--Raphson routine converges rapidly (typically within five iterations), and sensitivity tests indicate stability with respect to starting values and tolerance thresholds.
 
+\subsubsection{Quadratic dependence of RE on asymmetry}
+
+Figure~\ref{fig:re_vs_skewness} demonstrates that the empirical dependence of RE on skewness coefficient $\gamma_3$ is in good agreement with the theoretical formula (Theorem~\ref{thm:pmm2_basic}).
+
+For small $\gamma_3$, the change in RE has a quadratic character, showing sharp growth in efficiency even with mild asymmetry. When $\gamma_3$ reaches moderate values, it is appropriate to use the exact formula~\eqref{eq:re_pmm2_ols}: for $\gamma_3 \approx 1.4$ and $\gamma_4 \approx 3$ it yields $RE \approx 1.64$, corresponding to an MSE difference of about 39\%.
+
+For very high values $\gamma_3 \approx 2.0$ (Lognormal), empirical RE is slightly lower than theoretical, which may be due to:
+\begin{itemize}
+    \item Finite sample size effects ($N = 500$)
+    \item Higher-order terms in the asymptotic expansion
+    \item Possible non-smoothness of the distribution function for heavy tails
+\end{itemize}
+
+\subsubsection{Consistency across different ARIMA configurations}
+
+Results for ARIMA(0,1,1), ARIMA(1,1,1), and ARIMA(2,1,0) (Subsection~\ref{subsec:monte_carlo_results}) confirm that the advantages of PMM2 are not limited to a specific parametrisation. This indicates that the method is robust with respect to the choice of model order $(p, d, q)$ and parameter signs.
+
+For models with multiple parameters (e.g., ARIMA(1,1,1)), PMM2 provides similar RE for all parameters ($\phi_1$ and $\theta_1$), indicating balanced estimation efficiency.
+
+\paragraph{Remark on RE for multiple parameters.}
+
+Although theory (Theorem~\ref{thm:pmm2_basic}) predicts equal asymptotic relative efficiency for all parameters, empirical results show small differences (2--5\%) between RE for different parameters. For example, for ARIMA(1,1,1) with Gamma innovations we obtained $RE(\phi_1) = 1.52$ and $RE(\theta_1) = 1.48$. These differences can be explained by:
+
+\begin{itemize}
+    \item \textbf{Monte Carlo variability:} The standard error of RE with 2000 iterations is approximately 0.03--0.05, making the observed differences statistically insignificant at level $\alpha = 0.05$.
+
+    \item \textbf{Finite-sample effect:} For ARIMA models, estimated residuals $\hat{\varepsilon}_t^{\text{CSS}}$ are used instead of true innovations in the construction of pseudo-regressors~\eqref{eq:design_row}, which may lead to small deviations from asymptotic theory at finite samples ($N = 500$).
+
+    \item \textbf{Differential bias contribution:} If PMM2 or OLS have different bias for different parameters, this affects empirical MSE and, accordingly, the observed relative efficiency.
+\end{itemize}
+
+It is important to note that the differences are small (< 5\%) and all parameters demonstrate substantial improvements over OLS. For practical purposes, one can assume that RE is approximately equal for all parameters, especially for $N \geq 500$.
+
 \subsection{Comparison with existing literature}
 \label{subsec:literature_comparison}
 
-PMM2 complements robust estimation approaches (M-estimators, LAD, quantile regression) by explicitly targeting higher-order moments. While robust methods mitigate the influence of outliers, PMM2 capitalises on structured asymmetry. Our results align with the broader literature on semiparametric efficiency gains for non-Gaussian processes~\cite{franses1998nonlinear,pagan1984econometric} and extend Kunchenko's polynomial maximisation framework to dynamic models.
+\subsubsection{Robust M-estimates}
+
+Classical robust methods such as Huber's M-estimates~\cite{huber1964robust} and LAD regression~\cite{koenker1978regression} focus on reducing the influence of outliers by bounding the influence function. However, they do not exploit information from higher-order cumulants and typically have lower efficiency for distributions without outliers but with asymmetry.
+
+Our results show that PMM2 achieves RE of 1.4--1.9 for moderately asymmetric distributions (Gamma, Chi-squared) \textit{without outliers}. Unlike M-estimates, PMM2 does not lose efficiency for Gaussian innovations (RE $\approx$ 1.0), whereas M-estimates typically have RE $\approx$ 0.95 even for normal data~\cite{hampel1986robust}.
+
+\subsubsection{Heavy-tailed specifications}
+
+Approaches using Student-$t$ distribution~\cite{harvey2013dynamic} or GED~\cite{box2015time} explicitly model heavy tails through an additional shape parameter. However, these methods require correct specification of the innovation distribution, which can be challenging in practice.
+
+PMM2, on the other hand, is \textit{semiparametric} in the sense that it does not assume a specific distribution but uses only moments up to the fourth order. This makes the method more flexible and applicable to a wide class of distributions.
+
+\subsubsection{Bayesian methods}
+
+Bayesian approaches~\cite{fruhwirth2006finite, nakajima2012generalized} allow incorporating prior information about parameters and the innovation distribution. However, they are computationally intensive (MCMC) and sensitive to the choice of prior distributions.
+
+PMM2 is a deterministic method with computational complexity comparable to MLE, making it more suitable for large datasets and real-time applications. PMM2 computation time in our experiments was only 10--20\% longer than OLS for the same data.
+
+\subsubsection{Quantile regression for time series}
+
+Quantile regression~\cite{koenker2005quantile} allows modelling different quantiles of the conditional distribution, which is useful for risk assessment. However, standard quantile regression does not estimate ARIMA model parameters directly but models conditional quantiles of $y_t$.
+
+PMM2 focuses on estimating parameters $\theta = (\phi_1, \ldots, \phi_p, \theta_1, \ldots, \theta_q)$ with maximum efficiency, exploiting innovation asymmetry. These two approaches are complementary: PMM2 for accurate parameter estimation, quantile regression for forecast distribution analysis.
 
 \subsection{Practical recommendations}
 \label{subsec:practical_guidelines}
 
-We recommend adopting PMM2 when:
+\subsubsection{When to use PMM2?}
+
+Based on our results, we recommend using PMM2 instead of OLS/CSS/MLE when:
+
 \begin{enumerate}
-    \item Residual skewness satisfies $|\gamma_3| \geq 0.5$ or excess kurtosis $|\gamma_4| \geq 1$, signalling non-Gaussianity.
-    \item Sample size exceeds 200 observations, ensuring reliable moment estimates.
-    \item Computational resources permit iterative estimation (typically less than $5\times$ the cost of CSS for low-order models).
+    \item \textbf{Residuals demonstrate asymmetry:} If a preliminary estimate (e.g., OLS) yields residuals $\hat{\varepsilon}_t$ with $|\hat{\gamma}_3| > 0.5$, PMM2 will likely provide RE $> 1.2$ (variance reduction $> 17\%$).
+
+    \item \textbf{Sample size $N \geq 200$:} PMM2 requires stable estimates of higher-order cumulants. For $N < 200$, the method still works but RE may be slightly lower due to variability of higher-order moment estimates.
+
+    \item \textbf{Data contain moderate deviations from normality:} PMM2 is most effective for distributions with $\gamma_3 \in [1.0, 2.0]$ and $\gamma_4 \in [2.0, 8.0]$. For extreme heavy tails ($\gamma_4 > 10$), truncated variants of PMM2 may be advisable.
+
+    \item \textbf{Computational resources permit:} PMM2 requires computing gradients with partial derivatives with respect to parameters. For large models (e.g., ARIMA(5,1,5)), this may be 20--50\% slower than OLS, but still significantly faster than a full Bayesian approach.
 \end{enumerate}
 
 \subsubsection{Diagnostic algorithm for practitioners}
@@ -907,44 +995,56 @@ Algorithm~\ref{alg:method_selection} summarises a decision workflow for selectin
 \caption{Choosing between OLS/CSS and PMM2 for ARIMA models}
 \label{alg:method_selection}
 \begin{algorithmic}[1]
-\STATE \textbf{Input:} Time series $\{y_t\}_{t=1}^n$, model order $(p,d,q)$.
-\STATE Estimate $\hat{\theta}_{\text{OLS}}$ via OLS/CSS and compute residuals $\hat{\varepsilon}_t$.
-\STATE Evaluate residual cumulants: $\hat{\gamma}_3$, $\hat{\gamma}_4$.
+\STATE \textbf{Input:} Time series $\{y_t\}_{t=1}^n$, model order $(p,d,q)$
+\STATE \textbf{Output:} Parameter estimates $\hat{\theta}$
+
+\STATE Estimate model using OLS/CSS: $\hat{\theta}_{\text{OLS}}$
+\STATE Compute residuals: $\hat{\varepsilon}_t = \Theta(B)^{-1} \Phi(B) \Delta^d y_t$
+\STATE Estimate residual cumulants: $\hat{\gamma}_3 = \frac{1}{n} \sum_{t=1}^n \hat{\varepsilon}_t^3 / \hat{\sigma}^3$, $\hat{\gamma}_4 = \frac{1}{n} \sum_{t=1}^n \hat{\varepsilon}_t^4 / \hat{\sigma}^4 - 3$
+
 \IF{$|\hat{\gamma}_3| < 0.5$ \AND $|\hat{\gamma}_4| < 1.0$}
-    \STATE Retain $\hat{\theta}_{\text{OLS}}$ (Gaussian regime).
+    \STATE \textbf{Use} $\hat{\theta}_{\text{OLS}}$ (Gaussian innovations, PMM2 provides no advantage)
 \ELSIF{$n < 200$}
-    \STATE Warn about small-sample instability; prefer OLS or cross-validated PMM2.
+    \STATE \textbf{Warning:} Small sample size, PMM2 may be unstable
+    \STATE \textbf{Use} $\hat{\theta}_{\text{OLS}}$ or verify PMM2 consistency via cross-validation
 \ELSE
-    \STATE Compute theoretical $RE = \frac{4 + 2\hat{\gamma}_4}{4 + 2\hat{\gamma}_4 - \hat{\gamma}_3^2}$.
-    \IF{$RE > 1.2$}
-        \STATE Estimate $\hat{\theta}_{\text{PMM2}}$ via Algorithm~\ref{alg:pmm2_arima}.
-        \STATE Compare standard errors; if $\text{SE}(\hat{\theta}_{\text{PMM2}}) < \text{SE}(\hat{\theta}_{\text{OLS}})$, prefer PMM2.
+    \STATE Compute theoretical RE: $RE_{\text{theor}} = \frac{4 + 2\hat{\gamma}_4}{4 + 2\hat{\gamma}_4 - \hat{\gamma}_3^2}$
+    \IF{$RE_{\text{theor}} > 1.2$}
+        \STATE \textbf{Use PMM2:} Estimate $\hat{\theta}_{\text{PMM2}}$ via Algorithm~\ref{alg:pmm2_arima}
+        \STATE Compare standard errors: if $\text{SE}(\hat{\theta}_{\text{PMM2}}) < \text{SE}(\hat{\theta}_{\text{OLS}})$, use PMM2
     \ELSE
-        \STATE Retain $\hat{\theta}_{\text{OLS}}$ (insufficient asymmetry).
+        \STATE \textbf{Use} $\hat{\theta}_{\text{OLS}}$ (insufficient asymmetry for PMM2 advantages)
     \ENDIF
 \ENDIF
-\STATE \textbf{Output:} Selected estimator (OLS/CSS or PMM2).
+
+\STATE \textbf{Return} $\hat{\theta}$ (OLS or PMM2)
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{Limitations}
 \label{subsec:study_limitations}
 
-\subsubsection{Innovation distributions}
+\subsubsection{Limitations on innovation distributions}
 
-Our simulations cover Gaussian, Gamma, lognormal, and chi-squared innovations. Real-world data may exhibit mixture distributions, conditional heteroskedasticity, or extreme heavy tails ($\gamma_4 > 20$), which could challenge moment-based estimation.
+Our Monte Carlo experiments cover four types of distributions (Gaussian, Gamma, Lognormal, Chi-squared), but real data may have more complex characteristics:
 
-\subsubsection{Model order}
+\begin{itemize}
+    \item \textbf{Mixture distributions:} Innovations may be a mixture of Gaussian and non-Gaussian components, which was not considered.
+    \item \textbf{Conditional heteroskedasticity:} The presence of GARCH effects violates the assumption of independent identically distributed innovations.
+    \item \textbf{Extreme heavy tails:} For distributions with $\gamma_4 > 20$ (e.g., Pareto), fourth-order cumulants may be unstable.
+\end{itemize}
 
-We focus on low-order ARIMA models ($p,q \leq 2$). Higher orders increase the dimensionality of cumulant estimation and may require additional regularisation or numerical safeguards.
+\subsubsection{Limitations on model order}
 
-\subsubsection{Model selection}
+We considered low-order models ($p, q \leq 2$). For high orders (e.g., ARIMA(5,1,5)), gradient computation becomes more complex, and numerical stability issues require additional investigation.
 
-We assume the model order $(p,d,q)$ is known. In practice, information criteria determine the order, and PMM2 may influence selection. Developing PMM2-consistent order-selection tools is an open problem.
+\subsubsection{Absence of model selection tests}
 
-\subsubsection{Information criteria}
+We assumed that the model order $(p, d, q)$ is known. In practice, model order selection (e.g., via AIC, BIC) may interact with the estimation method. PMM2 may change model selection compared to OLS if information criteria account for estimation accuracy.
 
-Because PMM2 does not maximise a likelihood, classical AIC/BIC lack formal justification. In this study we report post-hoc Gaussian log-likelihoods for comparability with CSS-ML, but caution that these should be interpreted heuristically. Alternatives include quasi-information criteria~\cite{pan2001akaike}, out-of-sample metrics, and rolling cross-validation. Designing PMM2-specific criteria that account for higher-order cumulants is a promising research direction.
+\subsubsection{Limitations of information criteria for PMM2}
+
+Because PMM2 is not a maximum likelihood method, standard application of Akaike (AIC) and Bayesian (BIC) criteria is problematic. In this study, AIC/BIC were computed via \textit{post-hoc} Gaussian log-likelihood to ensure comparability with the CSS-ML method, but these values should be interpreted with caution:
 
 \subsection{Theoretical considerations}
 \label{subsec:theoretical_considerations}
@@ -1028,8 +1128,9 @@ ARIMA(2,1,2) & -0.70 & 5.49 & 1.071 (6.6\%) & +0.84\% & $\triangle$ \\
 
 \paragraph{Key conclusions.}
 \begin{itemize}
-    \item $|\gamma_3| \approx 0.73$ implies an expected MSE gain of about 7\%, matching the empirical difference.
+    \item $|\gamma_3| \approx 0.73$ for WTI implies an expected MSE gain of about 7\%, matching the empirical difference.
     \item For ARIMA(1,1,1) PMM2 markedly decreases AIC/BIC, confirming that benefits are strongest for parsimonious specifications.
+    \item The theoretical formula~\eqref{eq:re_pmm2_ols} remains a conservative estimate: empirical RE values for strongly asymmetric distributions exceed theoretical predictions.
 \end{itemize}
 
 \subsection{Data characteristics}
