@@ -157,6 +157,12 @@ packrat/src/
 Experiment_R/
 Experiment_Python/
 
+# Data search directory (excluded from public repository)
+data-search/
+
+# Include EstemPMM2-lib package (negation of *.gz pattern)
+!EstemPMM2-lib/*.gz
+
 # Large data files (if any)
 # data/raw/*.csv  # Uncomment if you have large datasets
 *.RData  # Already specified above but emphasized here

@@ -1,14 +1,27 @@
 # PMM2-ARIMA Reproducibility Package
 
-This directory bundles everything reviewers need to regenerate the empirical results that feed into `latex/PMM2_ARIMA.tex`. The scripts reproduce both the WTI case-study analysis and the Monte Carlo experiments from Section 3.
+This repository contains all scripts, data, and tools needed to reproduce the empirical results reported in the PMM2-ARIMA manuscript. The package includes both the WTI crude oil case study and the comprehensive Monte Carlo simulation experiments.
 
 ## Repository Layout
+
+### Public Repository Contents
+
+This public repository contains all materials needed to reproduce the empirical results:
 
 - `data/` – immutable inputs delivered with the package (`DCOILWTICO.csv` from FRED).
 - `scripts/` – R entry points that orchestrate analysis, plotting, and reporting.
 - `results/` – auto-generated artefacts (CSV tables, RDS stores, plots, Markdown report, Monte Carlo summaries).
-- `latex/` – manuscript sources (`PMM2_ARIMA.tex`, `references.bib`).
+- `EstemPMM2-lib/` – packaged version of the EstemPMM library (v0.1.1) for reproducibility.
 - `DESCRIPTION` – declared R dependencies for quick inspection/tooling.
+
+### Excluded from Public Repository
+
+The following directories are maintained locally for development but excluded from the public repository:
+
+- `LaTeX/` – draft manuscript versions and LaTeX source files (work in progress).
+- `Experiment_R/` – experimental R code and alternative implementations.
+- `Experiment_Python/` – Python-based experiments and comparative analyses.
+- `data-search/` – preliminary data exploration and source documentation.
 
 ## Requirements
 
@@ -52,15 +65,15 @@ Rscript scripts/generate_report.R
 
 After a successful run you should see:
 
-- `results/full_results.csv` – values used in Table \ref{tab:wti_comprehensive_results} of the manuscript.
-- `results/method_comparison.csv` – deltas reported in Table \ref{tab:wti_method_comparison}.
-- `results/descriptive_stats.csv` – descriptive panel in Section 4.
-- `results/plots/*.png` – Figures 1–10 (numbered to match captions).
-- `results/ANALYTICAL_REPORT.md` – extended prose that aligns with the LaTeX discussion.
-- `results/monte_carlo/*.csv` – simulation summaries mirroring the Monte Carlo tables (per-model metrics, relative efficiencies, residual cumulants).
-- `results/monte_carlo/article_comparison.csv` – expanded table that juxtaposes simulation estimates with published article values and adds deviations/ratios.
+- `results/full_results.csv` – comprehensive model comparison results for all ARIMA specifications.
+- `results/method_comparison.csv` – deltas between CSS-ML and PMM2 methods.
+- `results/descriptive_stats.csv` – descriptive statistics for the WTI crude oil series.
+- `results/plots/*.png` – publication-quality figures (numbered 1–10).
+- `results/ANALYTICAL_REPORT.md` – extended narrative analysis of results.
+- `results/monte_carlo/*.csv` – simulation summaries including per-model metrics, relative efficiencies, and residual cumulants.
+- `results/monte_carlo/article_comparison.csv` – comparison of simulation results with published values.
 
-The numerical values in the LaTeX tables were exported by doubling the AIC/BIC scores for formatting purposes; the CSV files contain the raw outputs from R. Reviewers can regenerate the manuscript by re-running the scripts and then compiling `latex/PMM2_ARIMA.tex`.
+All CSV files contain raw outputs from R for full transparency and reproducibility.
 
 ## Monte Carlo Simulations
 
@@ -82,10 +95,10 @@ Options `--standardize-innov` and `--css-method` allow checking sensitivity to i
 Key artifacts:
 
 - `monte_carlo_metrics.csv` – complete cross-section of metrics (bias, var, MSE, RE, VR) for each model, parameter, and distribution.
-- `arima110_summary.csv`, `arima110_re_vs_sample_size.csv` – data for ARIMA(1,1,0) tables and RE dependence on N.
-- `arima011_summary.csv`, `arima111_summary.csv`, `arima210_summary.csv` – condensed comparisons for other configurations.
-- `arima110_residual_cumulants.csv` – average cumulants of PMM2 residuals (Table \ref{tab:residual_cumulants}).
-- `article_comparison.csv` – comparison of simulations with published values and new columns with deviations.
+- `arima110_summary.csv`, `arima110_re_vs_sample_size.csv` – ARIMA(1,1,0) results and RE dependence on sample size.
+- `arima011_summary.csv`, `arima111_summary.csv`, `arima210_summary.csv` – condensed comparisons for other model configurations.
+- `arima110_residual_cumulants.csv` – average cumulants of PMM2 residuals for normality assessment.
+- `article_comparison.csv` – comparison of simulation results with published values including deviations.
 - The `M-EST` column in summary files contains results of Huber M-estimates for AR components, allowing comparison of PMM2/CSS with robust estimates.
 
 ## Bootstrap Confidence Intervals (NEW)
