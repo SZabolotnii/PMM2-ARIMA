@@ -1,3 +1,21 @@
-# Generated artifacts
-*
+# Results Directory - Include all reproducibility artifacts
+# This directory contains generated results that are essential for reproducibility
+
+# Include all CSV files (tables and metrics)
+!*.csv
+
+# Include Markdown reports
+!*.md
+
+# Include PNG plots
+!*.png
+
+# Include RDS files (R data structures)
+!*.rds
+
+# Include subdirectories
+!monte_carlo/
+!plots/
+
+# Keep this gitignore tracked
 !.gitignore
