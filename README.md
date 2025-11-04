@@ -1,6 +1,14 @@
 # PMM2-ARIMA Reproducibility Package
 
-This repository contains all scripts, data, and tools needed to reproduce the empirical results reported in the PMM2-ARIMA manuscript. The package includes both the WTI crude oil case study and the comprehensive Monte Carlo simulation experiments.
+[![GitHub](https://img.shields.io/badge/GitHub-PMM2--ARIMA-blue?logo=github)](https://github.com/SZabolotnii/PMM2-ARIMA)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![R](https://img.shields.io/badge/R-%E2%89%A54.3-blue)](https://www.r-project.org/)
+
+This repository contains all scripts, data, and tools needed to reproduce the empirical results reported in the manuscript **"Applying the Polynomial Maximization Method to Estimate ARIMA Models with Asymmetric Non-Gaussian Innovations"** by Serhii Zabolotnii.
+
+**Repository:** [https://github.com/SZabolotnii/PMM2-ARIMA](https://github.com/SZabolotnii/PMM2-ARIMA)
+
+The package includes both the WTI crude oil case study and the comprehensive Monte Carlo simulation experiments (128,000+ simulations) demonstrating the PMM2 method's performance across various non-Gaussian innovation distributions.
 
 ## Repository Layout
 
@@ -161,6 +169,34 @@ Addresses reviewer request for diagnostic plots with p-values.
 - **Platform:** macOS Sequoia 15.6.1 (aarch64-apple-darwin24.4.0)
 - **Random seed:** All scripts use `set.seed(12345)` for reproducibility
 - **Session info:** Complete R environment details available in `sessionInfo.txt`
+
+## Citation
+
+If you use this code or data in your research, please cite:
+
+```bibtex
+@article{zabolotnii2025pmm2arima,
+  title={Applying the Polynomial Maximization Method to Estimate ARIMA Models with Asymmetric Non-Gaussian Innovations},
+  author={Zabolotnii, Serhii},
+  journal={Submitted for publication},
+  year={2025},
+  url={https://github.com/SZabolotnii/PMM2-ARIMA}
+}
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+**Serhii Zabolotnii**
+Cherkasy State Business College, Cherkasy, Ukraine
+Email: zabolotnii.serhii@csbc.edu.ua
+
+## Acknowledgments
+
+This research builds upon the Polynomial Maximization Method framework and adapts it to time series analysis with non-Gaussian innovations. We thank the R community for the excellent statistical computing tools that made this research possible.
 
 ## Housekeeping
 
