@@ -311,7 +311,7 @@ latexmk -c
 Якщо ви використовуєте цей код або результати у вашому дослідженні, будь ласка, цитуйте:
 
 ```bibtex
-@article{zabolotnii2025pmm2arima,
+@article{zabolotnii2025PMM2-ARIMA,
   title   = {Застосування Методу Максимізації Поліномів для Оцінювання Параметрів
              ARIMA Моделей з Асиметричними Негаусовими Інноваціями},
   author  = {Заболотній, Сергій},
@@ -468,7 +468,7 @@ latexmk -pdf PMM2_ARIMA.tex
 ## Citation
 
 ```bibtex
-@article{zabolotnii2025pmm2arima,
+@article{zabolotnii2025PMM2-ARIMA,
   title   = {Application of Polynomial Maximization Method for Estimating
              ARIMA Models with Asymmetric Non-Gaussian Innovations},
   author  = {Zabolotnii, Serhii},

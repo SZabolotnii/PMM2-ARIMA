@@ -1,4 +1,4 @@
-# Repository Readiness Assessment: PMM2ARIMARepro
+# Repository Readiness Assessment: PMM2-ARIMA
 
 **Assessment Date**: 2025-11-03
 **Version**: 2.0.0
@@ -10,7 +10,7 @@
 
 ### 📁 Repository Structure (100%)
 ```
-PMM2ARIMARepro/
+PMM2-ARIMA/
 ├── data/                    ✅ WTI data (DCOILWTICO.csv)
 ├── scripts/                 ✅ 9 R scripts (3 NEW!)
 │   ├── arima_oil_quick_demo.R
