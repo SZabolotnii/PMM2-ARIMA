@@ -200,5 +200,4 @@ This research builds upon the Polynomial Maximization Method framework and adapt
 
 ## Housekeeping
 
-- `results/` ships with a `.gitignore`; delete or replace the placeholder when publishing generated artefacts.
 - Use `DESCRIPTION` with `renv` or `pak` if you wish to create a fully locked environment before sharing.
