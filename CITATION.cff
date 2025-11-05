@@ -52,8 +52,8 @@ preferred-citation:
   status: "submitted"
   url: "https://github.com/SZabolotnii/PMM2-ARIMA"
 
-# DOI will be added after publication or Zenodo deposit
-# doi: "10.5281/zenodo.XXXXXXX"
+# Zenodo DOI for this repository
+doi: "10.5281/zenodo.17529589"
 
 references:
   - type: software

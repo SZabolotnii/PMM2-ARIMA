@@ -1,6 +1,7 @@
 # PMM2-ARIMA Reproducibility Package
 
 [![GitHub](https://img.shields.io/badge/GitHub-PMM2--ARIMA-blue?logo=github)](https://github.com/SZabolotnii/PMM2-ARIMA)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17529589.svg)](https://doi.org/10.5281/zenodo.17529589)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R](https://img.shields.io/badge/R-%E2%89%A54.3-blue)](https://www.r-project.org/)
 
@@ -180,7 +181,8 @@ If you use this code or data in your research, please cite:
   author={Zabolotnii, Serhii},
   journal={Submitted for publication},
   year={2025},
-  url={https://github.com/SZabolotnii/PMM2-ARIMA}
+  url={https://github.com/SZabolotnii/PMM2-ARIMA},
+  doi={10.5281/zenodo.17529589}
 }
 ```
 
