@@ -1,10 +1,13 @@
 Package: PMM2ARIMA
-Type: Project
+Type: Package
 Title: PMM2 vs Classical ARIMA Reproducibility Materials
 Version: 0.0.1
 Authors@R: person("Serhii", "Zabolotnii", email = "zabolotnii.serhii@csbc.edu.ua", role = c("aut", "cre"))
-Description: Supporting scripts and data to reproduce the WTI crude oil case study results for the PMM2ARIMA manuscript.
-License: MIT
+Description: Supporting scripts and data to reproduce the WTI crude oil case study
+    results for the PMM2ARIMA manuscript. This package provides reproducibility
+    materials including R scripts for Monte Carlo simulations and empirical analysis
+    comparing PMM2 with classical ARIMA estimation methods.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.3)
 Imports:
@@ -15,4 +18,8 @@ Imports:
     tseries,
     knitr,
     MASS
+Suggests:
+    rmarkdown
 LazyData: false
+URL: https://github.com/SZabolotnii/PMM2-ARIMA
+BugReports: https://github.com/SZabolotnii/PMM2-ARIMA/issues
