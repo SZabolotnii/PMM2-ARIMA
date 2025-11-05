@@ -1,9 +1,9 @@
-Package: PMM2-ARIMA
+Package: PMM2ARIMA
 Type: Project
 Title: PMM2 vs Classical ARIMA Reproducibility Materials
 Version: 0.0.1
 Authors@R: person("Serhii", "Zabolotnii", email = "zabolotnii.serhii@csbc.edu.ua", role = c("aut", "cre"))
-Description: Supporting scripts and data to reproduce the WTI crude oil case study results for the PMM2-ARIMA manuscript.
+Description: Supporting scripts and data to reproduce the WTI crude oil case study results for the PMM2ARIMA manuscript.
 License: MIT
 Encoding: UTF-8
 Depends: R (>= 4.3)

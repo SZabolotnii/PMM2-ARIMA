@@ -13,7 +13,7 @@
 # - Diagnostic statistics table with p-values
 # - Residual plots
 #
-# Author: PMM2-ARIMA Research Team
+# Author: PMM2ARIMA Research Team
 # Date: 2025-11-03
 # =============================================================================
 

@@ -7,7 +7,7 @@
 #
 # Addresses reviewer comment: "Add confidence intervals to Monte Carlo tables"
 #
-# Author: PMM2-ARIMA Research Team
+# Author: PMM2ARIMA Research Team
 # Date: 2025-11-03
 # =============================================================================
 

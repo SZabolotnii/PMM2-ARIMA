@@ -12,7 +12,7 @@
 # 2. Rolling-window forecasts (expanding window)
 # 3. Metrics: RMSE, MAE, Coverage of prediction intervals
 #
-# Author: PMM2-ARIMA Research Team
+# Author: PMM2ARIMA Research Team
 # Date: 2025-11-03
 # =============================================================================
 

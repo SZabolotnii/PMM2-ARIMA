@@ -1,4 +1,4 @@
-arXiv Submission Package for PMM2-ARIMA Paper
+arXiv Submission Package for PMM2ARIMA Paper
 =============================================
 
 IMPORTANT: This directory is ready for submission to arXiv.org

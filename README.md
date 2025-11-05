@@ -1,4 +1,4 @@
-# PMM2-ARIMA Reproducibility Package
+# PMM2ARIMA Reproducibility Package
 
 [![GitHub](https://img.shields.io/badge/GitHub-PMM2--ARIMA-blue?logo=github)](https://github.com/SZabolotnii/PMM2-ARIMA)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17529589.svg)](https://doi.org/10.5281/zenodo.17529589)
