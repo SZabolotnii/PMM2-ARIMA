@@ -20,6 +20,7 @@ Imports:
     MASS
 Suggests:
     rmarkdown
-LazyData: false
+LazyData: true
 URL: https://github.com/SZabolotnii/PMM2-ARIMA
 BugReports: https://github.com/SZabolotnii/PMM2-ARIMA/issues
+RoxygenNote: 7.3.3
