@@ -1,32 +1,60 @@
 cff-version: 1.2.0
-message: "If you use this software or reproduce results from this repository, please cite the associated research paper and this repository."
 title: "PMM2-ARIMA Reproducibility Package"
+message: "If you use this software or reproduce results from this repository, please cite the associated research paper and this repository."
 version: 1.0.0
 date-released: 2025-11-03
 authors:
   - family-names: Zabolotnii
     given-names: Serhii
-    email: serhii.zabolotnii@example.com
-    orcid: https://orcid.org/0000-0003-0242-2234
+    email: zabolotnii.serhii@csbc.edu.ua
+    affiliation: "Cherkasy State Business College"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"  # Uncomment and update when available
+
 repository-code: "https://github.com/SZabolotnii/PMM2-ARIMA"
 license: MIT
+
 keywords:
   - time series
-  - ARIMA
+  - ARIMA models
   - PMM2
+  - polynomial maximization method
+  - non-Gaussian innovations
+  - asymmetric distributions
+  - parameter estimation
+  - semiparametric methods
   - robust estimation
+  - Monte Carlo simulation
   - reproducibility
   - R package
-abstract: "This repository provides complete reproducibility materials for the research paper on Polynomial Maximization Method of order 2 (PMM2) for ARIMA parameter estimation. It includes all R scripts, data, and documentation needed to regenerate the empirical results, Monte Carlo simulations, and visualizations presented in the manuscript."
+  - financial econometrics
+
+abstract: >
+  This repository provides complete reproducibility materials for the research paper on applying the
+  second-order Polynomial Maximization Method (PMM2) to estimate ARIMA models with asymmetric non-Gaussian
+  innovations. PMM2 is a semiparametric technique that exploits higher-order cumulants without requiring
+  full distributional specification. The package includes: (1) WTI crude oil case study with 6 ARIMA
+  specifications, (2) Monte Carlo experiments with 128,000+ simulations across 4 innovation distributions
+  and 4 sample sizes, (3) complete R scripts for analysis and visualization, (4) EstemPMM package v0.1.1,
+  and (5) all generated results (CSV tables, publication-quality plots, diagnostic reports). Results
+  demonstrate 30-48% variance reduction for non-Gaussian innovations while maintaining classical efficiency
+  under Gaussianity.
+
 preferred-citation:
   type: article
   authors:
     - family-names: Zabolotnii
       given-names: Serhii
-  title: "Polynomial Maximization Method of order 2 for ARIMA Parameter Estimation: Theory and Applications"
+      email: zabolotnii.serhii@csbc.edu.ua
+      affiliation: "Cherkasy State Business College"
+  title: "Applying the Polynomial Maximization Method to Estimate ARIMA Models with Asymmetric Non-Gaussian Innovations"
   year: 2025
-  journal: "Journal Name (To be updated upon acceptance)"
-  status: "Under Review"
+  journal: "Submitted for publication"
+  status: "submitted"
+  url: "https://github.com/SZabolotnii/PMM2-ARIMA"
+
+# DOI will be added after publication or Zenodo deposit
+# doi: "10.5281/zenodo.XXXXXXX"
+
 references:
   - type: software
     title: "EstemPMM: Polynomial Maximization Method Estimation Package"
